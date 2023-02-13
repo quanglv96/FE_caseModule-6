@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Songs} from "../model/Songs";
-import {OwlOptions} from "ngx-owl-carousel-o";
-import * as $ from 'jquery'
 import {SongsService} from "../service/songs/songs.service";
 import {Playlist} from "../model/Playlist";
 import {PlaylistService} from "../service/playlist/playlist.service";

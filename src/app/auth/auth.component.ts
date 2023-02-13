@@ -4,6 +4,7 @@ import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {Router} from "@angular/router";
 import {Location} from "@angular/common";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-auth',
@@ -30,7 +31,8 @@ export class AuthComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private router: Router,
-              private location: Location) {
+              private location: Location,
+              private dataService: DataService) {
   }
 
   ngOnInit() {
@@ -117,6 +119,7 @@ export class AuthComponent implements OnInit {
     } else {
       this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe(data => {
         localStorage.setItem('idUser', data.id)
+        this.dataService.changeMessage('oke r')
         alert("Login Successful")
         return this.router.navigateByUrl('')
       }, (error: any) => {

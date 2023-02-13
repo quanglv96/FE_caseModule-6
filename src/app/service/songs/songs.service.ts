@@ -20,4 +20,7 @@ export class SongsService {
   getNewSongs() {
     return this.http.get<Songs[]>(`${API_URL}/songs/listNewSongs`)
   }
+  listTop10SongsTrending(){
+    return this.http.get(`${API_URL}/songs/listTop10SongsTrending`)
+  }
 }
