@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,7 @@ export class HeaderComponent implements OnInit{
   avatar=""
   @Input() textSearch: string | any
 
-  constructor(private router: Router, private userService:UserService) {
+  constructor(private router: Router, private userService:UserService,private dataService: DataService) {
   }
 
   routeSearch() {
@@ -24,15 +25,20 @@ export class HeaderComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if(localStorage.getItem('idUser')){
-      this.userService.findById(localStorage.getItem('idUser')).subscribe((data:User)=>{
-        this.user=data
-      })
-    }
+    this.dataService.currentMessage.subscribe(()=>{
+      if(localStorage.getItem('idUser')){
+        this.userService.findById(localStorage.getItem('idUser')).subscribe((data:User)=>{
+          this.user=data
+        })
+      }
+    })
+
   }
 
   logOut() {
     localStorage.removeItem('idUser');
+    this.user=null;
     return this.router.navigateByUrl('')
   }
+
 }

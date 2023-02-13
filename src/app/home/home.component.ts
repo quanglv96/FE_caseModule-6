@@ -1,9 +1,10 @@
 import { OwlOptions } from "ngx-owl-carousel-o";
-import { Component, OnInit } from '@angular/core';
-import { SongsService } from "../service/songs/songs.service";
+import {Component, OnInit} from '@angular/core';
+import {SongsService} from "../service/songs/songs.service";
 
 import {Songs} from "../model/Songs";
 import {Router} from "@angular/router";
+import { DataService } from "../service/data/data.service";
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
     '/assets/Untitled-2.jpg',
     '/assets/Untitled-3.jpg'
   ];
-
+// chạy slide
   options: OwlOptions = {
     items: 1,
     slideBy: 1,
@@ -37,7 +38,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.router.navigateByUrl('header')
     // @ts-ignore
     this.songService.listTop10SongsTrending().subscribe((data: Songs[]) => {
       this.songs = data;

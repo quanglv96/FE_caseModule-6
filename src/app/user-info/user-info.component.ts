@@ -20,6 +20,7 @@ export class UserInfoComponent implements OnInit{
       this.user = data;
       this.name=this.user.name
       this.username=this.user.username;
+
     })
     this.userService.userChange.subscribe(
       data => {
