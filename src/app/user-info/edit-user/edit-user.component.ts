@@ -55,6 +55,7 @@ export class EditUserComponent implements OnInit {
       this.user = this.userForm.value as User
       this.userService.updateUser(this.idUser, this.user).subscribe((data) => {
         this.userService.userChange.emit(data)
+        this.router.navigateByUrl('user-info')
         alert("change succses")
       })
     }
