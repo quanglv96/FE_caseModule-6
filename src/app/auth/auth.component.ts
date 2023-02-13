@@ -116,7 +116,10 @@ export class AuthComponent implements OnInit {
       });
     } else {
       this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe(data => {
+        this.user = data;
         alert("Login Successful")
+        console.log(this.user)
+        localStorage.setItem('idUser', <string>this.user?.id)
       }, (error: any) => {
         console.log(error)
         alert(error['error']);
