@@ -42,4 +42,9 @@ export class UserService {
   getUsername() {
     return this.http.get<string[]>(`${API_URL}/users/usernames`)
   }
+
+  updatePass(id: number, password: String): Observable<User> {
+    // @ts-ignore
+    return this.http.put(`${API_URL}/users/changepass/${id}?password=${password}`)
+  }
 }
