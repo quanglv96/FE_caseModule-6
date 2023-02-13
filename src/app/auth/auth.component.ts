@@ -28,9 +28,9 @@ export class AuthComponent implements OnInit {
   })
 
   constructor(private formBuilder: FormBuilder,
-              private userService:UserService,
+              private userService: UserService,
               private router: Router,
-              private location: Location){
+              private location: Location) {
   }
 
   ngOnInit() {
@@ -83,7 +83,7 @@ export class AuthComponent implements OnInit {
     return null
   }
 
-  existUsernameValidator(control: FormControl): {[s: string]: boolean} | null {
+  existUsernameValidator(control: FormControl): { [s: string]: boolean } | null {
     if (this.username?.includes(control.value)) {
       return {'usernameExist': true}
     }
@@ -99,9 +99,9 @@ export class AuthComponent implements OnInit {
     } else {
       this.user = this.registerForm.value
       this.userService.register(this.user).subscribe(data => {
-          alert("dang ky thanh cong")
-          this.switchToLogin()
-          this.loginForm.patchValue(data)
+        alert("dang ky thanh cong")
+        this.switchToLogin()
+        this.loginForm.patchValue(data)
       }, error => {
         alert("tai khoan da ton tai")
       })
@@ -116,7 +116,9 @@ export class AuthComponent implements OnInit {
       });
     } else {
       this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe(data => {
+        localStorage.setItem('idUser', data.id)
         alert("Login Successful")
+        return this.router.navigateByUrl('')
       }, (error: any) => {
         console.log(error)
         alert(error['error']);
