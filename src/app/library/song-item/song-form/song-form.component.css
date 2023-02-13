@@ -1,0 +1,81 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+
+.song-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  background-color: rgba(255,255,255,0.6);
+}
+
+.song-modal-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  background-color: white;
+  z-index: 5;
+  padding: 30px 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.song-modal-header {
+  font-weight: 400;
+  letter-spacing: 4px;
+  font-size: 25px;
+}
+
+.upload-image {
+  position: relative;
+}
+
+.upload-image-btn {
+  border: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 85%;
+  opacity: 80%;
+  width: 60%;
+  font-size: 12px;
+}
+
+.upload-mp3-btn {
+  padding: 4px 8px;
+  width: 100%;
+  border: 1px solid rgb(224, 224, 224);
+}
+
+.mp3-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.modal-input {
+  padding: 6px 8px;
+  width: 100%;
+  border: 1px solid transparent;
+  background-color: #f2f2f2;
+  outline: none;
+}
+
+.modal-btn {
+  padding: 8px 16px !important;
+  border-radius: 0 !important;
+  color: white;
+  border: 1px solid transparent;
+  letter-spacing: 2px;
+}
+
+.modal-submit {
+  background-color: orangered;
+}
+
+.modal-close {
+  margin-right: 8px;
+  color: #615e5e;
+}

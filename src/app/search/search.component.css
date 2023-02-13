@@ -1,0 +1,30 @@
+.sidebar .search-menu {
+  list-style-type: none;
+}
+
+.sidebar .filter-option {
+  color: black;
+  text-decoration: none;
+}
+
+.sidebar .search-item:hover .filter-option {
+  background-color: black;
+  color: white;
+}
+
+.sidebar .tag-header {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sidebar .tag {
+  background-color: #999999;
+  color: white;
+  display: inline-block;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.sidebar .tag:hover {
+  background-color: #615e5e;
+}

@@ -1,0 +1,82 @@
+.user-info-img {
+  width: 200px;
+  height: 200px;
+  aspect-ratio: 1/1;
+  margin: 12px auto;
+  border-radius: 50%;
+}
+
+.back-btn {
+  padding: 8px 16px !important;
+  width: 100%;
+  text-align: left;
+}
+
+.user-info-id {
+  margin-top: 12px;
+}
+
+.user-bg-img {
+  background: linear-gradient(315deg, rgb(132, 97, 112) 0%, rgb(140 132 132) 100%)
+}
+
+.user-info-username-wrapper {
+  margin-top: 15px !important;
+}
+
+.tab-item {
+  width: 150px;
+  padding: 12px 0;
+  cursor: pointer;
+  background-color: #cccccc;
+}
+
+.user-info-tab.tab-item {
+  background-color: white;
+}
+
+.tab-content {
+  padding: 0 24px;
+}
+
+.input-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.disable {
+  opacity: 55%;
+}
+
+.user-info-btn {
+  width: 100px;
+  padding: 6px 0;
+}
+
+.password-form, .submit-password {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pass-form-group {
+  min-height: 85px;
+}
+
+.u-tag {
+  background-color: #999999;
+  color: white;
+  display: inline-block;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.upload-btn-info {
+  border: none;
+  border-radius: 4px;
+  position: absolute;
+  left: 64px;
+  top: 200px;
+  opacity: 80%;
+}

@@ -1,0 +1,70 @@
+<div class="song-modal">
+  <div class="song-modal-dialog">
+    <form class="song-form">
+      <h2 class="text-center song-modal-header">Upload song</h2>
+      <hr class="border-2">
+      <div class="row">
+        <div class="col-4">
+          <div class="upload-image">
+            <img class="fit-image" src="/assets/song.jfif" alt="">
+            <button class="upload-image-btn p-1">
+              <span onclick="openUpload('.input-song')" class="py-2 px-2">
+                <i class="me-1 fa-solid fa-camera"></i>
+                <span class="font-12">Upload image</span>
+              </span>
+              <input onchange="replaceImg(this, '.modal-img-song')" class="input-song" type="file" hidden>
+            </button>
+          </div>
+          <hr>
+          <button class="upload-mp3-btn">
+            <span onclick="openUpload('.input-mp3-file')" class="py-2 px-2 font-12 grey-text">
+              Choose mp3 file:
+            </span>
+            <input onchange="getFileName(this)" class="input-mp3-file" type="file" hidden>
+          </button>
+          <p class="mp3-name font-12 grey-text"></p>
+        </div>
+        <div class="col-8 border-start">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group mb-1">
+                <label class="modal-label my-1" for="name">Name:</label><br>
+                <input class="modal-input" name="name" type="text" id="name" placeholder="Name">
+              </div>
+              <div class="form-group mb-1">
+                <label class="modal-label my-1" for="description">Description:</label><br>
+                <textarea class="modal-input" rows="3" name="description" type="text" id="description" placeholder="Description"></textarea>
+              </div>
+              <div class="form-group mb-1">
+                <label class="modal-label my-1" for="composer">Composer:</label><br>
+                <input class="modal-input" name="composer" type="text" id="composer" placeholder="Price">
+              </div>
+              <div class="form-group mb-1">
+                <label class="modal-label my-1" for="singer">Singer:</label><br>
+                <input class="modal-input" name="singer" type="text" id="singer" placeholder="Singer">
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group mb-1">
+                <label class="modal-label my-1" for="tag">Tag:</label><br>
+                <input class="modal-input" name="tag" type="text" id="tag" placeholder="Tag">
+              </div>
+              <div class="form-group mb-1">
+                <label class="modal-label my-1" for="album">Album:</label><br>
+                <input class="modal-input" name="album" type="text" id="album" placeholder="Album">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="text-end">
+            <button class="modal-btn modal-close" type="button" routerLink="../">Close</button>
+            <button class="modal-btn modal-submit" type="submit">Upload</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+<form class="user-info-form info-form show mt-3" [formGroup]="userForm" (ngSubmit)="saveChange()">
+  <div class="input-section row px-3">
+    <div class="input-left col col-4">
+      <div class="user-image">
+        <img class="fit-image" [src]="!!editImage ? editImage : '/assets/avt-default.png'" alt="">
+        <button class="pick-image p-1" type="button" (click)="openUpload('.image-input')">
+          <span class="py-2 px-2">
+            <i class="me-1 fa-solid fa-camera"></i>
+            <span class="font-14">Upload image</span>
+          </span>
+          <input (change)="renderImagePath($event)" class="image-input" type="file"
+                 hidden formControlName="avatar">
+        </button>
+      </div>
+    </div>
+    <div class="input-right col col-8">
+      <div class="row">
+        <div class="col col-6">
+          <div class="form-group mb-2 disable">
+            <label class="modal-label my-1" for="i-username">Username:</label><br>
+            <input class="modal-input" name="username" type="text"
+                   id="i-username" disabled placeholder="Username" value="{{ user?.username }}">
+          </div>
+          <div class="form-group mb-2">
+            <label class="modal-label my-1" for="i-name">Name:</label><br>
+            <input (input)="clearValid($event, name)" (blur)="checkValid($event, name)"
+                   class="modal-input" name="name" type="text" id="i-name"
+                   placeholder="Name" formControlName="name">
+            <div #name>
+              <span class="form-message font-12"
+                    *ngIf="userForm.get('name')!.errors !== null
+                    && userForm.get('name')!.errors!['required']
+                    && userForm.get('name')!.touched">
+                    Name must not be left blank
+              </span>
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <label class="modal-label my-1" for="i-address">Address:</label><br>
+            <input class="modal-input" name="address" type="text" id="i-address"
+                   placeholder="Address" formControlName="address">
+          </div>
+        </div>
+        <div class="col col-6">
+          <div class="form-group mb-2">
+            <label class="modal-label my-1" for="i-email">Email:</label><br>
+            <input (input)="clearValid($event, email)" (blur)="checkValid($event, email)"
+                   class="modal-input" name="email" type="text" id="i-email"
+                   placeholder="Email" formControlName="email">
+            <div #email>
+              <span class="form-message font-12"
+                    *ngIf="userForm.get('email')!.errors !== null
+                    && userForm.get('email')!.errors!['required']
+                    && userForm.get('email')!.touched">
+                    Email must not be left blank
+              </span>
+              <span class="form-message font-12"
+                    *ngIf="userForm.get('email')!.errors !== null
+                    && userForm.get('email')!.errors!['email']
+                    && userForm.get('email')!.touched">
+                    Must be email
+              </span>
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <label class="modal-label my-1" for="i-phone_number">Phone number:</label><br>
+            <input (input)="clearValid($event, phoneNumber)" (blur)="checkValid($event, phoneNumber)"
+                   class="modal-input" name="phone_number" type="text" id="i-phone_number"
+                   placeholder="Phone number" formControlName="phone">
+            <div #phoneNumber>
+              <span class="form-message font-12"
+                    *ngIf="userForm.get('phone')!.errors !== null
+                    && userForm.get('phone')!.errors!['required']
+                    && userForm.get('phone')!.touched">
+                    Phone number must not be left blank
+              </span>
+              <span class="form-message font-12"
+                    *ngIf="userForm.get('phone')!.errors !== null
+                    && userForm.get('phone')!.errors!['invalidPhoneNumber']
+                    && userForm.get('phone')!.touched">
+                    Phone number must start with 84|0 follow by 3|5|7|8|9 follow by 8 number
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="submit-section text-end">
+        <button class="user-info-btn btn btn-sm btn-danger m-0 no-border-radius me-2" type="reset">Clear</button>
+        <button class="user-info-btn btn btn-sm btn-dark m-0 no-border-radius" type="submit">Save change</button>
+      </div>
+    </div>
+  </div>
+</form>

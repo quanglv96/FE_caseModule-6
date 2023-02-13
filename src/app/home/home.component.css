@@ -1,0 +1,76 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+@import '~@coreui/coreui/dist/css/coreui.min.css';
+
+.slider {
+  margin-top: 53.5px;
+}
+
+.home-input-group {
+  position: relative;
+}
+
+.home-input {
+  width: 70%;
+  padding: 0 16px;
+  height: 46px;
+  color: #6c6c6c;
+  border: none;
+  border-radius: 4px;
+  background-color: #f2f2f2;
+  outline: none;
+}
+
+.home-input-icon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #6c6c6c;
+  cursor: pointer;
+}
+
+.row .col-20 {
+  flex: 0 0 auto;
+  width: 20%;
+}
+
+.item:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+
+.explore-btn {
+  font-size: 18px;
+  border: none;
+  border-radius: 4px;
+  padding: 13px 23px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+.explore-btn:hover {
+  background-color: #333333;
+}
+
+.item-wrapper:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+
+.create-btn {
+  padding: 13px 23px;
+  background-color: orangered;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 18px;
+  margin-top: 16px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+}
+

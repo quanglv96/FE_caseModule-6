@@ -1,0 +1,67 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.no-border-radius {
+  border-radius: 0;
+}
+
+.fit-image {
+  object-fit: contain;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.font-20 {
+  font-size: 20px;
+}
+
+.font-16 {
+  font-size: 16px;
+}
+
+.font-14 {
+  font-size: 14px;
+}
+
+.font-12 {
+  font-size: 12px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.grey-text {
+  color: #999999;
+}
+
+.border-radius-1 {
+  border-radius: 4px;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.body-container {
+  background-color: #f2f2f2;
+  margin-top: 53px !important;
+}
+
+.body {
+  background-color: white;
+  padding-bottom: 30px;
+}

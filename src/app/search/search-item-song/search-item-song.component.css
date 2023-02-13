@@ -1,0 +1,37 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+
+.play-btn {
+  width: 40px;
+  height: 40px;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.play-btn:hover {
+  background-color: #615e5e;
+}
+
+.tag-ref {
+  background-color: #999999;
+  color: white;
+  display: inline-block;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.tag-ref:hover {
+  background-color: #615e5e;
+}
+
+.audio-control {
+  width: 100%;
+}
+
+.wave-song > wave > wave {
+  border: none !important;
+}
+
+
+

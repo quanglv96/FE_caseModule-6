@@ -1,0 +1,43 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+
+.footer {
+  background-color: black;
+}
+
+.footer__container {
+  padding: 50px 0;
+  text-align: center;
+}
+
+.footer__header {
+  letter-spacing: 6px;
+}
+
+.footer__desc {
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 100;
+}
+
+.footer__desc-wrapper {
+  width: 60%;
+  margin: auto;
+}
+
+.footer__social {
+  margin: 30px 0;
+  font-size: 30px;
+  color: white;
+}
+
+.social + .social {
+  margin-left: 16px;
+}
+
+.footer__end {
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 100;
+}

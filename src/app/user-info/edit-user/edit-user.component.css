@@ -1,0 +1,65 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+
+.user-image {
+  position: relative;
+}
+
+.pick-image {
+  border: none;
+  border-radius: 4px;
+  position: absolute;
+  opacity: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  top: 80%;
+}
+
+.user-info-id {
+  margin-top: 12px;
+}
+
+.tab-content {
+  padding: 0 24px;
+}
+
+.input-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.disable {
+  opacity: 55%;
+}
+
+.user-info-btn {
+  width: 100px;
+  padding: 6px 0;
+}
+
+.modal-input {
+  padding: 6px 8px;
+  width: 100%;
+  border: none;
+  background-color: #f2f2f2;
+  outline: none;
+}
+
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+  background-color: mistyrose;
+}
+
+input.ng-invalid.ng-touched.clear {
+  border: 1px solid white;
+  background-color: #f2f2f2;
+}
+
+.hide {
+  display: none;
+}
+
+.form-message {
+  color: red;
+}

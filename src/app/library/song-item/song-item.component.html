@@ -1,0 +1,43 @@
+<div class="row" *ngFor="let s of listSongs">
+  <div class="col-3">
+    <div class="track-image">
+      <img class="fit-image" src="{{s.avatar}}" alt="">
+    </div>
+  </div>
+  <div class="col-9 g-0">
+    <div class="track-desc d-flex flex-column justify-content-between" >
+      <div class="track-desc-first d-flex justify-content-between">
+        <div class="left-section d-flex">
+          <div class="play-btn me-1">
+            <i style="margin-left: 3px" class="fa-solid fa-play"></i>
+          </div>
+          <div class="track-name-user">
+<!--            name song-->
+            <p class="m-0 font-14">{{s.name}}</p>
+          </div>
+        </div>
+<!--        date-->
+        <div class="right-section font-12 grey-text">{{s.date}}</div>
+      </div>
+      <div class="track-desc-second">
+<!--        wave-->
+        <div class="wave-loader"></div>
+        <div class="action-btn d-flex justify-content-between">
+          <div class="action">
+            <span class="act-btn font-12"><i class="fa-solid fa-heart" (click)="likeSong(s.id)"></i>Like</span>
+            <span class="act-btn font-12"><i class="fa-solid fa-pen" (click)="editSong(s.id)"></i> Edit</span>
+            <span class="act-btn font-12"><i class="fa-solid fa-plus" (click)="addPlayList(s.id)"></i> Add to playlist</span>
+            <span class="act-btn font-12"><i class="fa-solid fa-trash" (click)="deleteSong(s.id)"></i> Delete</span>
+          </div>
+          <div class="view d-flex align-items-center">
+            <span class="font-12 grey-text"><i class="fa-solid fa-play"></i> {{s.views}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<router-outlet></router-outlet>

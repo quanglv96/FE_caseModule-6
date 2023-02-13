@@ -1,0 +1,78 @@
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: black;
+  z-index: 4;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.header .logo {
+  width: 100px;
+}
+
+.header .logo-img {
+  object-fit: contain;
+  width: 100px;
+  margin: 4px 0;
+}
+
+.header .avatar {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+.header .login-btn {
+  border: 1px solid white !important;
+}
+
+.header .login-btn:hover {
+  color: black !important;
+  background-color: #ffffff;
+}
+
+.header .user-info {
+  position: relative;
+}
+
+.header .user-menu {
+  position: absolute;
+  top: 50px !important;
+  left: 0 !important;
+  list-style-type: none;
+  display: none;
+  background-color: white;
+}
+
+.header .user-menu li:hover a {
+  background-color: rgb(204, 201, 201);
+}
+
+.header .user-toggle {
+  border: 1px solid black;
+}
+
+.header .user-toggle:hover {
+  cursor: pointer;
+  border: 1px solid white;
+  border-radius: 4px;
+}
+
+.open > .user-menu {
+  display: block;
+  top: 35px;
+  left: -80px;
+}
+
+.nav-item {
+  letter-spacing: 1px;
+  font-weight: 100;
+  cursor: pointer;
+}

@@ -1,0 +1,64 @@
+<div class="body-container container-fluid">
+  <div class="body container">
+    <div class="row lib-top">
+      <div class="col-md-3">
+        <div class="user-image p-2">
+          <img class="fit-image circle" src="{{avatar}}" alt="">
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="title-box">
+          <span class="title">{{username}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 px-4">
+        <div class="library-tab d-flex justify-content-between align-items-center">
+          <div class="tab">
+            <span class="tab-item me-3" routerLink="song" routerLinkActive="active">Track</span>
+            <span class="tab-item" routerLink="playlist" routerLinkActive="active">Playlist</span>
+          </div>
+          <div class="add-button font-14" (click)="toAddForm()"><i class="fa-solid fa-plus"></i> Add</div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-8 px-4">
+        <router-outlet></router-outlet>
+      </div>
+      <div class="col-4 ps-3 pe-4 border-left">
+        <div class="side-bar-container">
+          <div class="row">
+            <div class="col-6">
+              <div class="px-3 text-center">
+                <div class="grey-text font-12">Track</div>
+                <div class="grey-text font-20">3</div>
+              </div>
+            </div>
+            <div class="col-6 border-left">
+              <div class="px-3 text-center">
+                <div class="grey-text font-12">Playlist</div>
+                <div class="grey-text font-20">3</div>
+              </div>
+            </div>
+          </div>
+          <hr class="">
+          <div class="row">
+            <div class="col-12">
+              <p class="m-0 font-16">Get it on mobile:</p>
+            </div>
+            <div class="mt-2 d-flex">
+              <div class="me-4" style="width: 48%">
+                <img class="mobile-app pointer" src="/assets/google-play.jpg" alt="">
+              </div>
+              <div style="width: 48%">
+                <img class="mobile-app pointer" src="/assets/apple-store.jpg" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="item-image col-3">
+    <div class="image-search">
+<!--      AVT-->
+      <img alt="" class="fit-image" src="{{avatar}}">
+    </div>
+  </div>
+  <div class="item-desc audio-feedback col-9 d-flex flex-column justify-content-between">
+    <div class="desc-box d-flex d-flex justify-content-between">
+      <div class="d-flex">
+        <div class="play-btn-1 play-btn d-flex justify-content-center align-items-center me-2">
+<!--          play Song-->
+          <i class="fa-solid fa-play" (click)="playSong({id})"></i>
+        </div>
+        <div class="first-desc-row d-inline-block">
+<!--          User upload-->
+          <p class="user-upload m-0 grey-text font-12">{{users}}</p>
+<!--          Song name-->
+          <p class="item-name m-0">{{name}}</p>
+        </div>
+      </div>
+      <div class="second-desc-row d-inline-block right-text">
+<!--        Time upload-->
+        <p class="date-upload m-0 grey-text font-12">{{date}}</p>
+<!--        Tag-->
+        <p class="tag-ref m-0 px-2 small-text">{{tags}}</p>
+      </div>
+    </div>
+    <div class="play-box">
+      <div class="wave-song" id="wave-1">
+
+      </div>
+      <div class="action-box d-flex justify-content-between mt-2 mb-1">
+        <div class="like-box">
+        <span
+          class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1">
+<!--          Lượt like-->
+          <i class="fa-solid fa-heart"></i>{{likes}}
+        </span>
+          <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1">
+          <i class="fa-solid fa-square-plus"></i> Add to playlist
+        </span>
+        </div>
+<!--        <div class="like-box">-->
+<!--        <span-->
+<!--          class="play-count font-12 grey-text border py-1 px-2 me-1 border-radius-1">-->
+<!--          <i class="fa-solid fa-play"></i> 110K-->
+<!--        </span>-->
+<!--          <span class="comment-count font-12 grey-text border py-1 px-2 border-radius-1">-->
+<!--          <i class="fa-solid fa-comment"></i> 100K-->
+<!--        </span>-->
+<!--        </div>-->
+      </div>
+    </div>
+  </div>
+</div>

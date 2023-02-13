@@ -1,0 +1,66 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+
+.lib-top {
+  background-image: linear-gradient(315deg, rgb(119, 100, 102) 0%, rgb(246, 185, 174) 100%);
+}
+
+.active {
+  color: orangered;
+  border-bottom: 2px solid orangered !important;
+}
+
+.user-image {
+  margin: 12px 0;
+}
+
+.title-box {
+  margin-top: 20px;
+}
+
+.title {
+  display: inline-block;
+  color: white;
+  padding: 8px 16px;
+  background-color: #1e1d1d;
+}
+
+.library-tab {
+  padding-top: 20px;
+  border-bottom: 1px solid #999999;
+}
+
+.tab-item {
+  display: inline-block;
+  font-size: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.tab-item:hover {
+  border-bottom: 2px solid black;
+}
+
+.add-button {
+  padding: 2px 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.add-button:hover {
+  border: 1px solid #a6a3a3;
+}
+
+.side-bar-container {
+  width: 100%;
+  height: 100%;
+}
+
+.border-left {
+  border-left: 1px solid #dedede;
+}
+
+.mobile-app {
+  object-fit: contain;
+  width: 100%;
+}
