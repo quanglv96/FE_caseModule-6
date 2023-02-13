@@ -14,8 +14,8 @@ export class LibraryComponent implements OnInit {
   user: User | any;
   avatar:any;
   username:any
+  btn_add:boolean=true;
   ngOnInit(): void {
-    localStorage.setItem('idUser', '1')
     this.idUser = localStorage.getItem('idUser')
     this.userService.findById(this.idUser).subscribe((data:User)=>{
       this.user=data;
@@ -35,7 +35,9 @@ export class LibraryComponent implements OnInit {
       }
     )
   }
-
+buttonADD(){
+  this.btn_add=false
+}
   toAddForm() {
     console.log(this.childPath)
     if (this.childPath === 'song') {

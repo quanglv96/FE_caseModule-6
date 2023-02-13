@@ -12,8 +12,10 @@ import {HomeComponent} from "./home/home.component";
 import {SongFormComponent} from "./library/song-item/song-form/song-form.component";
 import {PlaylistFormComponent} from "./library/playlist-item/playlist-form/playlist-form.component";
 import {TrendingComponent} from "./trending/trending.component";
+import {HeaderComponent} from "./header/header.component";
 
 const routes: Routes = [
+  {path:'header',component: HeaderComponent,pathMatch:"full"},
   {path: 'auth', component: AuthComponent},
   {path:'search/:textSearch',component:SearchComponent, pathMatch:"full"},
   {path: 'auth', component: AuthComponent},

@@ -22,8 +22,8 @@
       <div class="col-20 mb-4" *ngFor="let song of songs">
         <div class="item">
           <img class="fit-image" src="/assets/song.jfif" alt="">
-          <p class="m-0 item-title">Song name</p>
-          <p class="m-0 item-description font-12 grey-text">Upload user</p>
+          <p class="m-0 item-title" >{{song.name}}</p>
+          <p class="m-0 item-description font-12 grey-text">{{song.users?.username}}</p>
         </div>
       </div>
     </div>
