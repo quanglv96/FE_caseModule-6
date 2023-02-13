@@ -11,4 +11,7 @@ export class SongsService {
   findSongByUser(id:number){
     return this.http.get(`${API_URL}/songs/listSongsByUser/${id}`)
   }
+  listNewSongsByDate(){
+    return this.http.get(`${API_URL}/songs/listNewSongs`)
+  }
 }
