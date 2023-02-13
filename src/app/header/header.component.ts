@@ -13,14 +13,14 @@ export class HeaderComponent implements OnInit{
   avatar=""
   @Input() textSearch: string | any
 
-  constructor(private route: Router, private userService:UserService) {
+  constructor(private router: Router, private userService:UserService) {
   }
 
   routeSearch() {
     if (this.textSearch == undefined) {
       this.textSearch = '';
     }
-    return this.route.navigateByUrl(`search/${this.textSearch}`)
+    return this.router.navigateByUrl(`search/${this.textSearch}`)
   }
 
   ngOnInit(): void {
@@ -28,11 +28,11 @@ export class HeaderComponent implements OnInit{
       this.userService.findById(localStorage.getItem('idUser')).subscribe((data:User)=>{
         this.user=data
       })
-
     }
   }
 
   logOut() {
     localStorage.removeItem('idUser');
+    return this.router.navigateByUrl('')
   }
 }

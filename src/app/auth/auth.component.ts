@@ -4,7 +4,6 @@ import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {Router} from "@angular/router";
 import {Location} from "@angular/common";
-const header = () => import('../header/header.component').then(m => m.HeaderComponent);
 
 @Component({
   selector: 'app-auth',
@@ -108,6 +107,7 @@ export class AuthComponent implements OnInit {
       })
     }
   }
+
   onLogin() {
     if (!this.loginForm.valid) {
       Object.keys(this.loginForm.controls).forEach(field => {
@@ -118,7 +118,6 @@ export class AuthComponent implements OnInit {
       this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe(data => {
         localStorage.setItem('idUser', data.id)
         alert("Login Successful")
-        header().then(m=>m.prototype.ngOnInit())
         return this.router.navigateByUrl('')
       }, (error: any) => {
         console.log(error)
