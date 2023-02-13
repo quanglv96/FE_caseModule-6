@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit{
 
   ngOnInit(): void {
     // @ts-ignore
-    this.songService.listNewSongsByDate().subscribe((data: Songs[]) => {
+    this.songService.listTop10SongsTrending().subscribe((data: Songs[]) => {
       this.songs = data;
     })
   }
