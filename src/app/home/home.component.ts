@@ -37,7 +37,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.router.navigateByUrl('header')
     // @ts-ignore
     this.songService.listTop10SongsTrending().subscribe((data: Songs[]) => {
       this.songs = data;

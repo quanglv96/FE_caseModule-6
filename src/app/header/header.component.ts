@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
+import * as path from "path";
 
 @Component({
   selector: 'app-header',
@@ -33,6 +34,6 @@ export class HeaderComponent implements OnInit{
 
   logOut() {
     localStorage.removeItem('idUser');
-    return this.router.navigateByUrl('')
+    return this.router.navigateByUrl('/')
   }
 }
