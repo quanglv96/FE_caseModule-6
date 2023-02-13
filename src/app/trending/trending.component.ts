@@ -1,21 +1,47 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Songs} from "../model/Songs";
+import {OwlOptions} from "ngx-owl-carousel-o";
+import * as $ from 'jquery'
+import {SongsService} from "../service/songs/songs.service";
+import {Playlist} from "../model/Playlist";
+import {PlaylistService} from "../service/playlist/playlist.service";
 
 @Component({
   selector: 'app-trending',
   templateUrl: './trending.component.html',
   styleUrls: ['./trending.component.css']
 })
-export class TrendingComponent {
-  slideConfig = {"slidesToShow": 4, "slidesToScroll": 4};
+export class TrendingComponent implements OnInit {
+  topSongs: Songs[] = []
+  newSongs: Songs[] = []
+  topPlaylists: Playlist[] = []
+  newPlaylists: Playlist[] = []
 
-  slides = [
-    {img: "https://dummyimage.com/350x150/423b42/fff"},
-    {img: "https://dummyimage.com/350x150/2a2b7a/fff"},
-    {img: "https://dummyimage.com/350x150/1a2b7a/fff"},
-    {img: "https://dummyimage.com/350x150/7a2b7a/fff"},
-    {img: "https://dummyimage.com/350x150/9a2b7a/fff"},
-    {img: "https://dummyimage.com/350x150/5a2b7a/fff"},
-    {img: "https://dummyimage.com/350x150/4a2b7a/fff"}
-  ];
+  constructor(private songService: SongsService,
+              private playlistService: PlaylistService) {
 
+  }
+
+  ngOnInit() {
+    this.songService.getTopSongs().subscribe(
+      data => {
+        this.topSongs = data;
+      }
+    )
+    this.songService.getNewSongs().subscribe(
+      data => {
+        this.newSongs = data;
+      }
+    )
+    this.playlistService.getTopPlaylist().subscribe(
+      data => {
+        this.topPlaylists = data;
+      }
+    )
+    this.playlistService.getNewPlaylist().subscribe(
+      data => {
+        this.newPlaylists = data;
+      }
+    )
+  }
 }

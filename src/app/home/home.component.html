@@ -1,16 +1,11 @@
 <div class="container-fluid p-0 slider">
-<!--  <c-carousel [interval]="3000" transition="slide">-->
-<!--    <c-carousel-inner>-->
-<!--      <c-carousel-item *ngFor="let slide of slides">-->
-<!--        <img-->
-<!--          [src]="slide"-->
-<!--          alt="{{slide}}"-->
-<!--          class="d-block w-100"-->
-<!--          loading="lazy"-->
-<!--        />-->
-<!--      </c-carousel-item>-->
-<!--    </c-carousel-inner>-->
-<!--  </c-carousel>-->
+  <owl-carousel-o [options]="options">
+    <ng-container *ngFor="let s of slides">
+      <ng-template carouselSlide>
+        <img [src]="s">
+      </ng-template>
+    </ng-container>
+  </owl-carousel-o>
 </div>
 <div class="container">
   <div class="text-center my-5">

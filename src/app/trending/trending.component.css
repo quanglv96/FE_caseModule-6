@@ -1,33 +1,10 @@
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
-
-.slider-area {
-  position: relative;
+.header {
+  letter-spacing: 3px;
+  font-size: 25px;
+  font-weight: 400;
 }
 
-.arrow {
-  width: 30px;
-  height: 30px;
-  border: 0.5px solid #a9a9a9;
-  background-color: white;
-  border-radius: 2px;
-  opacity: 70%;
-  position: absolute;
-  z-index: 1;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.arrow:hover {
-  border: 0.5px solid rgb(255, 85, 0);
-  color: rgb(255, 85, 0);
-}
-
-.prev-arrow {
-  left: 0;
-  transform: translateX(25%);
-}
-
-.next-arrow {
-  right: 0;
-  transform: translateX(-25%);
+.mobile-app {
+  object-fit: contain;
+  width: 100%;
 }

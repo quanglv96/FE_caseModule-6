@@ -30,10 +30,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "bootstrap": "^5.2.3",
     "jquery": "^3.6.3",
-    "ngx-slick-carousel": "^15.0.0",
+    "ngx-owl-carousel-o": "^15.0.0",
     "rxjs": "~7.8.0",
-    "slick-carousel": "^1.8.1",
-    "swiper": "^8.4.7",
     "tslib": "^2.3.0",
     "typeface-muli": "^1.1.13",
     "zone.js": "~0.12.0"

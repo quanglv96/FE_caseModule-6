@@ -2,26 +2,41 @@
   <div class="container body">
     <div class="row pt-4">
       <div class="col-9">
-
-        <div class="slider-area p-4">
-          <h2 class="slider-header">Top 10 song</h2>
-          <div class="slider-body">
-            <div class="trending-song">
-              <div class="item-contain col col-3">  <!-- ngFor here -->
-                <div class="item-img">
-                  <img class="fit-image" src="/assets/song.jfif" alt="">
-                  <p class="m-0 item-title text-start">Song name</p>
-                  <p class="m-0 item-description font-12 grey-text text-start">Song username</p>
-                </div>
-              </div>
-            </div>
-            <button class="prev-arrow arrow"><i class="fa-solid fa-angle-left"></i></button>
-            <button class="next-arrow arrow"><i class="fa-solid fa-angle-right"></i></button>
-          </div>
+        <div class="mx-4">
+          <h2 class="header">Discover what is new in community:</h2>
         </div>
-
+        <hr class="mx-4 my-0">
+        <app-discovery-item [navClass]="'top-song'" [title]="'Top 10 song:'" [items]="topSongs"></app-discovery-item>
+        <hr class="mx-4 my-0">
+        <app-discovery-item [navClass]="'new-song'" [title]="'New 10 song:'" [items]="newSongs"></app-discovery-item>
+        <hr class="mx-4 my-0">
+        <app-discovery-item [navClass]="'top-playlist'" [title]="'Top 10 playlist:'" [items]="topPlaylists"></app-discovery-item>
+        <hr class="mx-4 my-0">
+        <app-discovery-item [navClass]="'new-playlist'" [title]="'New 10 playlist:'" [items]="newPlaylists"></app-discovery-item>
       </div>
-      <div class="col-3 border-start"></div>
+      <div class="col-3 border-start">
+        <div class="row px-2">
+          <div class="col-12">
+            <p class="m-0 mb-3 font-16">Get it on mobile:</p>
+          </div>
+          <div class="mt-2 d-flex">
+            <div class="me-4" style="width: 48%">
+              <img class="mobile-app pointer" src="/assets/google-play.jpg" alt="">
+            </div>
+            <div style="width: 48%">
+              <img class="mobile-app pointer" src="/assets/apple-store.jpg" alt="">
+            </div>
+          </div>
+          <div class="col-12">
+            <hr class="my-4">
+            <div style="width: 100%">
+              <img class="mb-4" style="width: 100%; object-fit: contain" src="/assets/Banner%201.jpg" alt="">
+              <img style="width: 100%; object-fit: contain" src="/assets/Banner%202.jpg" alt="">
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
   </div>
 </div>

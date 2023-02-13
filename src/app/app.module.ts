@@ -23,12 +23,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { SongItemComponent } from './library/song-item/song-item.component';
 import { PlaylistItemComponent } from './library/playlist-item/playlist-item.component';
 import { HomeComponent } from "./home/home.component";
-import { CarouselModule } from "@coreui/angular";
 import { FooterComponent } from './footer/footer.component';
 import { SongFormComponent } from './library/song-item/song-form/song-form.component';
 import { PlaylistFormComponent } from './library/playlist-item/playlist-form/playlist-form.component';
 import { TrendingComponent } from './trending/trending.component';
-import {SwiperModule} from "swiper/angular";
+import { CarouselModule } from "ngx-owl-carousel-o";
+import { DiscoveryItemComponent } from './trending/discovery-item/discovery-item.component';
+
 
 @NgModule({
   declarations: [
@@ -51,20 +52,20 @@ import {SwiperModule} from "swiper/angular";
     FooterComponent,
     SongFormComponent,
     PlaylistFormComponent,
-    TrendingComponent
+    TrendingComponent,
+    DiscoveryItemComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FontAwesomeModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    CarouselModule,
-    SwiperModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FontAwesomeModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        CarouselModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

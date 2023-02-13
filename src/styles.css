@@ -65,3 +65,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: white;
   padding-bottom: 30px;
 }
+
+.short-paragraph {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

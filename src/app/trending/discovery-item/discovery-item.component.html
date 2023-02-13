@@ -1,0 +1,22 @@
+<div class="slider-area px-4 py-3">
+  <h2 class="slider-header">{{ title }}</h2>
+  <div class="slider-body">
+    <div class="{{ navClass }}">
+      <owl-carousel-o [options]="customOptions">
+        <ng-container *ngFor="let item of items">
+          <ng-template carouselSlide>
+            <img class="fit-image" src="assets/song.jfif" alt="">
+            <p class="m-0 text-start short-paragraph">{{ item['name'] }}</p>
+            <p class="m-0 font-12 grey-text text-start">{{ item['users']['username'] }}</p>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+    <button (click)="prev('.' + navClass + ' .owl-prev')" class="prev-arrow arrow">
+      <i class="fa-solid fa-angle-left"></i>
+    </button>
+    <button (click)="next('.' + navClass + ' .owl-next')" class="next-arrow arrow">
+      <i class="fa-solid fa-angle-right"></i>
+    </button>
+  </div>
+</div>
