@@ -11,6 +11,5 @@ export class HomeComponent {
     '/assets/Untitled-2.jpg',
     '/assets/Untitled-3.jpg'
   ];
-
   songs = new Array(10)
 }

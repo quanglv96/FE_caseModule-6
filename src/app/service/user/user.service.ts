@@ -35,7 +35,7 @@ export class UserService {
     return this.http.get(`${API_URL}/users/${id}`)
   }
 
-  findById(id: number): Observable<User> {
+  findById(id: string | null): Observable<User> {
     return this.http.get(`${API_URL}/users/${id}`)
   }
 
