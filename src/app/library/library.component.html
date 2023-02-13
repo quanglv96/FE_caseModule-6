@@ -16,10 +16,10 @@
       <div class="col-12 px-4">
         <div class="library-tab d-flex justify-content-between align-items-center">
           <div class="tab">
-            <span class="tab-item me-3" routerLink="song" routerLinkActive="active">Track</span>
-            <span class="tab-item" routerLink="playlist" routerLinkActive="active">Playlist</span>
+            <span class="tab-item me-3" routerLink="song" routerLinkActive="active" (click)="buttonADD()">Track</span>
+            <span class="tab-item" routerLink="playlist" routerLinkActive="active" (click)="buttonADD()">Playlist</span>
           </div>
-          <div class="add-button font-14" (click)="toAddForm()"><i class="fa-solid fa-plus"></i> Add</div>
+          <div [hidden]="btn_add" class="add-button font-14" (click)="toAddForm()"><i class="fa-solid fa-plus"></i> Add</div>
         </div>
       </div>
     </div>

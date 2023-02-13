@@ -18,13 +18,12 @@ export class HomeComponent implements OnInit {
 
   songs: Songs[] = []
 
-
-  constructor(private songService: SongsService, private router:Router) {
+  constructor(private songService: SongsService, private router: Router) {
 
   }
 
   ngOnInit(): void {
-    this.router.navigateByUrl('header')
+      this.router.navigateByUrl('header')
     // @ts-ignore
     this.songService.listNewSongsByDate().subscribe((data: Songs[]) => {
       this.songs = data;
