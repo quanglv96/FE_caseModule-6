@@ -40,9 +40,12 @@ import { provideMessaging,getMessaging } from '@angular/fire/messaging';
 import { providePerformance,getPerformance } from '@angular/fire/performance';
 import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
 import { provideStorage,getStorage } from '@angular/fire/storage';
-import {FileUploadService} from "./service/file-upload.service";
-
-
+import { FileUploadService } from "./service/file-upload.service";
+import {AngularFireModule} from "@angular/fire/compat";
+import {AngularFireStorageModule} from "@angular/fire/compat/storage";
+import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
+import { SongComponent } from './song/song.component';
+import { PlaylistComponent } from './playlist/playlist.component';
 
 @NgModule({
   declarations: [
@@ -67,28 +70,33 @@ import {FileUploadService} from "./service/file-upload.service";
     PlaylistFormComponent,
     TrendingComponent,
     DiscoveryItemComponent,
+    SongComponent,
+    PlaylistComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        FontAwesomeModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatIconModule,
-        CarouselModule,
-        provideFirebaseApp(() => initializeApp(environment.firebase)),
-        provideAnalytics(() => getAnalytics()),
-        provideAuth(() => getAuth()),
-        provideDatabase(() => getDatabase()),
-        provideFirestore(() => getFirestore()),
-        provideFunctions(() => getFunctions()),
-        provideMessaging(() => getMessaging()),
-        providePerformance(() => getPerformance()),
-        provideRemoteConfig(() => getRemoteConfig()),
-        provideStorage(() => getStorage())
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatIconModule,
+    CarouselModule,
+    AngularFireStorageModule,
+    AngularFireDatabaseModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    // provideFirebaseApp(() => initializeApp(environment.firebase)),
+    // provideAnalytics(() => getAnalytics()),
+    // provideAuth(() => getAuth()),
+    // provideDatabase(() => getDatabase()),
+    // provideFirestore(() => getFirestore()),
+    // provideFunctions(() => getFunctions()),
+    // provideMessaging(() => getMessaging()),
+    // providePerformance(() => getPerformance()),
+    // provideRemoteConfig(() => getRemoteConfig()),
+    // provideStorage(() => getStorage())
+  ],
   providers: [
     ScreenTrackingService,UserTrackingService, FileUploadService
   ],

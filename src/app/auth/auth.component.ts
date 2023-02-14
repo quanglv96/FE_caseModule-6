@@ -5,6 +5,7 @@ import {User} from "../model/User";
 import {Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {DataService} from "../service/data/data.service";
+import SwAl from 'sweetalert2'
 
 @Component({
   selector: 'app-auth',
@@ -101,11 +102,36 @@ export class AuthComponent implements OnInit {
     } else {
       this.user = this.registerForm.value
       this.userService.register(this.user).subscribe(data => {
-        alert("dang ky thanh cong")
-        this.switchToLogin()
-        this.loginForm.patchValue(data)
+        SwAl.fire({
+          title: 'Register successfully',
+          icon: "success",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'success-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then(
+          () => {
+            this.switchToLogin()
+            this.loginForm.patchValue(data)
+          }
+        )
       }, error => {
-        alert("tai khoan da ton tai")
+        SwAl.fire({
+          title: 'Account already exist',
+          icon: "error",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then()
       })
     }
   }
@@ -120,11 +146,35 @@ export class AuthComponent implements OnInit {
       this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe(data => {
         localStorage.setItem('idUser', data.id)
         this.dataService.changeMessage('oke r')
-        alert("Login Successful")
-        return this.router.navigateByUrl('')
+        SwAl.fire({
+          title: 'Login successfully',
+          icon: "success",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'success-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then(
+          () => {
+            return this.router.navigateByUrl('/trending')
+          }
+        )
       }, (error: any) => {
-        console.log(error)
-        alert(error['error']);
+        SwAl.fire({
+          title: error['error'].content,
+          icon: "error",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then()
       })
     }
   }

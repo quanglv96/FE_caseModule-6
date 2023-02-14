@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-user-info',
@@ -12,7 +13,8 @@ export class UserInfoComponent implements OnInit{
   user: User| any;
    name:any;
    username: string='';
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+              private location: Location) {
   }
   ngOnInit(): void {
     this.idUser = localStorage.getItem("idUser");
@@ -30,4 +32,7 @@ export class UserInfoComponent implements OnInit{
     )
   }
 
+  back() {
+    this.location.back();
+  }
 }
