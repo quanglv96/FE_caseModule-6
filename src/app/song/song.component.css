@@ -33,10 +33,6 @@
   width: 100%;
 }
 
-#audio-wave > wave > wave {
-  border: none !important;
-}
-
 .input-container {
   background-color: #f2f2f2;
 }
@@ -96,4 +92,8 @@
 
 .random-songs {
   height: 100%;
+}
+
+#waveform {
+  padding: 0 4px;
 }

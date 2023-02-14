@@ -46,6 +46,7 @@ import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
 import { SongComponent } from './song/song.component';
 import { PlaylistComponent } from './playlist/playlist.component';
+import { NgxWavesurferModule, NgxWavesurferService } from "ngx-wavesurfer";
 
 @NgModule({
   declarations: [
@@ -98,7 +99,7 @@ import { PlaylistComponent } from './playlist/playlist.component';
     // provideStorage(() => getStorage())
   ],
   providers: [
-    ScreenTrackingService,UserTrackingService, FileUploadService
+    ScreenTrackingService,UserTrackingService, FileUploadService, NgxWavesurferService
   ],
   bootstrap: [AppComponent]
 })
