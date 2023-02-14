@@ -12,15 +12,17 @@ export class UserInfoComponent implements OnInit{
   user: User| any;
    name:any;
    username: string='';
+   avatar: string ='';
   constructor(private userService: UserService) {
   }
   ngOnInit(): void {
     this.idUser = localStorage.getItem("idUser");
     this.userService.getUser(this.idUser).subscribe(data => {
       this.user = data;
+      console.log(this.user)
       this.name=this.user.name
       this.username=this.user.username;
-
+      this.avatar = this.user.avatar
     })
     this.userService.userChange.subscribe(
       data => {
