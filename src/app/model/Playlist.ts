@@ -11,7 +11,7 @@ export interface Playlist{
   dateCreate?:Date;
   lastUpdate?:Date;
   users?:User;
-  songList?:Songs[]
+  songsList?:Songs[]
   tagsList?:Tags[];
   views?:number;
   userLikesPlaylist?:User[];
