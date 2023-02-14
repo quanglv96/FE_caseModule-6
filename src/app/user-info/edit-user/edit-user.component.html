@@ -2,13 +2,13 @@
   <div class="input-section row px-3">
     <div class="input-left col col-4">
       <div class="user-image">
-        <img class="fit-image" [src]="!!editImage ? editImage : '/assets/avt-default.png'" alt="">
+        <img class="fit-image" [src]="getImage()" alt="">
         <button class="pick-image p-1" type="button" (click)="openUpload('.image-input')">
           <span class="py-2 px-2">
             <i class="me-1 fa-solid fa-camera"></i>
             <span class="font-14">Upload image</span>
           </span>
-          <input (change)="renderImagePath($event)" class="image-input" type="file"
+          <input #userAvatar (change)="renderImagePath($event)" class="image-input" type="file"
                  hidden formControlName="avatar">
         </button>
       </div>

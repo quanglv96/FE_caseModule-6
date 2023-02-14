@@ -93,7 +93,7 @@ export class ChangePasswordComponent implements OnInit {
             alert("nhap mat khau sai 3 lan, moi ban dang nhap lai")
             this.router.navigateByUrl("/auth")
           }else {
-            alert('mat khau khong dung')
+            alert('mat khau khong dung ' )
           }
 
         }

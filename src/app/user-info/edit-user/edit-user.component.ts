@@ -1,9 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import * as $ from 'jquery'
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {User} from "../../model/User";
 import {UserService} from "../../service/user/user.service";
 import {Router} from "@angular/router";
+import {FileUploadService} from "../../service/file-upload.service";
+import * as url from "url";
 
 
 @Component({
@@ -12,22 +14,24 @@ import {Router} from "@angular/router";
   styleUrls: ['./edit-user.component.css']
 })
 export class EditUserComponent implements OnInit {
-  editImage: string | ArrayBuffer | null = ''
+  editImage?: string | ArrayBuffer | null;
   user: any | User;
   idUser: number | any;
+  avatar!: any;
+  @ViewChild('userAvatar') userAvatar?: ElementRef
+
 
   userForm = this.formBuilder.group({
-    username: [''],
     name: ['', {validators: Validators.required, updateOn: 'blur'}],
     email: ['', {validators: [Validators.required, Validators.email], updateOn: 'blur'}],
     address: [''],
     phone: ['', {validators: [Validators.required, this.phoneValidator.bind(this)], updateOn: 'blur'}],
-    avatar: ['']
   });
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
-              private router: Router) {
+              private router: Router,
+              private fileUpload: FileUploadService) {
   }
 
   openUpload(s: string) {
@@ -53,11 +57,23 @@ export class EditUserComponent implements OnInit {
       });
     } else {
       this.user = this.userForm.value as User
-      this.userService.updateUser(this.idUser, this.user).subscribe((data) => {
-        this.userService.userChange.emit(data)
-        this.router.navigateByUrl('user-info')
-        alert("change succses")
-      })
+      let files = this.userAvatar?.nativeElement.files
+      if (files == null) {
+        files = 'assets/avt-default.png'
+      } else {
+        this.fileUpload.pushFileToStorage('image/users', files[0]).subscribe(
+          url => {
+            this.user.avatar = url
+            // update user len db
+            this.userService.updateUser(this.idUser, this.user).subscribe((data) => {
+              this.userService.userChange.emit(data)
+              alert("Change success")
+              this.userService.getUser(this.idUser).subscribe((data) => {
+                this.user = data;
+              });
+            })
+          })
+      }
     }
   }
 
@@ -94,5 +110,10 @@ export class EditUserComponent implements OnInit {
         this.user = data;
       }
     )
+  }
+
+  getImage() {
+    let image = !!this.user.avatar ? this.user.avatar : 'assets/avt-default.png'
+    return !!this.editImage ? this.editImage : image;
   }
 }

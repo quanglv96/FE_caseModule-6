@@ -11,23 +11,27 @@ import {Location} from "@angular/common";
 export class UserInfoComponent implements OnInit{
   idUser: number|any;
   user: User| any;
-   name:any;
-   username: string='';
+  name:any;
+  username: string='';
+  avatar: string = '';
   constructor(private userService: UserService,
               private location: Location) {
   }
+
   ngOnInit(): void {
     this.idUser = localStorage.getItem("idUser");
     this.userService.getUser(this.idUser).subscribe(data => {
       this.user = data;
-      this.name=this.user.name
-      this.username=this.user.username;
-
+      console.log(this.user)
+      this.name = this.user.name
+      this.username = this.user.username;
+      this.avatar = this.user.avatar
     })
     this.userService.userChange.subscribe(
       data => {
         this.user = data
         this.name = data.name
+        console.log(data)
       }
     )
   }
