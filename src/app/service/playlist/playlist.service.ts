@@ -28,4 +28,13 @@ export class PlaylistService {
   getPlaylistByUser(id: number) {
     return this.http.get<Playlist[]>(`${API_URL}/playlist/findPlaylistByUser/${id}`)
   }
+  deletePlaylist(idPlaylist:number){
+    return this.http.delete<Playlist>(`${API_URL}/playlist/${idPlaylist}`)
+  }
+  findPlaylistById(idPlaylist:number){
+    return this.http.get<Playlist>(`${API_URL}/playlist/${idPlaylist}`)
+  }
+  updatePlaylist(idPlaylist:number, playlist:Playlist){
+    return this.http.put<Playlist>(`${API_URL}/playlist/${idPlaylist}`,playlist)
+  }
 }
