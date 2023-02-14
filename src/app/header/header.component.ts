@@ -32,6 +32,11 @@ export class HeaderComponent implements OnInit{
         })
       }
     })
+    this.userService.userChange.subscribe(
+      data => {
+        this.user = data;
+      }
+    )
 
   }
 

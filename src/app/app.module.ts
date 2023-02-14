@@ -41,6 +41,9 @@ import { providePerformance,getPerformance } from '@angular/fire/performance';
 import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import {FileUploadService} from "./service/file-upload.service";
+import {AngularFireModule} from "@angular/fire/compat";
+import {AngularFireStorageModule} from "@angular/fire/compat/storage";
+import {AngularFireDatabase, AngularFireDatabaseModule} from "@angular/fire/compat/database";
 
 
 
@@ -78,16 +81,11 @@ import {FileUploadService} from "./service/file-upload.service";
         BrowserAnimationsModule,
         MatIconModule,
         CarouselModule,
-        provideFirebaseApp(() => initializeApp(environment.firebase)),
-        provideAnalytics(() => getAnalytics()),
-        provideAuth(() => getAuth()),
-        provideDatabase(() => getDatabase()),
-        provideFirestore(() => getFirestore()),
-        provideFunctions(() => getFunctions()),
-        provideMessaging(() => getMessaging()),
-        providePerformance(() => getPerformance()),
-        provideRemoteConfig(() => getRemoteConfig()),
-        provideStorage(() => getStorage())
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireStorageModule,
+        AngularFireDatabaseModule,
+        // provideFirebaseApp(() => initializeApp(environment.firebase)),
+        //
     ],
   providers: [
     ScreenTrackingService,UserTrackingService, FileUploadService
