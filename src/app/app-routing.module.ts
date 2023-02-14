@@ -12,6 +12,8 @@ import {HomeComponent} from "./home/home.component";
 import {SongFormComponent} from "./library/song-item/song-form/song-form.component";
 import {PlaylistFormComponent} from "./library/playlist-item/playlist-form/playlist-form.component";
 import {TrendingComponent} from "./trending/trending.component";
+import {SongComponent} from "./song/song.component";
+import {PlaylistComponent} from "./playlist/playlist.component";
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent},
@@ -32,6 +34,8 @@ const routes: Routes = [
       ]}
   ]},
   {path: 'trending', component: TrendingComponent},
+  {path: 'song/:id', component: SongComponent},
+  {path: 'playlist/:id', component: PlaylistComponent},
   {path: '', component: HomeComponent, pathMatch: 'full'}
 ];
 

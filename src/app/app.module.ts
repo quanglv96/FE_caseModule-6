@@ -31,12 +31,13 @@ import {CarouselModule} from "ngx-owl-carousel-o";
 import {DiscoveryItemComponent} from "./trending/discovery-item/discovery-item.component";
 import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
 import {environment} from '../environments/environment';
-import { ScreenTrackingService, UserTrackingService} from '@angular/fire/analytics';
+import {ScreenTrackingService, UserTrackingService} from '@angular/fire/analytics';
 import {FileUploadService} from "./service/file-upload.service";
 import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {AngularFireModule} from "@angular/fire/compat";
 import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
-
+import {SongComponent} from './song/song.component';
+import {PlaylistComponent} from './playlist/playlist.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,8 @@ import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
     PlaylistFormComponent,
     TrendingComponent,
     DiscoveryItemComponent,
+    SongComponent,
+    PlaylistComponent,
   ],
   imports: [
     BrowserModule,

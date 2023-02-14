@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-user-info',
@@ -16,6 +17,14 @@ export class UserInfoComponent implements OnInit {
 
   constructor(private userService: UserService,
               private dataService:DataService) {
+export class UserInfoComponent implements OnInit{
+  idUser: number|any;
+  user: User| any;
+  name:any;
+  username: string='';
+  avatar: string = '';
+  constructor(private userService: UserService,
+              private location: Location) {
   }
 
   ngOnInit(): void {
@@ -28,5 +37,9 @@ export class UserInfoComponent implements OnInit {
 
       })
     })
+  }
+
+  back() {
+    this.location.back();
   }
 }

@@ -1,4 +1,5 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+/*@import "src/sweet-alert-custom.css";*/
 
 .lib-top {
   background-image: linear-gradient(315deg, rgb(119, 100, 102) 0%, rgb(246, 185, 174) 100%);
@@ -63,4 +64,8 @@
 .mobile-app {
   object-fit: contain;
   width: 100%;
+}
+
+.popup-mess {
+  border-radius: 0 !important;
 }

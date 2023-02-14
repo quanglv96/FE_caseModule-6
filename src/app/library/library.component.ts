@@ -3,6 +3,7 @@ import {NavigationEnd, Router} from "@angular/router";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
+import SwAl from 'sweetalert2'
 
 @Component({
   selector: 'app-library',
@@ -33,6 +34,12 @@ export class LibraryComponent implements OnInit {
     })
       }
 
+  option = {
+    customClass: {
+      popup: '.popup',
+    }
+  }
+
   constructor(private router: Router,
               private userService: UserService,
               private dataService:DataService) {
@@ -52,5 +59,27 @@ export class LibraryComponent implements OnInit {
     } else if (this.childPath === 'playlist') {
       this.router.navigate(['/library/playlist/new']).finally()
     }
+  }
+
+  test() {
+
+    SwAl.fire({
+      title: 'Register successfully',
+      iconHtml: '<img style="width: 50px; height: 50px" src="https://icons.veryicon.com/png/o/miscellaneous/batch-editor/success-38.png">',
+      showConfirmButton: true,
+      showCloseButton: true,
+      customClass: {
+        icon: 'icon',
+        actions: 'action',
+        title: 'success-message',
+        popup: 'popup',
+        confirmButton: 'confirm-btn',
+        closeButton: 'close-btn'
+      }
+    }).then(
+      () => {
+        this.router.navigate(['/']).finally()
+      }
+    )
   }
 }
