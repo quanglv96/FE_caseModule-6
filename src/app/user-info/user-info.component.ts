@@ -14,26 +14,20 @@ export class UserInfoComponent implements OnInit {
   user: User | any;
   name: any;
   username: string = '';
+  avatar: string = '';
 
   constructor(private userService: UserService,
-              private dataService:DataService) {
-export class UserInfoComponent implements OnInit{
-  idUser: number|any;
-  user: User| any;
-  name:any;
-  username: string='';
-  avatar: string = '';
-  constructor(private userService: UserService,
-              private location: Location) {
+              private location: Location, private dataService: DataService) {
   }
 
   ngOnInit(): void {
-    this.dataService.currentMessage.subscribe(()=>{
+    this.dataService.currentMessage.subscribe(() => {
       this.idUser = localStorage.getItem("idUser");
       this.userService.getUser(this.idUser).subscribe(data => {
         this.user = data;
         this.name = this.user.name
         this.username = this.user.username;
+        this.avatar=this.user.avatar;
 
       })
     })
