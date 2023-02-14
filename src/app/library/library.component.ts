@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from "@angular/router";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-library',
@@ -14,18 +15,27 @@ export class LibraryComponent implements OnInit {
   user: User | any;
   avatar:any;
   username:any
-  btn_add:boolean=true;
+  countSongsByUser: any;
+  countPlaylistByUser: any;
   ngOnInit(): void {
-    this.idUser = localStorage.getItem('idUser')
-    this.userService.findById(this.idUser).subscribe((data:User)=>{
-      this.user=data;
-      this.avatar=this.user.avatar
-      this.username=this.user.username
-    });
-  }
+    this.dataService.currentMessage.subscribe(()=>{
+      this.idUser = localStorage.getItem('idUser');
+      this.userService.findById(this.idUser).subscribe((data:User)=>{
+        this.user=data;
+        this.avatar=this.user.avatar
+        this.username=this.user.username
+        // @ts-ignore
+        this.userService.countByUser(this.idUser).subscribe((data:number[])=>{
+          this.countPlaylistByUser=data[0];
+          this.countSongsByUser=data[1];
+        })
+      });
+    })
+      }
 
   constructor(private router: Router,
-              private userService: UserService) {
+              private userService: UserService,
+              private dataService:DataService) {
     router.events.subscribe(
       event => {
         if (event instanceof NavigationEnd) {
@@ -35,9 +45,6 @@ export class LibraryComponent implements OnInit {
       }
     )
   }
-buttonADD(){
-  this.btn_add=false
-}
   toAddForm() {
     console.log(this.childPath)
     if (this.childPath === 'song') {

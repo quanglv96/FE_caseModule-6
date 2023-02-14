@@ -36,6 +36,6 @@
   <div class="text-center mb-4">
     <h2 style="font-weight: 400">Thanks for listening. Now join in.</h2>
     <h4 style="font-weight: 300">Save tracks, follow artists and build playlists. All for free.</h4>
-    <button class="create-btn" routerLink="/auth">Create account / Sign in</button>
+    <button class="create-btn" routerLink="/auth" [hidden]="statusLogin">Create account / Sign in</button>
   </div>
 </div>

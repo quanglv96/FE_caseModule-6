@@ -1,11 +1,10 @@
-import { OwlOptions } from "ngx-owl-carousel-o";
+import {OwlOptions} from "ngx-owl-carousel-o";
 import {Component, OnInit} from '@angular/core';
 import {SongsService} from "../service/songs/songs.service";
 
 import {Songs} from "../model/Songs";
 import {Router} from "@angular/router";
-import { DataService } from "../service/data/data.service";
-import {UserService} from "../service/user/user.service";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-home',
@@ -33,18 +32,27 @@ export class HomeComponent implements OnInit {
   }
 
   songs: Songs[] = []
+  statusLogin: boolean=false;
 
-  constructor(private songService: SongsService, private router: Router) {
+  constructor(private songService: SongsService, private dataService:DataService) {
 
   }
 
   ngOnInit(): void {
-    // @ts-ignore
-    this.songService.listTop10SongsTrending().subscribe((data: Songs[]) => {
-      this.songs = data;
+    this.dataService.currentMessage.subscribe(data=>{
+      if(localStorage.getItem('idUser')){
+        this.statusLogin=true;
+      }
+      if(data=="log out"){
+        this.statusLogin=false;
+      }
+      // @ts-ignore
+      this.songService.listTop10SongsTrending().subscribe((data: Songs[]) => {
+        this.songs = data;
+
+      })
     })
   }
-
 
 
 }

@@ -24,7 +24,7 @@ const routes: Routes = [
   {path: 'library', component: LibraryComponent, children: [
       {path: 'song', component: SongItemComponent, children: [
           {path: 'new', component: SongFormComponent},
-          {path: 'edit/:id', component: SongFormComponent}
+          {path: 'edit/:idSong', component: SongFormComponent}
       ]},
       {path: 'playlist', component: PlaylistItemComponent, children: [
           {path: 'new', component: PlaylistFormComponent},

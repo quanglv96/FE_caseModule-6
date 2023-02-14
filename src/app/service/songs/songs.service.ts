@@ -23,4 +23,10 @@ export class SongsService {
   listTop10SongsTrending(){
     return this.http.get(`${API_URL}/songs/listTop10SongsTrending`)
   }
+  saveCreate(song:Songs){
+    return this.http.post(`${API_URL}/songs`,song)
+  }
+  deleteSong(idSong:number){
+    return  this.http.delete(`${API_URL}/songs/${idSong}`)
+  }
 }

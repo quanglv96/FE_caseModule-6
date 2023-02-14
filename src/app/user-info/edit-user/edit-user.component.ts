@@ -6,6 +6,7 @@ import {UserService} from "../../service/user/user.service";
 import {Router} from "@angular/router";
 import {FileUploadService} from "../../service/file-upload.service";
 import * as url from "url";
+import {DataService} from "../../service/data/data.service";
 
 
 @Component({
@@ -31,7 +32,8 @@ export class EditUserComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private router: Router,
-              private fileUpload: FileUploadService) {
+              private fileUpload: FileUploadService,
+              private dataService:DataService) {
   }
 
   openUpload(s: string) {
@@ -48,7 +50,16 @@ export class EditUserComponent implements OnInit {
       reader.readAsDataURL(files[0])
     }
   }
-
+  ngOnInit(): void {
+    this.dataService.currentMessage.subscribe(()=>{
+      this.idUser = localStorage.getItem("idUser");
+      this.userService.findById(this.idUser).subscribe(data => {
+        this.user = data;
+        this.getImage()
+        this.userForm.patchValue(this.user);
+      })
+    })
+  }
   saveChange() {
     if (!this.userForm.valid) {
       Object.keys(this.userForm.controls).forEach(field => {
@@ -57,22 +68,47 @@ export class EditUserComponent implements OnInit {
       });
     } else {
       this.user = this.userForm.value as User
-      let files = this.userAvatar?.nativeElement.files
-      if (files == null) {
-        files = 'assets/avt-default.png'
-      } else {
-        this.fileUpload.pushFileToStorage('image/users', files[0]).subscribe(
-          url => {
-            this.user.avatar = url
-            // update user len db
-            this.userService.updateUser(this.idUser, this.user).subscribe((data) => {
-              this.userService.userChange.emit(data)
-              alert("Change success")
-              this.userService.getUser(this.idUser).subscribe((data) => {
-                this.user = data;
-              });
+      let files = this.userAvatar?.nativeElement.files[0]
+      // đk: có up file(bao gồm cả mp3 và img)
+      if (files) {
+        // check up k phải file ảnh
+        if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
+          return alert("k đc up file mp3")
+        } else {
+          // lấy url file ảnh
+          this.fileUpload.pushFileToStorage('image/users', files).subscribe(url => {
+            //tạo đối tượng user mới sau khi edit
+            this.user = {
+              id: localStorage.getItem('idUser'),
+              name: this.userForm.value.name,
+              address: this.userForm.value.address,
+              email: this.userForm.value.email,
+              phone: this.userForm.value.phone,
+              // thay thế bằng avt mới
+              avatar: url
+            }
+            // kết nói API với Be
+            this.userService.updateUser(localStorage.getItem('idUser'), this.user).subscribe(data => {
+              this.dataService.changeMessage("changeInfoUser")
+              return this.router.navigateByUrl('/user-info/edit')
             })
           })
+        }
+      } else {
+        // tạo mới đối tượng user. dùng avt cũ
+        this.user = {
+          id: localStorage.getItem('idUser'),
+          name: this.userForm.value.name,
+          address: this.userForm.value.address,
+          email: this.userForm.value.email,
+          phone: this.userForm.value.phone,
+          // lấy avt cũ
+          avatar: this.user.avatar
+        }
+        this.userService.updateUser(localStorage.getItem('idUser'), this.user).subscribe(data => {
+          this.dataService.changeMessage("changeInfoUser")
+          return this.router.navigateByUrl('/user-info/edit')
+        })
       }
     }
   }
@@ -99,21 +135,14 @@ export class EditUserComponent implements OnInit {
     return null
   }
 
-  ngOnInit(): void {
-    this.idUser = localStorage.getItem("idUser");
-    this.userService.getUser(this.idUser).subscribe(data => {
-      this.user = data;
-      this.userForm.patchValue(this.user);
-    })
-    this.userService.userChange.subscribe(
-      data => {
-        this.user = data;
-      }
-    )
-  }
+
 
   getImage() {
     let image = !!this.user.avatar ? this.user.avatar : 'assets/avt-default.png'
     return !!this.editImage ? this.editImage : image;
+  }
+
+  clearForm() {
+    this.userForm.patchValue(this.user);
   }
 }

@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {SongsService} from "../../service/songs/songs.service";
 import {Songs} from "../../model/Songs";
+import {DataService} from "../../service/data/data.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-song-item',
@@ -8,25 +10,27 @@ import {Songs} from "../../model/Songs";
   styleUrls: ['./song-item.component.css']
 })
 export class SongItemComponent implements OnInit {
-  idUser: any=null;
+  idUser: any = null;
   listSongs: Songs[] = [];
 
-  constructor(private songService: SongsService) {
+  constructor(private songService: SongsService,
+              private dataService:DataService,
+              private router:Router) {
   }
 
   ngOnInit(): void {
-    this.idUser = localStorage.getItem('idUser')
+    this.dataService.currentMessage.subscribe(()=>{
+      this.idUser = localStorage.getItem('idUser')
 
-    if(this.idUser){
-      // @ts-ignore
-      this.songService.findSongByUser(this.idUser).subscribe((data: Songs[]) => {
-        this.listSongs = data;
-      })
-    }
-
+      if (this.idUser) {
+        // @ts-ignore
+        this.songService.findSongByUser(this.idUser).subscribe((data: Songs[]) => {
+          this.listSongs = data;
+        })
+      }
+    })
   }
-
-  likeSong(id:any) {
+  likeSong(id: any) {
 
   }
 
@@ -39,6 +43,9 @@ export class SongItemComponent implements OnInit {
   }
 
   deleteSong(id: any) {
-
+    this.songService.deleteSong(id).subscribe(()=>{
+      this.dataService.changeMessage("delete");
+      return this.router.navigateByUrl('/library/song');
+    })
   }
 }

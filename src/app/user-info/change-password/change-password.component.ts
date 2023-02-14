@@ -82,7 +82,8 @@ export class ChangePasswordComponent implements OnInit {
         if(this.changePassForm.value.password == this.user.password) {
           this.userService.updatePass(this.idUser, this.newPassword).subscribe(data => {
             alert("Change Password successfuly")
-            this.router.navigateByUrl("/auth")
+            localStorage.removeItem('idUser')
+            return this.router.navigateByUrl("/auth")
           } )
         }else {
           this.countNumber = this.countNumber +1
