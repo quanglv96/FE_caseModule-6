@@ -1,41 +1,42 @@
 <div class="playlist-modal">
   <div class="playlist-modal-dialog">
-    <form class="playlist-form">
-      <h2 class="text-center playlist-modal-header">Create new playlist</h2>
+    <form #submit class="playlist-form" [formGroup]="formPlaylist" (ngSubmit)="submitForm()">
+      <h2 class="text-center playlist-modal-header">{{titleContent}}</h2>
       <hr>
       <div class="row">
         <div class="col-6">
           <div class="upload-image">
-            <img class="fit-image" src="/assets/song.jfif" alt="">
-            <button class="upload-image-btn p-1">
-              <span onclick="openUpload('.input-song')" class="py-2 px-2">
+            <img class="fit-image" src="{{playlistImage}}" alt=""  >
+            <button class="upload-image-btn p-1" type="button" >
+              <span (click)="openUpload('.playlist-img')" class="py-2 px-2">
                 <i class="me-1 fa-solid fa-camera"></i>
                 <span class="font-12">Upload image</span>
               </span>
-              <input onchange="replaceImg(this, '.modal-img-song')" class="input-song" type="file" hidden>
+              <input #avatar (change)="renderImagePath($event)" class="playlist-img" type="file" hidden>
             </button>
           </div>
         </div>
         <div class="col-6 border-start">
           <div class="form-group mb-1">
             <label class="modal-label my-1" for="name">Name:</label><br>
-            <input class="modal-input" name="name" type="text" id="name" placeholder="Name">
+            <input class="modal-input" name="name" type="text" id="name" placeholder="Name" formControlName="name">
           </div>
           <div class="form-group mb-1">
             <label class="modal-label my-1" for="description">Description:</label><br>
-            <textarea class="modal-input" rows="3" name="description" type="text" id="description" placeholder="Description"></textarea>
+            <textarea class="modal-input" rows="3" name="description" type="text" id="description" placeholder="Description" formControlName="description"></textarea>
           </div>
           <div class="form-group mb-1">
             <label class="modal-label my-1" for="tag">Tag:</label><br>
-            <input class="modal-input" name="tag" type="text" id="tag" placeholder="Tag">
+            <input class="modal-input" name="tag" type="text" id="tag" placeholder="VD: #pop #hiphop" [(ngModel)]="stringTag" [ngModelOptions]="{standalone:true}" >
+<!--            //standalon:ddawwtjt ra ngoài form-->
           </div>
         </div>
       </div>
       <div class="row mt-4">
         <div class="col-12">
           <div class="text-end">
-            <button class="modal-btn modal-close" type="button" routerLink="../">Close</button>
-            <button class="modal-btn modal-submit" type="submit">Create</button>
+            <button class="modal-btn modal-close" type="button" routerLink="/library/playlist">Close</button>
+            <button class="modal-btn modal-submit" type="submit">Save</button>
           </div>
         </div>
       </div>
