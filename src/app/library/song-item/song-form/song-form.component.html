@@ -8,11 +8,11 @@
           <div class="upload-image">
             <img class="fit-image" src="/assets/song.jfif" alt="">
             <button class="upload-image-btn p-1">
-              <span onclick="openUpload('.input-song')" class="py-2 px-2">
+              <span (click)="openUpload('.song-img')" class="py-2 px-2">
                 <i class="me-1 fa-solid fa-camera"></i>
                 <span class="font-12">Upload image</span>
               </span>
-              <input onchange="replaceImg(this, '.modal-img-song')" class="input-song" type="file" hidden>
+              <input (change)="renderImagePath($event)" class="song-img" type="file" hidden>
             </button>
           </div>
           <hr>
