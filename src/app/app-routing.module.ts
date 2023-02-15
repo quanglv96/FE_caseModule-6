@@ -24,6 +24,7 @@ const routes: Routes = [
       {path: 'change-password', component: ChangePasswordComponent}
   ]},
   {path: 'library', component: LibraryComponent, children: [
+      {path: '', pathMatch: 'full', redirectTo: '/library/song'},
       {path: 'song', component: SongItemComponent, children: [
           {path: 'new', component: SongFormComponent},
           {path: 'edit/:idSong', component: SongFormComponent}
@@ -36,7 +37,7 @@ const routes: Routes = [
   {path: 'trending', component: TrendingComponent},
   {path: 'song/:id', component: SongComponent},
   {path: 'playlist/:id', component: PlaylistComponent},
-  {path: '', component: HomeComponent, pathMatch: 'full'}
+  {path: '', component: HomeComponent, pathMatch: 'full'},
 ];
 
 @NgModule({

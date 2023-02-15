@@ -29,7 +29,6 @@ import {PlaylistFormComponent} from './library/playlist-item/playlist-form/playl
 import {TrendingComponent} from './trending/trending.component';
 import {CarouselModule} from "ngx-owl-carousel-o";
 import {DiscoveryItemComponent} from "./trending/discovery-item/discovery-item.component";
-import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
 import {environment} from '../environments/environment';
 import {ScreenTrackingService, UserTrackingService} from '@angular/fire/analytics';
 import {FileUploadService} from "./service/file-upload.service";
@@ -38,6 +37,8 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
 import {SongComponent} from './song/song.component';
 import {PlaylistComponent} from './playlist/playlist.component';
+import {NgWaveformModule} from "ng-waveform";
+import {NgxWavesurferModule, NgxWavesurferService} from "ngx-wavesurfer";
 
 @NgModule({
   declarations: [
@@ -77,10 +78,12 @@ import {PlaylistComponent} from './playlist/playlist.component';
     CarouselModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    NgWaveformModule,
+    NgxWavesurferModule
   ],
   providers: [
-    ScreenTrackingService, UserTrackingService, FileUploadService
+    ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService
   ],
   bootstrap: [AppComponent]
 })
