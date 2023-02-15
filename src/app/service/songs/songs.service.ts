@@ -29,4 +29,10 @@ export class SongsService {
   deleteSong(idSong:number){
     return  this.http.delete(`${API_URL}/songs/${idSong}`)
   }
+  findSongById(idSong:number){
+    return this.http.get(`${API_URL}/songs/${idSong}`)
+  }
+  updateSong(idSong:number|any,newSong:Songs){
+    return this.http.put(`${API_URL}/songs/${idSong}`,newSong)
+  }
 }

@@ -9,6 +9,7 @@ import {User} from "../../../model/User";
 import {Singer} from "../../../model/Singer";
 import {SongsService} from "../../../service/songs/songs.service";
 import {DataService} from "../../../service/data/data.service";
+import {Playlist} from "../../../model/Playlist";
 
 @Component({
   selector: 'app-song-form',
@@ -28,17 +29,19 @@ export class SongFormComponent implements OnInit {
   stringTag: any;
   editIdSong: any
   songAudio?: any;
+  songAvatar?: string;
+  oldSong?: Songs;
 
   constructor(private activeRouter: ActivatedRoute,
               private fileUpload: FileUploadService,
               private songService: SongsService,
-              private router:Router,
-              private dataService:DataService) {
+              private router: Router,
+              private dataService: DataService) {
   }
 
   ngOnInit(): void {
     this.activeRouter.paramMap.subscribe((pramMap: ParamMap) => {
-      if(pramMap.get('idSong')){
+      if (pramMap.get('idSong')) {
         this.titleContent = "Update My Song"
         this.openFormEdit(pramMap.get('idSong'))
         this.editIdSong = pramMap.get('idSong');
@@ -80,7 +83,7 @@ export class SongFormComponent implements OnInit {
             return this.router.navigateByUrl('/library/song')
           })
         })
-      }else {
+      } else {
         alert("tạo bài hát mới phải có file mp3. vui lòng cập nhập")
       }
     } else {
@@ -89,11 +92,132 @@ export class SongFormComponent implements OnInit {
   }
 
   updateSong() {
+    const form = this.formSong.value;
+    let urlAudio: string|undefined="";
+    let urlAvatar: string|undefined="";
+
+
+    if (this.audio?.nativeElement?.files[0]) {
+      if (this.audio?.nativeElement.files[0].name.includes('jpg')) {
+        return alert("chỗ up file mp3 không up ảnh")
+      } else {
+        this.fileUpload.pushFileToStorage("audio", this.audio?.nativeElement.files[0]).subscribe(pathAudio => {
+          urlAudio = pathAudio;
+          if (this.avatar?.nativeElement.files[0]) {
+            if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
+              return alert("chỗ up ảnh không up mp3")
+            } else {
+              this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
+                urlAvatar = pathAvatar;
+                const songs: Songs = {
+                  name: form.name,
+                  audio: urlAudio,
+                  avatar: urlAvatar,
+                  // @ts-ignore
+                  users: this.oldSong?.users,
+                  singerList: this.editStringSinger(this.stringSinger),
+                  composer: form.composer,
+                  tagsList: this.editStringTag(this.stringTag)
+                }
+                this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
+                  alert(" tạo thành công");
+                  this.dataService.changeMessage("update thành công")
+                  return this.router.navigateByUrl('/library/song')
+                })
+              })
+            }
+          }else {
+            urlAvatar = this.oldSong?.avatar;
+            const songs: Songs = {
+              name: form.name,
+              audio: urlAudio,
+              avatar: urlAvatar,
+              // @ts-ignore
+              users: this.oldSong?.users,
+              singerList: this.editStringSinger(this.stringSinger),
+              composer: form.composer,
+              tagsList: this.editStringTag(this.stringTag)
+            }
+            this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
+              alert(" tạo thành công");
+              this.dataService.changeMessage("update thành công")
+              return this.router.navigateByUrl('/library/song')
+            })
+          }
+        })
+      }
+    }else {
+      urlAudio = this.oldSong?.audio;
+      if (this.avatar?.nativeElement.files[0]) {
+        if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
+          return alert("chỗ up ảnh không up mp3")
+        } else {
+          this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
+            urlAvatar = pathAvatar;
+            const songs: Songs = {
+              name: form.name,
+              audio: urlAudio,
+              avatar: urlAvatar,
+              // @ts-ignore
+              users: this.oldSong?.users,
+              singerList: this.editStringSinger(this.stringSinger),
+              composer: form.composer,
+              tagsList: this.editStringTag(this.stringTag)
+            }
+            this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
+              alert(" tạo thành công");
+              this.dataService.changeMessage("update thành công")
+              return this.router.navigateByUrl('/library/song')
+            })
+          })
+        }
+      }else {
+        urlAvatar = this.oldSong?.avatar;
+        const songs: Songs = {
+          name: form.name,
+          audio: urlAudio,
+          avatar: urlAvatar,
+          // @ts-ignore
+          users: this.oldSong?.users,
+          singerList: this.editStringSinger(this.stringSinger),
+          composer: form.composer,
+          tagsList: this.editStringTag(this.stringTag)
+        }
+        this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
+          alert(" tạo thành công");
+          this.dataService.changeMessage("update thành công")
+          return this.router.navigateByUrl('/library/song')
+        })
+      }
+    }
 
   }
 
   openFormEdit(idSong: any) {
-
+    this.songService.findSongById(idSong).subscribe((data: Songs) => {
+      this.oldSong = data;
+      this.formSong.patchValue(data);
+      if (data.avatar) {
+        this.songAvatar = data.avatar
+      }
+      this.stringTag = '';
+      // @ts-ignore
+      for (let i = 0; i < data.tagsList.length; i++) {
+        // @ts-ignore
+        this.stringTag += '#' + data.tagsList[i].name + ' '
+      }
+      this.stringSinger = '';
+      // @ts-ignore
+      for (let i = 0; i < data.singerList.length; i++) {
+        // @ts-ignore
+        this.stringSinger += data.singerList[i].name
+        // @ts-ignore
+        if (i != (data.singerList.length - 1)) {
+          this.stringSinger += ", "
+        }
+      }
+      this.titleContent = "Update Playlist"
+    })
   }
 
   editStringSinger(stringSinger: string): Singer[] {
@@ -103,7 +227,7 @@ export class SongFormComponent implements OnInit {
       let listIndex = list[i].split(" ")
       list[i] = "";
       for (let j = 0; j < listIndex.length; j++) {
-        list[i] += listIndex[j].charAt(0).toUpperCase() + listIndex[j].slice(1)+" ";
+        list[i] += listIndex[j].charAt(0).toUpperCase() + listIndex[j].slice(1) + " ";
       }
       // @ts-ignore
       singer.push({id: null, name: list[i]})
@@ -147,6 +271,7 @@ export class SongFormComponent implements OnInit {
       reader.readAsDataURL(files[0])
     }
   }
+
   renderAudioPath(event: any) {
     const files = event.target.files;
     const reader = new FileReader()
