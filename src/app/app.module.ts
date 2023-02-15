@@ -38,6 +38,7 @@ import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
 import {SongComponent} from './song/song.component';
 import {PlaylistComponent} from './playlist/playlist.component';
 import {NgWaveformModule} from "ng-waveform";
+import {NgxWavesurferModule, NgxWavesurferService} from "ngx-wavesurfer";
 
 @NgModule({
   declarations: [
@@ -78,10 +79,11 @@ import {NgWaveformModule} from "ng-waveform";
     AngularFireStorageModule,
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(environment.firebase),
-    NgWaveformModule
+    NgWaveformModule,
+    NgxWavesurferModule
   ],
   providers: [
-    ScreenTrackingService, UserTrackingService, FileUploadService
+    ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService
   ],
   bootstrap: [AppComponent]
 })

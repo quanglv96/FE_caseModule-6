@@ -5,9 +5,9 @@
         <div class="song-details">
           <div class="details-head d-flex align-items-center justify-content-between p-3">
             <div class="header-left d-flex align-items-center">
-              <div class="play-button d-flex justify-content-center align-items-center me-3">
-                <i style="font-size: 24px" class="fa-solid fa-play"></i>
-<!--                <i style="font-size: 24px" class="fa-solid fa-pause"></i>-->
+              <div class="play-button d-flex justify-content-center align-items-center me-3" (click)="playPause()">
+                <i *ngIf="!isPlaying" style="font-size: 24px; margin-left: 4px" class="fa-solid fa-play"></i>
+                <i *ngIf="isPlaying" style="font-size: 24px" class="fa-solid fa-pause"></i>
               </div>
               <div class="first-desc-row d-inline-block">
                 <p class="user-upload m-0 font-24">User upload</p>
@@ -23,7 +23,13 @@
           </div>
           <div class="details-foot p-3">
             <div id="waveform">
-
+              <div class="time">
+                <span class="time-start">00:00</span>
+                <span class="time-end">00:00</span>
+              </div>
+              <span class="play-line">
+                <span class="line"></span>
+              </span>
             </div>
           </div>
         </div>

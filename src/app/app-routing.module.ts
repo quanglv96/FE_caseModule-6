@@ -37,7 +37,7 @@ const routes: Routes = [
   {path: 'trending', component: TrendingComponent},
   {path: 'song/:id', component: SongComponent},
   {path: 'playlist/:id', component: PlaylistComponent},
-  {path: '', component: HomeComponent, pathMatch: 'full'}
+  {path: '', component: HomeComponent, pathMatch: 'full'},
 ];
 
 @NgModule({
