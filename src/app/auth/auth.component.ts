@@ -5,7 +5,7 @@ import {User} from "../model/User";
 import {Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {DataService} from "../service/data/data.service";
-// import SwAl from 'sweetalert2'
+import SwAl from 'sweetalert2'
 
 @Component({
   selector: 'app-auth',
@@ -101,38 +101,38 @@ export class AuthComponent implements OnInit {
       });
     } else {
       this.user = this.registerForm.value
-      // this.userService.register(this.user).subscribe(data => {
-      //   SwAl.fire({
-      //     title: 'Register successfully',
-      //     icon: "success",
-      //     showConfirmButton: false,
-      //     showCloseButton: true,
-      //     customClass: {
-      //       title: 'success-message',
-      //       popup: 'popup',
-      //       confirmButton: 'confirm-btn',
-      //       closeButton: 'close-btn'
-      //     }
-      //   }).then(
-      //     () => {
-      //       this.switchToLogin()
-      //       this.loginForm.patchValue(data)
-      //     }
-      //   )
-      // }, error => {
-      //   SwAl.fire({
-      //     title: 'Account already exist',
-      //     icon: "error",
-      //     showConfirmButton: false,
-      //     showCloseButton: true,
-      //     customClass: {
-      //       title: 'error-message',
-      //       popup: 'popup',
-      //       confirmButton: 'confirm-btn',
-      //       closeButton: 'close-btn'
-      //     }
-      //   }).then()
-      // })
+      this.userService.register(this.user).subscribe(data => {
+        SwAl.fire({
+          title: 'Register successfully',
+          icon: "success",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'success-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then(
+          () => {
+            this.switchToLogin()
+            this.loginForm.patchValue(data)
+          }
+        )
+      }, error => {
+        SwAl.fire({
+          title: 'Account already exist',
+          icon: "error",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then()
+      })
     }
   }
 
@@ -147,35 +147,35 @@ export class AuthComponent implements OnInit {
         localStorage.setItem('idUser', data.id)
         this.dataService.changeMessage('oke r')
         return this.router.navigateByUrl("");
-        // SwAl.fire({
-        //   title: 'Login successfully',
-        //   icon: "success",
-        //   showConfirmButton: false,
-        //   showCloseButton: true,
-        //   customClass: {
-        //     title: 'success-message',
-        //     popup: 'popup',
-        //     confirmButton: 'confirm-btn',
-        //     closeButton: 'close-btn'
-        //   }
-        // }).then(
-        //   () => {
-        //     return this.router.navigateByUrl('/trending')
-        //   }
-        // )
+        SwAl.fire({
+          title: 'Login successfully',
+          icon: "success",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'success-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then(
+          () => {
+            return this.router.navigateByUrl('/trending')
+          }
+        )
       }, (error: any) => {
-        // SwAl.fire({
-        //   title: error['error'].content,
-        //   icon: "error",
-        //   showConfirmButton: false,
-        //   showCloseButton: true,
-        //   customClass: {
-        //     title: 'error-message',
-        //     popup: 'popup',
-        //     confirmButton: 'confirm-btn',
-        //     closeButton: 'close-btn'
-        //   }
-        // }).then()
+        SwAl.fire({
+          title: error['error'].content,
+          icon: "error",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then()
       })
     }
   }
