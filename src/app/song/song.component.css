@@ -119,10 +119,15 @@
 .time {
   position: absolute;
   bottom: 50%;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
   z-index: 5;
+}
+
+.time-start-container {
+  left: 0;
+}
+
+.time-end-container {
+  right: 0;
 }
 
 .time-start, .time-end {
