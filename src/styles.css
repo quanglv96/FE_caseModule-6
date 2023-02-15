@@ -21,6 +21,10 @@
   cursor: pointer;
 }
 
+.pointer:hover {
+  opacity: 80%;
+}
+
 .font-20 {
   font-size: 20px;
 }

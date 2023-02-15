@@ -1,5 +1,5 @@
 <div class="body-container container-fluid">
-  <div class="body container pb-5 g-0">
+  <div class="body container pb-4 g-0">
     <div class="user-bg-img">
       <div class="row">
         <div class="col col-3 my-3">
@@ -23,15 +23,15 @@
       <div class="col-md-3">
         <div class="user-tab mx-3">
           <ul class="list-group no-border-radius">
-            <li class="list-group-item" routerLink="edit"><a>User information</a></li>
-            <li class="list-group-item" routerLink="change-password"><a>Change password</a></li>
+            <li class="list-group-item pointer" routerLink="edit"><a>User information</a></li>
+            <li class="list-group-item pointer" routerLink="change-password"><a>Change password</a></li>
             <li class="list-group-item p-0">
-              <a class="btn btn-danger no-border-radius back-btn" (click)="back()">Back</a>
+              <a class="btn no-border-radius back-btn pointer" routerLink="/trending">Back</a>
             </li>
           </ul>
         </div>
       </div>
-      <div class="col-md-9">
+      <div class="col-md-9 border-start">
         <router-outlet></router-outlet>
       </div>
     </div>

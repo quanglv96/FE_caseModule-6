@@ -2,6 +2,7 @@
   border-radius: 0 !important;
   width: 400px !important;
   font-family: inherit !important;
+  background-color: rgba(255,255,255,1) !important;
 }
 
 .success-message {

@@ -24,6 +24,7 @@ const routes: Routes = [
       {path: 'change-password', component: ChangePasswordComponent}
   ]},
   {path: 'library', component: LibraryComponent, children: [
+      {path: '', pathMatch: 'full', redirectTo: '/library/song'},
       {path: 'song', component: SongItemComponent, children: [
           {path: 'new', component: SongFormComponent},
           {path: 'edit/:idSong', component: SongFormComponent}
