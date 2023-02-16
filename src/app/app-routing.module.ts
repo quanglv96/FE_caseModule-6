@@ -14,6 +14,7 @@ import {PlaylistFormComponent} from "./library/playlist-item/playlist-form/playl
 import {TrendingComponent} from "./trending/trending.component";
 import {SongComponent} from "./song/song.component";
 import {PlaylistComponent} from "./playlist/playlist.component";
+import {CanDeactivateGuard} from "./service/can-deactivate";
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent},
@@ -35,8 +36,8 @@ const routes: Routes = [
       ]}
   ]},
   {path: 'trending', component: TrendingComponent},
-  {path: 'song/:id', component: SongComponent},
-  {path: 'playlist/:id', component: PlaylistComponent},
+  {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard]},
+  {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard]},
   {path: '', component: HomeComponent, pathMatch: 'full'},
 ];
 

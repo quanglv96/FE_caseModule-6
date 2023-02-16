@@ -39,6 +39,7 @@ import {SongComponent} from './song/song.component';
 import {PlaylistComponent} from './playlist/playlist.component';
 import {NgWaveformModule} from "ng-waveform";
 import {NgxWavesurferModule, NgxWavesurferService} from "ngx-wavesurfer";
+import {CanDeactivateGuard} from "./service/can-deactivate";
 
 @NgModule({
   declarations: [
@@ -83,7 +84,7 @@ import {NgxWavesurferModule, NgxWavesurferService} from "ngx-wavesurfer";
     NgxWavesurferModule
   ],
   providers: [
-    ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService
+    ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard
   ],
   bootstrap: [AppComponent]
 })

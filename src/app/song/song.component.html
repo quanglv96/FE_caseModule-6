@@ -16,7 +16,7 @@
             </div>
             <div class="header-right">
               <div class="second-desc-row d-inline-block right-text">
-                <p class="date-upload m-0 font-16 pb-3">Time upload</p>
+                <p class="date-upload m-0 font-16 pb-3 text-end">Time upload</p>
                 <span class="item-tag">#Instrumental</span>
               </div>
             </div>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="comment-related-song row p-3">
+    <div class="row p-3">
       <div class="col col-8 p-0">
         <div class="feedback p-3">
           <div class="comment border d-flex">
@@ -56,7 +56,7 @@
           <span class="like-count border py-1 px-2 me-1 pointer">
             <i class="fa-solid fa-heart"></i> 110K
           </span>
-          <span class="like-count border py-1 px-2 me-1 pointer">
+          <span (click)="test()" class="like-count border py-1 px-2 me-1 pointer">
             <i class="fa-solid fa-square-plus"></i> Add to playlist
           </span>
           <span class="play-count border py-1 px-2 me-1 pointer">
@@ -67,10 +67,10 @@
           </span>
           <hr>
         </div>
-        <div class="list-com-and-user row p-3">
-          <div class="col col-2">
+        <div class="row p-3">
+          <div class="col-2">
             <div class="user-avt">
-              <img class="fit-image" src="/assets/avt-default.png" alt="">
+              <img class="fit-image circle" src="/assets/avt-default.png" alt="">
             </div>
             <p class="my-2 grey-text">Username</p>
             <div class="d-flex align-items-center justify-content-between">
@@ -95,7 +95,7 @@
               </span>
             </div>
           </div>
-          <div class="col col-10 comment-area">
+          <div class="col col-10">
             <p class="comment-header grey-text">
               <i class="fa-solid fa-comment"></i>
               485 comment
