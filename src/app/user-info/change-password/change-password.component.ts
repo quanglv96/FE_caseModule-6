@@ -37,8 +37,7 @@ export class ChangePasswordComponent implements OnInit {
         this.changePassForm.controls['confirmNewPassword'].updateValueAndValidity();
       }
     )
-      this.idUser = localStorage.getItem("idUser");
-
+    this.idUser = localStorage.getItem("idUser");
   }
 
   confirmPassValidator(control: FormControl): {[s: string]: boolean} | null {
@@ -79,27 +78,25 @@ export class ChangePasswordComponent implements OnInit {
       this.userService.findById(this.idUser).subscribe(data => {
         this.user = data
         this.newPassword = this.changePassForm.value.newPassword;
-        if(this.changePassForm.value.password == this.user.password) {
+        if (this.changePassForm.value.password == this.user.password) {
           this.userService.updatePass(this.idUser, this.newPassword).subscribe(data => {
-            alert("Change Password successfuly")
+            alert("Change Password successfully")
             localStorage.removeItem('idUser')
             return this.router.navigateByUrl("/auth")
-          } )
-        }else {
-          this.countNumber = this.countNumber +1
+          })
+        } else {
+          this.countNumber = this.countNumber + 1
           console.log(this.countNumber)
           // @ts-ignore
-          if(this.countNumber == 3){
+          if (this.countNumber == 3) {
             this.countNumber = 0
             alert("nhap mat khau sai 3 lan, moi ban dang nhap lai")
             this.router.navigateByUrl("/auth")
-          }else {
+          } else {
             alert('mat khau khong dung ' )
           }
-
         }
       })
-
     }
   }
 
