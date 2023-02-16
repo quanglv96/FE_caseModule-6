@@ -73,7 +73,7 @@
             <div class="user-avt">
               <img class="fit-image circle" src="/assets/avt-default.png" alt="">
             </div>
-            <p class="my-2 grey-text">Username</p>
+            <p class="my-2 grey-text">{{songs.users?.username}}</p>
             <div class="d-flex align-items-center justify-content-between">
               <span class="playlist-count d-flex align-items-center">
                 <span class="filter-icon me-1 grey-text">
@@ -95,7 +95,6 @@
                 </span>
               </span>
             </div>
-            <p class="my-2 grey-text">{{songs.users?.username}}</p>
 <!--            <div class="d-flex align-items-center justify-content-between">-->
 <!--              <span class="playlist-count d-flex align-items-center">-->
 <!--                <span class="filter-icon me-1 grey-text">-->
@@ -135,7 +134,7 @@
                 </div>
               </div>
               <div class="c-item-right font-12">
-                <span class="c-time">{{c.date}}</span>
+                <span class="c-time">{{c.date | amTimeAgo}}</span>
               </div>
             </div>
           </div>
