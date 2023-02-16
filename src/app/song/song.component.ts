@@ -1,11 +1,11 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import {NgxWavesurferService} from "ngx-wavesurfer";
 import * as $ from "jquery";
 import {CanComponentDeactivate} from "../service/can-deactivate";
-import {ActivatedRoute, Router, ParamMap, Params} from "@angular/router";
+import {ActivatedRoute, Router, ParamMap} from "@angular/router";
 import {SongsService} from "../service/songs/songs.service";
 import {Songs} from "../model/Songs";
-import {data} from "jquery";
+
 import {Comments} from "../model/Comments";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
@@ -49,7 +49,8 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
-        this.url = song.audio;
+        // this.url = song.audio;
+        this.url = 'https://firebasestorage.googleapis.com/v0/b/quanglv-ca07a.appspot.com/o/image%2FBuongTay-KhoiMyLaThang-3128968.mp3?alt=media&token=3592ac19-1dda-4c4b-acdf-2dca77ef2c73'
         this.renderAudioOnStart()
         // @ts-ignore
         for (let i = 0; i < song.tagsList?.length; i++) {
@@ -77,9 +78,11 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
 
   renderAudioOnStart() {
     this.waveSurfer = this.waveSurferService.create(this.option)
+    console.log(this.url)
     this.loadAudio(this.waveSurfer, this.url).then(() => {
       this.endTime = this.getDuration();
-    })
+    }).catch((error) => {
+      console.log(error)})
     this.waveSurfer.on('finish', () => {
       this.isPlaying = false;
       $('.fit-image').trigger('click')
