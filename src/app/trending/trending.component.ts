@@ -44,11 +44,6 @@ export class TrendingComponent implements OnInit {
         this.topPlaylists = data;
       }
     )
-    this.playlistService.getNewPlaylist().subscribe(
-      data => {
-        this.newPlaylists = data;
-      }
-    )
     this.playlistService.getTopLikePlaylist().subscribe(
       data => {
         this.topLikePlaylists = data;
