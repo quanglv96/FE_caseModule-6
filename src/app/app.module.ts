@@ -40,6 +40,7 @@ import {PlaylistComponent} from './playlist/playlist.component';
 import {NgWaveformModule} from "ng-waveform";
 import {NgxWavesurferModule, NgxWavesurferService} from "ngx-wavesurfer";
 import {CanDeactivateGuard} from "./service/can-deactivate";
+import {MomentModule} from "ngx-moment";
 
 @NgModule({
   declarations: [
@@ -81,7 +82,12 @@ import {CanDeactivateGuard} from "./service/can-deactivate";
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(environment.firebase),
     NgWaveformModule,
-    NgxWavesurferModule
+    NgxWavesurferModule,
+    MomentModule.forRoot({
+      relativeTimeThresholdOptions: {
+        'm': 59
+      }
+    })
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard

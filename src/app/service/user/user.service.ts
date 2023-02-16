@@ -48,6 +48,6 @@ export class UserService {
     return this.http.put(`${API_URL}/users/changePass/${id}?password=${password}`)
   }
   countByUser(id:number){
-    return this.http.get(`${API_URL}/users/countByUser/${id}`)
+    return this.http.get<[]>(`${API_URL}/users/countByUser/${id}`)
   }
 }

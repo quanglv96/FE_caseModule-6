@@ -36,7 +36,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   user: User = {}
   @Input() contentComment: string = "";
   suggestSongs: Songs[] = []
-  statusLike: boolean=false;
+  statusLike: boolean = false;
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
@@ -82,7 +82,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     })
     this.waveSurfer.on('finish', () => {
       this.isPlaying = false;
-      $('.fit-image').trigger('click')
+      $('.random-item-0').trigger('click')
     })
   }
 
@@ -126,9 +126,5 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.isPlaying = false;
     this.waveSurfer = undefined;
     return true;
-  }
-
-  test() {
-    this.router.navigate(['/song/3']).finally()
   }
 }
