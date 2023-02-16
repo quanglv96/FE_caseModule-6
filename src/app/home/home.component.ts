@@ -39,17 +39,16 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataService.currentMessage.subscribe(data=>{
+    this.dataService.currentMessage.subscribe(message=>{
       if(localStorage.getItem('idUser')){
         this.statusLogin=true;
       }
-      if(data=="log out"){
+      if(message=="log out"){
         this.statusLogin=false;
       }
       // @ts-ignore
       this.songService.listTop10SongsTrending().subscribe((data: Songs[]) => {
         this.songs = data;
-
       })
     })
   }

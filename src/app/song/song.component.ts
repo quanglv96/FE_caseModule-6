@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {NgxWavesurferService} from "ngx-wavesurfer";
 import * as $ from "jquery";
 import {CanComponentDeactivate} from "../service/can-deactivate";
@@ -9,6 +9,7 @@ import {Songs} from "../model/Songs";
 import {Comments} from "../model/Comments";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-song',
@@ -28,7 +29,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     height: 200,
     hideScrollbar: true,
     hideCursor: true,
-    cursorColor: 'transparent'
+    cursorColor: 'transparent',
   }
   songs: Songs = {};
   listComment: Comments[] = []
@@ -36,42 +37,64 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   user: User = {}
   @Input() contentComment: string = "";
   suggestSongs: Songs[] = []
-  statusLike: boolean = false;
+  statusLike: boolean|undefined;
+  statusLogin: boolean|undefined;
+  countByUser:any
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
               private route: ActivatedRoute,
               private songService: SongsService,
-              private userService: UserService) {
+              private userService: UserService,
+              private dataService: DataService
+  ) {
   }
 
   ngOnInit() {
+    this.dataService.currentMessage.subscribe(message => {
+      switch (message){
+        case "log out":
+          this.statusLogin=false;
+          break;
+        case "Login successfully":
+          this.statusLogin=true;
+          break;
+      }
+    })
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
-        // this.url = song.audio;
-        this.url = 'https://firebasestorage.googleapis.com/v0/b/quanglv-ca07a.appspot.com/o/image%2FBuongTay-KhoiMyLaThang-3128968.mp3?alt=media&token=3592ac19-1dda-4c4b-acdf-2dca77ef2c73'
+        // @ts-ignore
+        this.songs.views=this.songs.views +1;
+        if (localStorage.getItem('idUser')) {
+          this.statusLogin = true
+          this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
+            this.user = users;
+            this.statusLike=false;
+            if (this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id) {
+              this.statusLike = true;
+              console.log( 'trong' +this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id)
+            }
+          })
+        }
+        this.url = song.audio;
         this.renderAudioOnStart()
         // @ts-ignore
         for (let i = 0; i < song.tagsList?.length; i++) {
           // @ts-ignore
           this.stringTag += song.tagsList[i].name + " ";
         }
+        this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{this.countByUser=list})
         // @ts-ignore
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
           this.listComment = comment
           // @ts-ignore
-          this.userService.findById(localStorage.getItem('idUser')).subscribe((user: User) => {
-            this.user = user as User;
-            if (this.songs.userLikeSong?.find(id => id.id == this.user.id)) {
-              this.statusLike = true;
-            }
-            // @ts-ignore
-            this.songService.getSuggest5Songs().subscribe((data: Songs[]) => {
-              this.suggestSongs = data;
-            })
+          this.songService.getSuggest5Songs().subscribe((data: Songs[]) => {
+            this.suggestSongs = data;
           })
         })
+        // tăng view
+        this.songService.changeLikeSongOrViews(song).subscribe(()=>{})
       })
     })
   }
@@ -81,8 +104,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     console.log(this.url)
     this.loadAudio(this.waveSurfer, this.url).then(() => {
       this.endTime = this.getDuration();
-    }).catch((error) => {
-      console.log(error)})
+    })
     this.waveSurfer.on('finish', () => {
       this.isPlaying = false;
       $('.fit-image').trigger('click')
@@ -108,12 +130,10 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       users: this.user,
       songs: this.songs
     }
-    this.songService.saveComment(comment).subscribe(() => {
+    // @ts-ignore
+    this.songService.saveComment(comment).subscribe((comment: Comments[]) => {
       this.contentComment = '';
-      // @ts-ignore
-      this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
-        this.listComment = comment
-      })
+        this.listComment = comment;
     })
   }
 
@@ -129,5 +149,17 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.isPlaying = false;
     this.waveSurfer = undefined;
     return true;
+  }
+
+  changeLike() {
+    if(!this.statusLike){
+      this.songs.userLikeSong?.push(this.user)
+    }else {
+
+      this.songs.userLikeSong=this.songs.userLikeSong?.filter(element=>element.id!=this.user.id)
+    }
+    this.statusLike=!this.statusLike
+    this.songService.changeLikeSongOrViews(this.songs).subscribe(()=>{
+    })
   }
 }

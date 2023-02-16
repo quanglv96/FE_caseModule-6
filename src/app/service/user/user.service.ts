@@ -47,7 +47,8 @@ export class UserService {
     // @ts-ignore
     return this.http.put(`${API_URL}/users/changePass/${id}?password=${password}`)
   }
-  countByUser(id:number){
+
+  countByUser(id: string | undefined){
     return this.http.get(`${API_URL}/users/countByUser/${id}`)
   }
 }

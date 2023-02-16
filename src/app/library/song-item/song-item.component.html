@@ -1,14 +1,14 @@
 <div class="row" *ngFor="let s of listSongs">
   <div class="col-3">
-    <div class="track-image">
-      <img class="fit-image" src="{{s.avatar}}" alt="">
+    <div class="track-image" [routerLink]="['/song',s.id]">
+      <img class="fit-image" src="{{s.avatar}}" alt="" >
     </div>
   </div>
   <div class="col-9 g-0">
     <div class="track-desc d-flex flex-column justify-content-between" >
       <div class="track-desc-first d-flex justify-content-between">
         <div class="left-section d-flex">
-          <div class="play-btn me-1">
+          <div class="play-btn me-1" [routerLink]="['/song',s.id]">
             <i style="margin-left: 3px" class="fa-solid fa-play"></i>
           </div>
           <div class="track-name-user">

@@ -45,4 +45,7 @@ export class SongsService {
   getSuggest5Songs(){
     return this.http.get(`${API_URL}/songs/suggest`)
   }
+  changeLikeSongOrViews(songs:Songs){
+    return this.http.put(`${API_URL}/songs/like`,songs)
+  }
 }
