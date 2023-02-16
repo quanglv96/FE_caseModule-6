@@ -21,7 +21,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataService.currentMessage.subscribe(() => {
+    this.dataService.currentMessage.subscribe(()=> {
       this.idUser = localStorage.getItem("idUser");
       this.userService.getUser(this.idUser).subscribe(data => {
         this.user = data;
