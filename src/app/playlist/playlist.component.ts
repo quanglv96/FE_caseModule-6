@@ -17,7 +17,7 @@ import {Comments} from "../model/Comments";
 })
 export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   comments: Comments[] = []
-  userData = [];
+  userData :any= [];
   songPlay?: string = '';
   songUser?: string = '';
   playlist?: Playlist;
