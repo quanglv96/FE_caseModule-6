@@ -164,3 +164,8 @@
   color: white;
   background-color: black;
 }
+
+.like {
+  border: 1px solid orangered;
+  color: orangered;
+}
