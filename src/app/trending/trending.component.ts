@@ -3,6 +3,7 @@ import {Songs} from "../model/Songs";
 import {SongsService} from "../service/songs/songs.service";
 import {Playlist} from "../model/Playlist";
 import {PlaylistService} from "../service/playlist/playlist.service";
+import {data} from "jquery";
 
 @Component({
   selector: 'app-trending',
@@ -31,6 +32,11 @@ export class TrendingComponent implements OnInit {
     this.songService.getNewSongs().subscribe(
       data => {
         this.newSongs = data;
+      }
+    )
+    this.songService.listTop10SongsLikeTrending().subscribe(
+      data => {
+        this.topLikeSongs = data;
       }
     )
     this.playlistService.getTopPlaylist().subscribe(
