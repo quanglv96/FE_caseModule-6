@@ -146,7 +146,7 @@ export class AuthComponent implements OnInit {
       this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).subscribe(data => {
         localStorage.setItem('idUser', data.id)
         this.dataService.changeMessage('oke r')
-        return this.router.navigateByUrl("");
+        // return this.router.navigateByUrl("");
         SwAl.fire({
           title: 'Login successfully',
           icon: "success",
@@ -165,7 +165,7 @@ export class AuthComponent implements OnInit {
         )
       }, (error: any) => {
         SwAl.fire({
-          title: error['error'].content,
+          title: error['error'],
           icon: "error",
           showConfirmButton: false,
           showCloseButton: true,

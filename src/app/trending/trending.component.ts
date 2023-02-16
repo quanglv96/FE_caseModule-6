@@ -10,10 +10,12 @@ import {PlaylistService} from "../service/playlist/playlist.service";
   styleUrls: ['./trending.component.css']
 })
 export class TrendingComponent implements OnInit {
-  topSongs: Songs[] = []
+  topViewSongs: Songs[] = []
   newSongs: Songs[] = []
+  topLikeSongs: Songs[] = []
   topPlaylists: Playlist[] = []
   newPlaylists: Playlist[] = []
+  topLikePlaylists: Songs[] = []
 
   constructor(private songService: SongsService,
               private playlistService: PlaylistService) {
@@ -23,7 +25,7 @@ export class TrendingComponent implements OnInit {
   ngOnInit() {
     this.songService.getTopSongs().subscribe(
       data => {
-        this.topSongs = data;
+        this.topViewSongs = data;
       }
     )
     this.songService.getNewSongs().subscribe(

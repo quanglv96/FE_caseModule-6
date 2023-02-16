@@ -34,8 +34,9 @@
 }
 
 .user-info-btn {
-  width: 100px;
+  width: 150px;
   padding: 6px 0;
+  letter-spacing: 1px;
 }
 
 .modal-input {
@@ -62,4 +63,9 @@ input.ng-invalid.ng-touched.clear {
 
 .form-message {
   color: red;
+}
+
+.clear-btn {
+  background-color: orangered !important;
+  color: white;
 }

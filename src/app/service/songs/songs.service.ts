@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Songs} from "../../model/Songs";
+import {Comments} from "../../model/Comments";
 const API_URL = `${environment.apiUrl}`;
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,20 @@ export class SongsService {
   }
   deleteSong(idSong:number){
     return  this.http.delete(`${API_URL}/songs/${idSong}`)
+  }
+  findSongById(idSong:number|any){
+    return this.http.get(`${API_URL}/songs/${idSong}`)
+  }
+  updateSong(idSong:number|any,newSong:Songs){
+    return this.http.put(`${API_URL}/songs/${idSong}`,newSong)
+  }
+  getCommentSong(idSong:number|any){
+    return this.http.get(`${API_URL}/comment/song/${idSong}`)
+  }
+  saveComment(comment:Comments){
+    return this.http.post(`${API_URL}/comment`, comment)
+  }
+  getSuggest5Songs(){
+    return this.http.get(`${API_URL}/songs/suggest`)
   }
 }

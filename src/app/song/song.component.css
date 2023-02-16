@@ -95,5 +95,61 @@
 }
 
 #waveform {
-  padding: 0 4px;
+  position: relative;
+}
+
+.play-line {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  width: 100%;
+  right: 0;
+  left: 0;
+  padding: 0 3px;
+  height: 2px;
+}
+
+.line {
+  border-top: 2px solid #a8a8a8;
+  width: 100%;
+  z-index: 5;
+  display: block;
+}
+
+.time {
+  position: absolute;
+  bottom: 50%;
+  z-index: 5;
+}
+
+.time-start-container {
+  left: 0;
+}
+
+.time-end-container {
+  right: 0;
+}
+
+.time-start, .time-end {
+  font-size: 10px;
+  padding: 0 2px;
+  line-height: 14px;
+  background-color: #333333;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.time-start {
+  margin-left: 3px;
+}
+
+.time-end {
+  margin-right: 3px;
+}
+
+.c-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }

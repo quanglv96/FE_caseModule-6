@@ -35,7 +35,7 @@ export class SongItemComponent implements OnInit {
   }
 
   editSong(id: any) {
-
+    return this.router.navigateByUrl("/library/song/edit/" + id)
   }
 
   addPlayList(id: any) {

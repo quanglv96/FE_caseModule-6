@@ -146,7 +146,6 @@ export class PlaylistFormComponent implements OnInit {
       } else {
         this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(path => {
           url = path;
-          console.log('true:' + url)
           const playlist: Playlist = {
             avatar: url,
             name: form.name,
