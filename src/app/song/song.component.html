@@ -10,7 +10,7 @@
                 <i *ngIf="isPlaying" style="font-size: 24px" class="fa-solid fa-pause"></i>
               </div>
               <div class="first-desc-row d-inline-block">
-                <p class="user-upload m-0 font-24">{{songs?.users?.username}}</p>
+                <p class="user-upload m-0 font-24">{{songs.users?.username}}</p>
                 <p class="item-name m-0 font-16">{{songs.name}}</p>
               </div>
             </div>
@@ -34,7 +34,7 @@
       </div>
       <div class="col-4" style="padding: 0">
         <div class="song-image p-3">
-          <img class="fit-image" src="{{songs?.avatar}}" alt="">
+          <img class="fit-image" src="{{songs.avatar}}" alt="">
         </div>
       </div>
     </div>
@@ -61,10 +61,10 @@
             <i class="fa-solid fa-square-plus"></i> Add to playlist
           </span>
           <span class="play-count border py-1 px-2 me-1 pointer">
-            <i class="fa-solid fa-play"></i> {{songs?.views}}
+            <i class="fa-solid fa-play"></i> {{songs.views}}
           </span>
           <span class="comment-count border py-1 px-2 pointer">
-            <i class="fa-solid fa-comment"></i> {{listComment?.length}}
+            <i class="fa-solid fa-comment"></i> {{listComment.length}}
           </span>
           <hr>
         </div>
@@ -121,7 +121,7 @@
           <div class="col col-10">
             <p class="comment-header grey-text">
               <i class="fa-solid fa-comment"></i>
-              {{listComment?.length}}
+              {{listComment.length}}
             </p>
             <hr>
             <div class="comment-item d-flex align-items-center justify-content-between mb-3" *ngFor="let c of listComment">

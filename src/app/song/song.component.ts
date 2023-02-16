@@ -15,12 +15,11 @@ import {User} from "../model/User";
   templateUrl: './song.component.html',
   styleUrls: ['./song.component.css']
 })
-export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
-  changeSong = new EventEmitter()
+export class SongComponent implements OnInit, CanComponentDeactivate {
   isPlaying = false;
   endTime: string = '';
   waveSurfer: any;
-  url = '/assets/Itsumo_nando_demo_Sprited_away_OST.mp3';
+  url?: string;
   option = {
     container: '#waveform',
     waveColor: 'white',
@@ -43,22 +42,15 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
               private router: Router,
               private route: ActivatedRoute,
               private songService: SongsService,
-              private userService: UserService,
-              private activeRouter: ActivatedRoute) {
+              private userService: UserService) {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(
-      (params: Params) => {
-        if (this.waveSurfer !== undefined) {
-          this.url = '/assets/Futari_no_kimochi_Inuyasha_OST.mp3'
-          this.ngAfterViewInit()
-        }
-      }
-    )
-    this.activeRouter.paramMap.subscribe((paramMap: ParamMap) => {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
+        this.url = song.audio;
+        this.renderAudioOnStart()
         // @ts-ignore
         for (let i = 0; i < song.tagsList?.length; i++) {
           // @ts-ignore
@@ -69,11 +61,10 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
           this.listComment = comment
           // @ts-ignore
           this.userService.findById(localStorage.getItem('idUser')).subscribe((user: User) => {
-            this.user = user;
-            if(this.songs.userLikeSong?.find(id => id.id == this.user.id)){
-              this.statusLike=true;
+            this.user = user as User;
+            if (this.songs.userLikeSong?.find(id => id.id == this.user.id)) {
+              this.statusLike = true;
             }
-            console.log(this.statusLike)
             // @ts-ignore
             this.songService.getSuggest5Songs().subscribe((data: Songs[]) => {
               this.suggestSongs = data;
@@ -84,7 +75,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
     })
   }
 
-  ngAfterViewInit() {
+  renderAudioOnStart() {
     this.waveSurfer = this.waveSurferService.create(this.option)
     this.loadAudio(this.waveSurfer, this.url).then(() => {
       this.endTime = this.getDuration();
@@ -95,7 +86,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
     })
   }
 
-  loadAudio(wavesurfer: any, url: string) {
+  loadAudio(wavesurfer: any, url: string | undefined) {
     return new Promise((resolve, reject) => {
       wavesurfer.on('error', reject);
       wavesurfer.on('ready', resolve);
@@ -109,7 +100,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
   }
 
   sendComment() {
-    const comment: Comments = {
+    const comment = {
       content: this.contentComment,
       users: this.user,
       songs: this.songs
@@ -133,7 +124,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
   canDeactivate() {
     this.waveSurfer.destroy();
     this.isPlaying = false;
-    this.changeSong.emit()
+    this.waveSurfer = undefined;
     return true;
   }
 
