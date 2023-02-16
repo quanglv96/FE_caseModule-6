@@ -54,6 +54,5 @@ export class TrendingComponent implements OnInit {
         this.topLikePlaylists = data;
       }
     )
-
   }
 }

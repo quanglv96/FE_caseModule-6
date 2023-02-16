@@ -50,4 +50,11 @@ export class HeaderComponent implements OnInit{
     this.dataService.changeMessage('log out');
   }
 
+  toLibrary() {
+    if(!localStorage.getItem('idUser')){
+      this.router.navigateByUrl('auth').finally()
+    }else {
+      this.router.navigateByUrl('library').finally()
+    }
+  }
 }

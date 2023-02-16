@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import * as $ from "jquery";
 import {OwlOptions} from "ngx-owl-carousel-o";
 
@@ -7,10 +7,11 @@ import {OwlOptions} from "ngx-owl-carousel-o";
   templateUrl: './discovery-item.component.html',
   styleUrls: ['./discovery-item.component.css']
 })
-export class DiscoveryItemComponent {
+export class DiscoveryItemComponent implements OnInit{
   @Input() items: any[] = [];
   @Input() title: string = '';
   @Input() navClass: string = ''
+  @Input() path:string=""
 
   customOptions: OwlOptions = {
     items: 5,
@@ -25,6 +26,8 @@ export class DiscoveryItemComponent {
   }
 
 
+  ngOnInit(): void {
+  }
   prev(s: string) {
     $(s).trigger('click')
   }
@@ -32,4 +35,6 @@ export class DiscoveryItemComponent {
   next(s: string) {
     $(s).trigger('click')
   }
+
+
 }
