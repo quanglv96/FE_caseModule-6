@@ -22,7 +22,7 @@ export class PlaylistService {
   }
 
   getNewPlaylist() {
-    return this.http.get<Playlist[]>(`${API_URL}/playlist/new`)
+    return this.http.get<Playlist[]>(`${API_URL}/playlist/listTop10ViewsPlaylistTrending`)
   }
 
   getPlaylistByUser(id: number) {
