@@ -10,14 +10,14 @@
                 <i *ngIf="isPlaying" style="font-size: 24px" class="fa-solid fa-pause"></i>
               </div>
               <div class="first-desc-row d-inline-block">
-                <p class="user-upload m-0 font-24">User upload</p>
-                <p class="item-name m-0 font-16">Song name</p>
+                <p class="user-upload m-0 font-24">{{songs?.users?.username}}</p>
+                <p class="item-name m-0 font-16">{{songs.name}}</p>
               </div>
             </div>
             <div class="header-right">
               <div class="second-desc-row d-inline-block right-text">
-                <p class="date-upload m-0 font-16 pb-3 text-end">Time upload</p>
-                <span class="item-tag">#Instrumental</span>
+                <p class="date-upload m-0 font-16 pb-3 text-end">{{songs.date}}</p>
+                <span class="item-tag">{{stringTag}}</span>
               </div>
             </div>
           </div>
@@ -34,7 +34,7 @@
       </div>
       <div class="col-4" style="padding: 0">
         <div class="song-image p-3">
-          <img class="fit-image" src="/assets/song.jfif" alt="">
+          <img class="fit-image" src="{{songs?.avatar}}" alt="">
         </div>
       </div>
     </div>
@@ -43,34 +43,35 @@
       <div class="col col-8 p-0">
         <div class="feedback p-3">
           <div class="comment border d-flex">
-            <img class="user-img" src="/assets/avt-default.png" alt="">
+            <img class="user-img" src="{{user.avatar}}" alt="">
             <div class="input-container d-flex align-item-center justify-content-center py-2 px-3">
-              <input class="input-comment" type="text">
+              <input class="input-comment" [(ngModel)]="contentComment" type="text">
             </div>
-            <span class="send-btn">
+            <span class="send-btn" (click)="sendComment()">
               <i class="fa-solid fa-paper-plane"></i>
             </span>
           </div>
         </div>
         <div class="user-action px-3">
           <span class="like-count border py-1 px-2 me-1 pointer">
-            <i class="fa-solid fa-heart"></i> 110K
+<!--            //đã like và chưa like-->
+            <i class="fa-sharp fa-solid fa-heart" [hidden]="!statusLike"></i><i [hidden]="statusLike" class="fa-sharp fa-regular fa-heart"></i> {{songs.userLikeSong?.length}}
           </span>
-          <span (click)="test()" class="like-count border py-1 px-2 me-1 pointer">
+          <span class="like-count border py-1 px-2 me-1 pointer">
             <i class="fa-solid fa-square-plus"></i> Add to playlist
           </span>
           <span class="play-count border py-1 px-2 me-1 pointer">
-            <i class="fa-solid fa-play"></i> 110K
+            <i class="fa-solid fa-play"></i> {{songs?.views}}
           </span>
           <span class="comment-count border py-1 px-2 pointer">
-            <i class="fa-solid fa-comment"></i> 100K
+            <i class="fa-solid fa-comment"></i> {{listComment?.length}}
           </span>
           <hr>
         </div>
         <div class="row p-3">
           <div class="col-2">
             <div class="user-avt">
-              <img class="fit-image circle" src="/assets/avt-default.png" alt="">
+              <img class="fit-image" src="/assets/avt-default.png" alt="">
             </div>
             <p class="my-2 grey-text">Username</p>
             <div class="d-flex align-items-center justify-content-between">
@@ -94,41 +95,47 @@
                 </span>
               </span>
             </div>
+            <p class="my-2 grey-text">{{songs.users?.username}}</p>
+<!--            <div class="d-flex align-items-center justify-content-between">-->
+<!--              <span class="playlist-count d-flex align-items-center">-->
+<!--                <span class="filter-icon me-1 grey-text">-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-soundwave" viewBox="0 0 16 16">-->
+<!--                    <path fill-rule="evenodd" d="M8.5 2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-1 0v-11a.5.5 0 0 1 .5-.5zm-2 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm-6 1.5A.5.5 0 0 1 5 6v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm8 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm-10 1A.5.5 0 0 1 3 7v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5zm12 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5z"/>-->
+<!--                  </svg>-->
+<!--                  20-->
+<!--                </span>-->
+<!--              </span>-->
+<!--              <span class="song-count d-flex align-items-center">-->
+<!--                <span class="filter-icon me-1 grey-text">-->
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">-->
+<!--                    <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>-->
+<!--                    <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>-->
+<!--                    <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>-->
+<!--                    <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>-->
+<!--                  </svg>-->
+<!--                  30-->
+<!--                </span>-->
+<!--              </span>-->
+<!--            </div>-->
           </div>
           <div class="col col-10">
             <p class="comment-header grey-text">
               <i class="fa-solid fa-comment"></i>
-              485 comment
+              {{listComment?.length}}
             </p>
             <hr>
-            <div class="comment-item d-flex align-items-center justify-content-between mb-3">
+            <div class="comment-item d-flex align-items-center justify-content-between mb-3" *ngFor="let c of listComment">
               <div class="c-item-left d-flex align-items-center">
                 <div class="c-avt me-2">
-                  <img class="c-img" src="/assets/avt-default.png" alt="">
+                  <img class="c-img" src="{{c.users?.avatar}}" alt="">
                 </div>
                 <div class="c-desc">
-                  <p class="m-0 c-uname grey-text font-12">User com</p>
-                  <p class="m-0 c-content font-12">Lorem, ipsum dolor sit amet consectetur adipisicing elit</p>
+                  <p class="m-0 c-uname grey-text font-12">{{c.users?.name}}</p>
+                  <p class="m-0 c-content font-12">{{c.content}}</p>
                 </div>
               </div>
               <div class="c-item-right font-12">
-                <span class="c-time">11 hour ago</span>
-
-              </div>
-            </div>
-            <div class="comment-item d-flex align-items-center justify-content-between mb-3">
-              <div class="c-item-left d-flex align-items-center">
-                <div class="c-avt me-2">
-                  <img class="c-img" src="/assets/avt-default.png" alt="">
-                </div>
-                <div class="c-desc">
-                  <p class="m-0 c-uname grey-text font-12">User com</p>
-                  <p class="m-0 c-content font-12">Lorem, ipsum dolor sit amet consectetur adipisicing elit</p>
-                </div>
-              </div>
-              <div class="c-item-right font-12">
-                <span class="c-time">11 hour ago</span>
-
+                <span class="c-time">{{c.date}}</span>
               </div>
             </div>
           </div>
@@ -149,22 +156,19 @@
           </div>
           <hr class="m-0">
           <div class="random-list mt-3 mb-3">
-            <div class="random-item d-flex mb-1 pointer">
+            <div  class="random-item d-flex mb-1 pointer" *ngFor="let ss of suggestSongs" routerLink="/song/{{ss.id}}">
               <div class="random-img">
-                <img class="fit-image" src="/assets/avt-default.png" alt="">
+                <img class="fit-image" src="{{ss.users?.avatar}}" alt="">
               </div>
               <div class="random-song-desc ms-2">
-                <div class="grey-text line-16 font-12 fit-head">User name</div>
-                <div class="line-16 font-12">Song name</div>
+                <div class="grey-text line-16 font-12 fit-head">{{ss.users?.name}}</div>
+                <div class="line-16 font-12">{{ss.name}}</div>
                 <div class="react-box">
                   <span class="font-12 grey-text pe-2">
-                    <i class="fa-solid fa-heart"></i> 110K
+                    <i class="fa-solid fa-heart"></i> {{ss.userLikeSong?.length}}
                   </span>
                   <span class="font-12 grey-text pe-2">
-                    <i class="fa-solid fa-play"></i> 110K
-                  </span>
-                  <span class="font-12 grey-text">
-                    <i class="fa-solid fa-comment"></i> 100K
+                    <i class="fa-solid fa-play"></i> {{ss.views}}
                   </span>
                 </div>
               </div>
