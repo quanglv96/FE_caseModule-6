@@ -37,4 +37,8 @@ export class PlaylistService {
   updatePlaylist(idPlaylist:number, playlist:Playlist){
     return this.http.put<Playlist>(`${API_URL}/playlist/${idPlaylist}`,playlist)
   }
+
+  getTopLikePlaylist() {
+    return this.http.get<Playlist[]>(`${API_URL}/playlist/topLikePlaylist`)
+  }
 }

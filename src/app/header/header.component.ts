@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,10 @@ export class HeaderComponent implements OnInit{
   avatar=""
   @Input() textSearch: string | any
 
-  constructor(private router: Router, private userService:UserService,private dataService: DataService) {
+  constructor(private router: Router,
+              private userService:UserService,
+              private dataService: DataService,
+              private location:Location) {
   }
 
   routeSearch() {
@@ -43,8 +47,7 @@ export class HeaderComponent implements OnInit{
   logOut() {
     localStorage.removeItem('idUser');
     this.user = null;
-    this.dataService.changeMessage('log out')
-    return this.router.navigateByUrl('')
+    this.dataService.changeMessage('log out');
   }
 
 }
