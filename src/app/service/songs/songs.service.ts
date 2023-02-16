@@ -24,6 +24,9 @@ export class SongsService {
   listTop10SongsTrending(){
     return this.http.get(`${API_URL}/songs/listTop10SongsTrending`)
   }
+  listTop10SongsLikeTrending(){
+    return this.http.get(`${API_URL}/songs/listTop10SongsLikeTrending`)
+  }
   saveCreate(song:Songs){
     return this.http.post(`${API_URL}/songs`,song)
   }
