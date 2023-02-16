@@ -49,7 +49,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
-        this.url = song.audio;
+        this.url = 'https://firebasestorage.googleapis.com/v0/b/upload-file-540c6.appspot.com/o/audio%2FAgainShigatsuWaKimiNoUsoOST-V.A-3863048%20(1).mp3?alt=media&token=f286820b-7cd6-4257-b45e-82432b4d6e72'
         this.renderAudioOnStart()
         // @ts-ignore
         for (let i = 0; i < song.tagsList?.length; i++) {
