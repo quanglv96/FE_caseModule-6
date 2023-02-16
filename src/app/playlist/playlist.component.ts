@@ -79,7 +79,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     )
     this.commentService.getPlaylistComments(this.playlistId).subscribe(
-      data => {
+      (data: Comments[]) => {
         this.comments = data;
         console.log(this.comments[0])
       }
