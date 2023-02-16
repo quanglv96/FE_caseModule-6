@@ -50,7 +50,7 @@
     <div class="row p-3 py-4">
       <div class="col-8">
         <div class="d-flex justify-content-between">
-          <span [class.like]="isLike()" class="like-count border py-1 px-2 me-1 border-radius-1 pointer font-14">
+          <span [class.like]="statusLike" (click)="changeLike()"  class="like-count border py-1 px-2 me-1 border-radius-1 pointer font-14">
             <i class="fa-solid fa-heart"></i> {{ playlist?.userLikesPlaylist?.length }}
           </span>
           <span class="play-count py-1 ps-2 me-1 grey-text font-14">
@@ -112,13 +112,13 @@
       </div>
 
       <div class="col-4 border-start">
-        <div class="feedback">
+        <div class="feedback" [hidden]="!statusLogin">
           <div class="comment border d-flex">
             <img class="user-img" [src]="user?.avatar" alt="">
             <div class="input-container d-flex align-item-center justify-content-center py-2 px-2">
-              <input class="input-comment" type="text">
+              <input class="input-comment" [(ngModel)]="contentComment" type="text">
             </div>
-            <span class="send-btn">
+            <span class="send-btn" (click)="sendComment()">
               <i class="fa-solid fa-paper-plane"></i>
             </span>
           </div>

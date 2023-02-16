@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Playlist} from "../../model/Playlist";
+import {Songs} from "../../model/Songs";
 
 const API_URL = `${environment.apiUrl}`;
 
@@ -40,5 +41,8 @@ export class PlaylistService {
 
   getTopLikePlaylist() {
     return this.http.get<Playlist[]>(`${API_URL}/playlist/topLikePlaylist`)
+  }
+  changeLikePlaylistOrViews(playlist:Playlist){
+    return this.http.put(`${API_URL}/playlist/like`,playlist)
   }
 }
