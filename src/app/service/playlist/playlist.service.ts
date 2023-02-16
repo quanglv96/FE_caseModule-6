@@ -15,20 +15,21 @@ export class PlaylistService {
   }
 
   getTopPlaylist() {
-    return this.http.get<Playlist[]>(`${API_URL}/playlist/top`)
+    return this.http.get<Playlist[]>(`${API_URL}/playlist/listTop10ViewsPlaylistTrending`)
+  }
+
+  getTop10PlaylistByDateDesc() {
+    return this.http.get<Playlist[]>(`${API_URL}/playlist/listTop10PlaylistOrderByDateDesc`)
   }
 
   saveCreate(playlist: Playlist) {
     return this.http.post<Playlist>(`${API_URL}/playlist`,playlist)
   }
 
-  getNewPlaylist() {
-    return this.http.get<Playlist[]>(`${API_URL}/playlist/listTop10ViewsPlaylistTrending`)
-  }
-
   getPlaylistByUser(id: number) {
     return this.http.get<Playlist[]>(`${API_URL}/playlist/findPlaylistByUser/${id}`)
   }
+
   deletePlaylist(idPlaylist:number){
     return this.http.delete<Playlist>(`${API_URL}/playlist/${idPlaylist}`)
   }

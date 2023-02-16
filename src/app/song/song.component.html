@@ -53,9 +53,9 @@
           </div>
         </div>
         <div class="user-action px-3">
-          <span class="like-count border py-1 px-2 me-1 pointer" (click)="changeLike()">
+          <span [class.like]="statusLike" class="like-count border py-1 px-2 me-1 pointer" (click)="changeLike()">
 <!--            //đã like và chưa like-->
-            <i class="fa-sharp fa-solid fa-heart" *ngIf="statusLike"></i><i *ngIf="!statusLike" class="fa-sharp fa-regular fa-heart"></i> {{songs.userLikeSong?.length}}
+            <i class="fa-sharp fa-solid fa-heart"></i> {{songs.userLikeSong?.length}}
           </span>
           <span class="like-count border py-1 px-2 me-1 pointer">
             <i class="fa-solid fa-square-plus"></i> Add to playlist
