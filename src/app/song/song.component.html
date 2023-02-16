@@ -71,9 +71,9 @@
         <div class="row p-3">
           <div class="col-2">
             <div class="user-avt">
-              <img class="fit-image" src="/assets/avt-default.png" alt="">
+              <img class="fit-image" src="{{songs.users?.avatar}}" alt="">
             </div>
-            <p class="my-2 grey-text">Username</p>
+            <p class="my-2 grey-text">{{songs.users?.name}}</p>
             <div class="d-flex align-items-center justify-content-between">
               <span class="playlist-count d-flex align-items-center">
                 <span class="filter-icon me-1 grey-text">
@@ -156,7 +156,7 @@
           </div>
           <hr class="m-0">
           <div class="random-list mt-3 mb-3">
-            <div  class="random-item d-flex mb-1 pointer" *ngFor="let ss of suggestSongs" routerLink="/song/{{ss.id}}">
+            <div  class="random-item d-flex mb-1 pointer" *ngFor="let ss of suggestSongs" [routerLink]="['/song',ss.id]">
               <div class="random-img">
                 <img class="fit-image" src="{{ss.users?.avatar}}" alt="">
               </div>

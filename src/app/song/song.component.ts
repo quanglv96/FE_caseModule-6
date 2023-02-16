@@ -2,7 +2,7 @@ import {AfterViewInit, Component, EventEmitter, OnInit, Input} from '@angular/co
 import {NgxWavesurferService} from "ngx-wavesurfer";
 import * as $ from "jquery";
 import {CanComponentDeactivate} from "../service/can-deactivate";
-import {ActivatedRoute, Params, Router, ParamMap} from "@angular/router";
+import {ActivatedRoute, Router, ParamMap, Params} from "@angular/router";
 import {SongsService} from "../service/songs/songs.service";
 import {Songs} from "../model/Songs";
 import {data} from "jquery";
@@ -20,7 +20,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
   isPlaying = false;
   endTime: string = '';
   waveSurfer: any;
-  url = '/assets/Itsumo_nando_demo_Sprited_away_OST.mp3';
+  url: string | undefined;
   option = {
     container: '#waveform',
     waveColor: 'white',
@@ -33,7 +33,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
   }
   songs: Songs = {};
   listComment: Comments[] = []
-  stringTag: string = "";
+  stringTag: string|any;
   user: User = {}
   @Input() contentComment: string = "";
   suggestSongs: Songs[] = []
@@ -48,17 +48,17 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
   }
 
   ngOnInit() {
-    this.route.params.subscribe(
-      (params: Params) => {
-        if (this.waveSurfer !== undefined) {
-          this.url = '/assets/Futari_no_kimochi_Inuyasha_OST.mp3'
-          this.ngAfterViewInit()
-        }
-      }
-    )
     this.activeRouter.paramMap.subscribe((paramMap: ParamMap) => {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
+        this.route.params.subscribe(
+          () => {
+            if (this.waveSurfer !== undefined) {
+              this.url = this.songs.audio
+              this.ngAfterViewInit()
+            }
+          }
+        )
         // @ts-ignore
         for (let i = 0; i < song.tagsList?.length; i++) {
           // @ts-ignore
@@ -95,7 +95,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
     })
   }
 
-  loadAudio(wavesurfer: any, url: string) {
+  loadAudio(wavesurfer: any, url: string | undefined) {
     return new Promise((resolve, reject) => {
       wavesurfer.on('error', reject);
       wavesurfer.on('ready', resolve);
@@ -137,7 +137,7 @@ export class SongComponent implements OnInit, AfterViewInit, CanComponentDeactiv
     return true;
   }
 
-  test() {
-    this.router.navigate(['/song/3']).finally()
-  }
+  // test() {
+  //   this.router.navigate(['/song/3']).finally()
+  // }
 }
