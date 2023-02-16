@@ -17,7 +17,7 @@
             <div class="header-right">
               <div class="second-desc-row d-inline-block right-text">
                 <p class="date-upload m-0 font-16 pb-3 text-end">{{songs.date}}</p>
-                <span class="item-tag">{{stringTag}}</span>
+                <span *ngFor="let t of songs?.tagsList" class="item-tag">#{{t.name}}</span>
               </div>
             </div>
           </div>

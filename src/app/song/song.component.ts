@@ -36,7 +36,6 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
   songs: Songs = {};
   listComment: Comments[] = []
-  stringTag: string = "";
   user: User = {}
   @Input() contentComment: string = "";
   suggestSongs: Songs[] = []
@@ -58,6 +57,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       switch (message){
         case "log out":
           this.statusLogin=false;
+          this.statusLike=false;
           break;
         case "Login successfully":
           this.statusLogin=true;
@@ -76,17 +76,11 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
             this.statusLike=false;
             if (this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id) {
               this.statusLike = true;
-              console.log( 'trong' +this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id)
             }
           })
         }
         this.url = song.audio;
         this.renderAudioOnStart()
-        // @ts-ignore
-        for (let i = 0; i < song.tagsList?.length; i++) {
-          // @ts-ignore
-          this.stringTag += song.tagsList[i].name + " ";
-        }
         this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{this.countByUser=list})
         // @ts-ignore
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {

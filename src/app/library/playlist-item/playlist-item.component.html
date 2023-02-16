@@ -1,7 +1,7 @@
 <div class="row" *ngFor="let pl of listPlaylist">
   <div class="col-3">
-    <div class="playlist-image">
-      <img class="fit-image" src="{{pl.avatar}}" alt="">
+    <div class="playlist-image" [routerLink]="['/playlist',pl.id]">
+      <img class="fit-image" src="{{pl.avatar}}" alt="" >
     </div>
   </div>
   <div class="col-9 g-0">
@@ -17,7 +17,7 @@
         </div>
         <div class="text-end">
           <div class="right-section font-12 grey-text">{{pl.lastUpdate}}</div>
-          <span class="font-12 grey-text"><i class="fa-solid fa-play"></i> {{pl.views}}</span>
+          <span class="font-12 grey-text"><i class="fa-solid fa-play" [routerLink]="['/playlist',pl.id]"></i> {{pl.views}}</span>
         </div>
       </div>
       <div class="track-desc-second">
@@ -26,7 +26,7 @@
           <div class="song-item d-flex justify-content-between pointer" *ngFor="let s of pl.songsList;index as i" >
             <div style="height: 100%" class="d-flex" >
               <div class="image" >
-                <img class="fit-image" src="{{s.avatar}}" alt="" >
+                <img class="fit-image" src="{{s.avatar}}" alt="" [routerLink]="['/song',s.id]">
               </div>
               <span class="ms-2 d-flex align-items-center font-12"> {{i+1}} - {{s.name}}</span>
             </div>

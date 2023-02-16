@@ -36,13 +36,17 @@ const routes: Routes = [
       ]}
   ]},
   {path: 'trending', component: TrendingComponent},
-  {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard]},
-  {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard]},
+  {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard],pathMatch: 'full'},
+  {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard],pathMatch: 'full'},
   {path: '', component: HomeComponent, pathMatch: 'full'},
+  //trending go to songDetail
+  {path: 'trending/song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard],pathMatch: 'full'},
+  {path: 'trending/playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard],pathMatch: 'full'},
+
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
