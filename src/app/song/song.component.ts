@@ -50,6 +50,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
         this.url = song.audio;
+        console.log(this.url)
         this.renderAudioOnStart()
         // @ts-ignore
         for (let i = 0; i < song.tagsList?.length; i++) {

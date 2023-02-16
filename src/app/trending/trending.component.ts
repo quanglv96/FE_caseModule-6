@@ -15,7 +15,7 @@ export class TrendingComponent implements OnInit {
   topLikeSongs: Songs[] = []
   topPlaylists: Playlist[] = []
   newPlaylists: Playlist[] = []
-  topLikePlaylists: Songs[] = []
+  topLikePlaylists: Playlist[] = []
 
   constructor(private songService: SongsService,
               private playlistService: PlaylistService) {
@@ -43,5 +43,11 @@ export class TrendingComponent implements OnInit {
         this.newPlaylists = data;
       }
     )
+    this.playlistService.getTopLikePlaylist().subscribe(
+      data => {
+        this.topLikePlaylists = data;
+      }
+    )
+
   }
 }
