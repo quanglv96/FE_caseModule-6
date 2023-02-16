@@ -17,6 +17,7 @@ import {DataService} from "../service/data/data.service";
   styleUrls: ['./song.component.css']
 })
 export class SongComponent implements OnInit, CanComponentDeactivate {
+  autoplay = false;
   isPlaying = false;
   endTime: string = '';
   waveSurfer: any;
@@ -103,10 +104,15 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.waveSurfer = this.waveSurferService.create(this.option)
     this.loadAudio(this.waveSurfer, this.url).then(() => {
       this.endTime = this.getDuration();
+      if (this.autoplay) {
+        this.waveSurfer.playPause();
+        this.isPlaying = this.waveSurfer.isPlaying()
+      }
     })
     this.waveSurfer.on('finish', () => {
       this.isPlaying = false;
-      $('.random-item-0').trigger('click')
+      let number = Math.floor(Math.random() * 5)
+      $('.random-item-' + number).trigger('click')
     })
   }
 
@@ -119,6 +125,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   playPause() {
+    this.autoplay = true;
     this.waveSurfer.playPause();
     this.isPlaying = this.waveSurfer.isPlaying()
   }
