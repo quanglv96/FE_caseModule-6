@@ -10,6 +10,8 @@ import {Comments} from "../model/Comments";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
+import {MatDialog} from "@angular/material/dialog";
+import {AddSongToPlaylistComponent} from "../add-song-to-playlist/add-song-to-playlist.component";
 
 @Component({
   selector: 'app-song',
@@ -40,15 +42,15 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   suggestSongs: Songs[] = []
   statusLike: boolean|undefined;
   statusLogin: boolean|undefined;
-  countByUser:any
+  countByUser: any
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
               private route: ActivatedRoute,
               private songService: SongsService,
               private userService: UserService,
-              private dataService: DataService
-  ) {
+              private dataService: DataService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -158,14 +160,27 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   changeLike() {
-    if(!this.statusLike){
+    if (!this.statusLike) {
       this.songs.userLikeSong?.push(this.user)
-    }else {
-
-      this.songs.userLikeSong=this.songs.userLikeSong?.filter(element=>element.id!=this.user.id)
+    } else {
+      this.songs.userLikeSong = this.songs.userLikeSong?.filter(element => element.id != this.user.id)
     }
-    this.statusLike=!this.statusLike
-    this.songService.changeLikeSongOrViews(this.songs).subscribe(()=>{
+    this.statusLike = !this.statusLike
+    this.songService.changeLikeSongOrViews(this.songs).subscribe(() => {
     })
+  }
+
+  openCustomModal() {
+    const dialogRef = this.dialog.open(AddSongToPlaylistComponent, {
+      width: '500px',
+      data: {
+        userId: this.user.id,
+        songId: this.songs.id
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }
