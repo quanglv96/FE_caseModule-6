@@ -12,7 +12,7 @@
 .play-button {
   width: 60px;
   height: 60px;
-  background-color: black;
+  background-color: orangered;
   color: white;
   border-radius: 50%;
   cursor: pointer;
@@ -154,4 +154,40 @@
 
 .time-end {
   margin-right: 3px;
+}
+
+.play-count {
+  border: 1px solid transparent;
+}
+
+.like-count, .play-count {
+  letter-spacing: 1px;
+}
+
+.p-user {
+  padding: 8px 16px;
+  color: white;
+  background-color: black;
+}
+
+.p-playlist {
+  padding: 10px 16px;
+  color: white;
+  background-color: black;
+}
+
+.song-play {
+  padding: 8px 16px;
+  color: white;
+  background-color: #e74000;
+  letter-spacing: 1px;
+}
+
+.comment-item {
+  width: 100%;
+}
+
+.like {
+  border: 1px solid orangered;
+  color: orangered;
 }

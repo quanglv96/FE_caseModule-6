@@ -101,13 +101,12 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
 
   renderAudioOnStart() {
     this.waveSurfer = this.waveSurferService.create(this.option)
-    console.log(this.url)
     this.loadAudio(this.waveSurfer, this.url).then(() => {
       this.endTime = this.getDuration();
     })
     this.waveSurfer.on('finish', () => {
       this.isPlaying = false;
-      $('.fit-image').trigger('click')
+      $('.random-item-0').trigger('click')
     })
   }
 

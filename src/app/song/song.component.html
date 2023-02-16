@@ -10,8 +10,8 @@
                 <i *ngIf="isPlaying" style="font-size: 24px" class="fa-solid fa-pause"></i>
               </div>
               <div class="first-desc-row d-inline-block">
-                <p class="user-upload m-0 font-24">{{songs.users?.username}}</p>
-                <p class="item-name m-0 font-16">{{songs.name}}</p>
+                <p class="s-user m-0 mb-1 font-24">{{songs.users?.username}}</p>
+                <p class="s-name m-0 font-16">{{songs.name}}</p>
               </div>
             </div>
             <div class="header-right">
@@ -71,7 +71,7 @@
         <div class="row p-3">
           <div class="col-2">
             <div class="user-avt">
-              <img class="fit-image" src="{{songs.users?.avatar}}" alt="">
+              <img class="fit-image circle" src="{{songs.users?.avatar}}" alt="">
             </div>
             <p class="my-2 grey-text">{{songs.users?.name}}</p>
             <div class="d-flex align-items-center justify-content-between">
@@ -156,7 +156,7 @@
           </div>
           <hr class="m-0">
           <div class="random-list mt-3 mb-3">
-            <div  class="random-item d-flex mb-1 pointer" *ngFor="let ss of suggestSongs" [routerLink]="['/song',ss.id]">
+            <div class="random-item random-item-{{ i }} d-flex mb-1 pointer" *ngFor="let ss of suggestSongs; let i = index" routerLink="/song/{{ss.id}}">
               <div class="random-img">
                 <img class="fit-image" src="{{ss.users?.avatar}}" alt="">
               </div>

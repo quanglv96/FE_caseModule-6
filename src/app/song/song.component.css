@@ -12,7 +12,7 @@
 .play-button {
   width: 60px;
   height: 60px;
-  background-color: black;
+  background-color: orangered;
   color: white;
   border-radius: 50%;
   cursor: pointer;
@@ -152,4 +152,16 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+
+.s-user {
+  padding: 8px 16px;
+  color: white;
+  background-color: black;
+}
+
+.s-name {
+  padding: 12px 16px;
+  color: white;
+  background-color: black;
 }
