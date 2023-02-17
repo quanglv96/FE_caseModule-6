@@ -10,6 +10,8 @@ import {Comments} from "../model/Comments";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
+import {MatDialog} from "@angular/material/dialog";
+import {AddSongToPlaylistComponent} from "../add-song-to-playlist/add-song-to-playlist.component";
 
 @Component({
   selector: 'app-song',
@@ -34,21 +36,20 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
   songs: Songs = {};
   listComment: Comments[] = []
-  stringTag: string = "";
   user: User = {}
   @Input() contentComment: string = "";
   suggestSongs: Songs[] = []
   statusLike: boolean|undefined;
   statusLogin: boolean|undefined;
-  countByUser:any
+  countByUser: any
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
               private route: ActivatedRoute,
               private songService: SongsService,
               private userService: UserService,
-              private dataService: DataService
-  ) {
+              private dataService: DataService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -56,6 +57,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       switch (message){
         case "log out":
           this.statusLogin=false;
+          this.statusLike=false;
           break;
         case "Login successfully":
           this.statusLogin=true;
@@ -74,17 +76,11 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
             this.statusLike=false;
             if (this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id) {
               this.statusLike = true;
-              console.log( 'trong' +this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id)
             }
           })
         }
         this.url = song.audio;
         this.renderAudioOnStart()
-        // @ts-ignore
-        for (let i = 0; i < song.tagsList?.length; i++) {
-          // @ts-ignore
-          this.stringTag += song.tagsList[i].name + " ";
-        }
         this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{this.countByUser=list})
         // @ts-ignore
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
@@ -158,14 +154,27 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   changeLike() {
-    if(!this.statusLike){
+    if (!this.statusLike) {
       this.songs.userLikeSong?.push(this.user)
-    }else {
-
-      this.songs.userLikeSong=this.songs.userLikeSong?.filter(element=>element.id!=this.user.id)
+    } else {
+      this.songs.userLikeSong = this.songs.userLikeSong?.filter(element => element.id != this.user.id)
     }
-    this.statusLike=!this.statusLike
-    this.songService.changeLikeSongOrViews(this.songs).subscribe(()=>{
+    this.statusLike = !this.statusLike
+    this.songService.changeLikeSongOrViews(this.songs).subscribe(() => {
     })
+  }
+
+  openCustomModal() {
+    const dialogRef = this.dialog.open(AddSongToPlaylistComponent, {
+      width: '500px',
+      data: {
+        userId: this.user.id,
+        songId: this.songs.id
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }

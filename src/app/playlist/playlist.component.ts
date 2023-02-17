@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Playlist} from "../model/Playlist";
 import {PlaylistService} from "../service/playlist/playlist.service";
 import {NgxWavesurferService} from "ngx-wavesurfer";
@@ -9,6 +9,7 @@ import * as $ from 'jquery'
 import {CanComponentDeactivate} from "../service/can-deactivate";
 import {CommentService} from "../service/comment/comment.service";
 import {Comments} from "../model/Comments";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-playlist',
@@ -17,13 +18,13 @@ import {Comments} from "../model/Comments";
 })
 export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   comments: Comments[] = []
-  userData :any= [];
+  userData: any = [];
   songPlay?: string = '';
   songUser?: string = '';
-  playlist?: Playlist;
+  playlist: Playlist = {};
   playlistId?: number
   userId?: number
-  user?: User
+  user: User | any;
   wavesurfer: any
   option = {
     container: '#waveform',
@@ -38,29 +39,48 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   isStartPlaying = false;
   isPlaying = false;
   endTime: string = '';
+  statusLike: boolean | undefined;
+  statusLogin: boolean | undefined;
 
   constructor(private playlistService: PlaylistService,
               public waveSurferService: NgxWavesurferService,
-              private route: ActivatedRoute,
+              private activatedRoute: ActivatedRoute,
               private userService: UserService,
-              private commentService: CommentService) {
+              private commentService: CommentService,
+              private dataService: DataService,
+              private router:Router) {
   }
 
   ngOnInit() {
-    // @ts-ignore
-    this.userId = localStorage.getItem('idUser');
-    console.log(this.userId)
-    if (!!this.userId) {
-      this.userService.getUser(+this.userId).subscribe(
-        data => {this.user = data}
-      )
-    }
-    this.playlistId = +this.route.snapshot.params['id']
-    this.playlistService.findPlaylistById(this.playlistId).subscribe(
-      data => {this.playlist = data;
-        console.log(this.playlist)}
+    this.dataService.currentMessage.subscribe(message => {
+      switch (message) {
+        case "log out":
+          this.statusLogin = false;
+          this.statusLike=false;
+          break;
+        case "Login successfully":
+          this.statusLogin = true;
+          break;
+      }
+    })
+    this.playlistId = +this.activatedRoute.snapshot.params['id']
+    this.playlistService.findPlaylistById(this.playlistId).subscribe(data => {
+        this.playlist = data;
+        // @ts-ignore
+        this.playlist.views = this.playlist?.views + 1
+        if (localStorage.getItem('idUser')) {
+          this.statusLogin = true
+          this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
+            this.user = users;
+            this.statusLike = false;
+            if (this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id) {
+              this.statusLike = true;
+            }
+          })
+        }
+      }
     )
-    this.route.params.subscribe(
+    this.activatedRoute.params.subscribe(
       (params: Params) => {
         this.playlistId = +params['id']
         this.playlistService.findPlaylistById(this.playlistId).subscribe(
@@ -93,7 +113,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       this.wavesurfer.playPause();
       this.isPlaying = this.wavesurfer.isPlaying();
     }
-    console.log(this.isLike())
   }
 
   loadSong(i: number) {
@@ -153,7 +172,34 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     return true;
   }
 
-  isLike() {
-    return !!this.playlist?.userLikesPlaylist?.find(id => id.id == this.userId);
+
+  @Input() contentComment: string = "";
+
+  sendComment() {
+    const comment = {
+      content: this.contentComment,
+      users: this.user,
+      playlist: this.playlist
+    }
+    // @ts-ignore
+    this.songService.saveComment(comment).subscribe((comment: Comments[]) => {
+      this.contentComment = '';
+      this.comments = comment;
+    })
+  }
+
+  changeLike() {
+    if(!this.statusLogin){
+      this.router.navigateByUrl('auth').finally()
+    }else {
+      if (!this.statusLike) {
+        this.playlist?.userLikesPlaylist?.push(this.user)
+      } else {
+        this.playlist.userLikesPlaylist = this.playlist?.userLikesPlaylist?.filter(element => element.id != this.user.id)
+      }
+      this.statusLike = !this.statusLike
+      this.playlistService.changeLikePlaylistOrViews(this.playlist).subscribe(() => {
+      })
+    }
   }
 }

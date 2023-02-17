@@ -1,0 +1,45 @@
+<div class="p-4">
+  <form>
+    <div class="header d-flex border-bottom">
+      <h2 class="pb-2 tab" [class.active]="addMode" (click)="switchTo('create-new')">Add to playlist</h2>
+      <span class="mx-2"></span>
+      <h2 class="pb-2 tab" [class.active]="!addMode" (click)="switchTo('add-song')">Create new playlist</h2>
+    </div>
+
+    <div class="my-3" *ngIf="addMode">
+      <div *ngIf="!!playlists?.length">
+        <div *ngFor="let p of playlists" class="playlist d-flex justify-content-between">
+          <div class="left-section d-flex align-items-center">
+            <div class="image">
+              <img class="fit-image" [src]="p.avatar" alt="">
+            </div>
+            <div class="description">
+              <div class="font-12">{{ p.name }}</div>
+              <div class="font-12 grey-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-soundwave" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8.5 2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-1 0v-11a.5.5 0 0 1 .5-.5zm-2 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm-6 1.5A.5.5 0 0 1 5 6v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm8 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm-10 1A.5.5 0 0 1 3 7v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5zm12 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5z"/>
+                </svg>
+                {{ p.songsList?.length }}
+              </div>
+            </div>
+          </div>
+          <div class="right-section d-flex justify-content-end align-items-center">
+            <span class="font-12 added" [hidden]="!isPlaylistContainSong(p)">Added</span>
+            <button class="font-12 add-btn" [hidden]="isPlaylistContainSong(p)">Add</button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="playlists?.length == 0" class="grey-text text-center">Your play list is empty, please create one</div>
+    </div>
+
+    <div class="my-3" *ngIf="!addMode">
+      <label for="playlist-name">Playlist name:</label>
+      <input type="text" class="input-playlist" id="playlist-name">
+    </div>
+
+    <div class="d-flex justify-content-end pt-3">
+      <button class="button me-2" (click)="cancel()">Cancel</button>
+      <button class="button submit" (click)="save()">Save</button>
+    </div>
+  </form>
+</div>

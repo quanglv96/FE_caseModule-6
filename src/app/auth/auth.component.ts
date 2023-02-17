@@ -106,7 +106,8 @@ export class AuthComponent implements OnInit {
           title: 'Register successfully',
           icon: "success",
           showConfirmButton: false,
-          showCloseButton: true,
+          showCloseButton: false,
+          timer:1000,
           customClass: {
             title: 'success-message',
             popup: 'popup',
@@ -124,7 +125,8 @@ export class AuthComponent implements OnInit {
           title: 'Account already exist',
           icon: "error",
           showConfirmButton: false,
-          showCloseButton: true,
+          showCloseButton: false,
+          timer:1000,
           customClass: {
             title: 'error-message',
             popup: 'popup',
@@ -151,7 +153,8 @@ export class AuthComponent implements OnInit {
           title: 'Login successfully',
           icon: "success",
           showConfirmButton: false,
-          showCloseButton: true,
+          showCloseButton: false,
+          timer:1000,
           customClass: {
             title: 'success-message',
             popup: 'popup',
@@ -168,7 +171,8 @@ export class AuthComponent implements OnInit {
           title: error['error'],
           icon: "error",
           showConfirmButton: false,
-          showCloseButton: true,
+          showCloseButton: false,
+          timer:1000,
           customClass: {
             title: 'error-message',
             popup: 'popup',
