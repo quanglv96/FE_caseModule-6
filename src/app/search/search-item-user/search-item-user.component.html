@@ -1,16 +1,16 @@
 <div class="row">
   <div class="item-image col-3">
     <div class="image circle">
-      <img class="fit-image circle" src="/assets/avt-default.png" alt="">
+      <img class="fit-image circle" src="{{user.avatar}}" alt="">
     </div>
   </div>
   <div class="item-desc col-9 user-desc">
     <div class="d-flex align-items-center">
       <div>
 <!--        Username-->
-        <p class="m-0 font-16 bold"> {{username}}</p>
+        <p class="m-0 font-16 bold"> {{user.username}}</p>
 <!--        Name-->
-        <p class="m-0 grey-text">{{name}}</p>
+        <p class="m-0 grey-text">{{user.name}}</p>
         <p class="m-0 grey-text">Address</p>
       </div>
     </div>

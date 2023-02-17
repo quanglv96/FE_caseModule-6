@@ -4,6 +4,7 @@ import {Playlist} from "../../model/Playlist";
 import {PlaylistService} from "../../service/playlist/playlist.service";
 import {Router} from "@angular/router";
 import {DataService} from "../../service/data/data.service";
+import SwAl from "sweetalert2";
 
 @Component({
   selector: 'app-playlist-item',
@@ -31,12 +32,45 @@ export class PlaylistItemComponent implements OnInit {
   editPlaylist(id: number | any) {
     return this.router.navigateByUrl("/library/playlist/edit/" + id)
   }
-
-  deletePlaylist(id: number | any) {
-    this.playlistService.deletePlaylist(id).subscribe(() => {
-        this.dataService.changeMessage("save thành công");
-        return this.router.navigateByUrl('/library/playlist')
+  confirmDelete( id: number | any, name: string|any){
+    // @ts-ignore
+     return SwAl.fire({
+      title: `Are you sure delete Playlist: "${name}"?`,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel please!",
+      closeOnConfirm: false,
+      closeOnCancel: false
+    }).then(result=>{
+      if(result.isConfirmed){
+        this.deletePlaylist(id)
+      }else if (result.isDenied) {
+        SwAl.fire('Changes are not saved', '', 'info').then()
       }
-    )
+     });
   }
+  // awit: thực hiện xong phương thức confirm r mới đến phương thức asyc
+  deletePlaylist(id: number | any) {
+      this.playlistService.deletePlaylist(id).subscribe(() => {
+        // @ts-ignore
+        SwAl.fire({
+          title: `Delete Success`,
+          icon:"success",
+          showCancelButton: false,
+          showCloseButton: false,
+          timer:2000,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then();
+          this.dataService.changeMessage("Save Success");
+          return this.router.navigateByUrl('/library/playlist')
+        }
+      )
+    }
 }

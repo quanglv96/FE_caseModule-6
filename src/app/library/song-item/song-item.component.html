@@ -17,7 +17,7 @@
           </div>
         </div>
 <!--        date-->
-        <div class="right-section font-12 grey-text">{{s.date}}</div>
+        <div class="right-section font-12 grey-text">{{s.date | amTimeAgo}}</div>
       </div>
       <div class="track-desc-second">
 <!--        wave-->
@@ -27,7 +27,7 @@
             <span class="act-btn font-12" (click)="likeSong(s.id)"><i class="fa-solid fa-heart" ></i> Like</span>
             <span class="act-btn font-12" (click)="editSong(s.id)"><i class="fa-solid fa-pen" ></i> Edit</span>
             <span class="act-btn font-12" (click)="addPlayList(s.id)"><i class="fa-solid fa-plus" ></i> Add to playlist</span>
-            <span class="act-btn font-12" (click)="deleteSong(s.id)"><i class="fa-solid fa-trash" ></i> Delete</span>
+            <span class="act-btn font-12" (click)="confirmDelete(s.id,s.name)"><i class="fa-solid fa-trash" ></i> Delete</span>
           </div>
           <div class="view d-flex align-items-center">
             <span class="font-12 grey-text"><i class="fa-solid fa-play"></i> {{s.views}}</span>
