@@ -27,6 +27,7 @@ export class SearchItemSongComponent implements OnInit {
   }
 
   constructor(private router: Router) {
+
   }
 
   playSong(id: any) {
