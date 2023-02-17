@@ -104,6 +104,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         console.log(this.comments[0])
       }
     )
+    this.dataService.changeMessage("clearSearch");
   }
 
   playPause() {

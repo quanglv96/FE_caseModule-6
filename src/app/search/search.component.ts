@@ -49,7 +49,7 @@ export class SearchComponent implements OnInit {
       this.resultPlaylist = data[1]
       this.resultUser = data[2]
       this.statisticalContent = `Found ${this.resultSong.length} Songs, ${this.resultUser.length} people, ${this.resultPlaylist.length} playlists`
-      localStorage.setItem('resultSearch', JSON.stringify(this.resultSearch));
+
     })
   }
   random(data: any) {

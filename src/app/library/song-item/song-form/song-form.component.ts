@@ -2,14 +2,14 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import * as $ from "jquery";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Tags} from "../../../model/Tags";
 import {Songs} from "../../../model/Songs";
 import {FileUploadService} from "../../../service/file-upload.service";
-import {User} from "../../../model/User";
-import {Singer} from "../../../model/Singer";
 import {SongsService} from "../../../service/songs/songs.service";
 import {DataService} from "../../../service/data/data.service";
-import {Playlist} from "../../../model/Playlist";
+
+import SwAl from "sweetalert2";
+import {EditStringTagsService} from "../../../service/edit-string-tags.service";
+import {EditStringSingerService} from "../../../service/edit-string-singer.service";
 
 @Component({
   selector: 'app-song-form',
@@ -36,7 +36,9 @@ export class SongFormComponent implements OnInit {
               private fileUpload: FileUploadService,
               private songService: SongsService,
               private router: Router,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private editStringTag: EditStringTagsService,
+              private editStringSinger:EditStringSingerService) {
   }
 
   ngOnInit(): void {
@@ -49,17 +51,43 @@ export class SongFormComponent implements OnInit {
     })
   }
 
+  // @ts-ignore
   submitForm() {
+    SwAl.fire('Please wait').then();
+    SwAl.showLoading()
+
     if (!this.editIdSong) {
       const form: Songs = this.formSong.value;
       let urlAvatar: string = 'https://demo.tutorialzine.com/2015/03/html5-music-player/assets/img/default.png'
       if (this.audio?.nativeElement.files[0]) {
         if (this.audio?.nativeElement.files[0].name.includes('jpg')) {
-          return alert("chỗ up file mp3 không up ảnh")
+          return SwAl.fire({
+            title: 'Audio file must format .mp3',
+            icon: "error",
+            showConfirmButton: false,
+            showCloseButton: true,
+            customClass: {
+              title: 'error-message',
+              popup: 'popup',
+              confirmButton: 'confirm-btn',
+              closeButton: 'close-btn'
+            }
+          }).then()
         }
         if (this.avatar?.nativeElement.files[0]) {
           if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-            return alert("chỗ up ảnh không up mp3")
+            return SwAl.fire({
+              title: 'Avatar file must format .jpg',
+              icon: "error",
+              showConfirmButton: false,
+              showCloseButton: true,
+              customClass: {
+                title: 'error-message',
+                popup: 'popup',
+                confirmButton: 'confirm-btn',
+                closeButton: 'close-btn'
+              }
+            }).then()
           } else {
             this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
               urlAvatar = pathAvatar;
@@ -73,125 +101,156 @@ export class SongFormComponent implements OnInit {
             avatar: urlAvatar,
             // @ts-ignore
             users: {id: localStorage.getItem('idUser')},
-            singerList: this.editStringSinger(this.stringSinger),
+            singerList: this.editStringSinger.editStringSinger(this.stringSinger),
             composer: form.composer,
-            tagsList: this.editStringTag(this.stringTag)
+            tagsList: this.editStringTag.editStringTag(this.stringTag)
           }
           this.songService.saveCreate(songs).subscribe(() => {
-            alert(" tạo thành công");
-            this.dataService.changeMessage("add song thành công")
+            SwAl.fire({
+              title: 'Upload Song Success',
+              icon: "success",
+              showConfirmButton: false,
+              showCloseButton: false,
+              timer: 2000,
+              customClass: {
+                title: 'success-message',
+                popup: 'popup',
+                confirmButton: 'confirm-btn',
+                closeButton: 'close-btn'
+              }
+            }).then()
+            this.dataService.changeMessage("Save Success")
             return this.router.navigateByUrl('/library/song')
           })
         })
       } else {
-        alert("tạo bài hát mới phải có file mp3. vui lòng cập nhập")
+        return SwAl.fire({
+          title: 'You have not updated the audio file',
+          icon: "error",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then()
       }
     } else {
-      this.updateSong();
+      // @ts-ignore
+      this.updateSong().then();
     }
   }
 
+  // @ts-ignore
   updateSong() {
-    const form = this.formSong.value;
-    let urlAudio: string|undefined="";
-    let urlAvatar: string|undefined="";
-
-
+    let urlAudio: string | undefined = "";
+    let urlAvatar: string | undefined = "";
     if (this.audio?.nativeElement?.files[0]) {
       if (this.audio?.nativeElement.files[0].name.includes('jpg')) {
-        return alert("chỗ up file mp3 không up ảnh")
+        return SwAl.fire({
+          title: 'Audio file must format .mp3',
+          icon: "error",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then()
       } else {
+        // @ts-ignore
         this.fileUpload.pushFileToStorage("audio", this.audio?.nativeElement.files[0]).subscribe(pathAudio => {
           urlAudio = pathAudio;
           if (this.avatar?.nativeElement.files[0]) {
             if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-              return alert("chỗ up ảnh không up mp3")
+              return SwAl.fire({
+                title: 'Avatar file must format .jpg',
+                icon: "error",
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: {
+                  title: 'error-message',
+                  popup: 'popup',
+                  confirmButton: 'confirm-btn',
+                  closeButton: 'close-btn'
+                }
+              }).then()
             } else {
               this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
                 urlAvatar = pathAvatar;
-                const songs: Songs = {
-                  name: form.name,
-                  audio: urlAudio,
-                  avatar: urlAvatar,
-                  // @ts-ignore
-                  users: this.oldSong?.users,
-                  singerList: this.editStringSinger(this.stringSinger),
-                  composer: form.composer,
-                  tagsList: this.editStringTag(this.stringTag)
-                }
-                this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
-                  alert(" tạo thành công");
-                  this.dataService.changeMessage("update thành công")
-                  return this.router.navigateByUrl('/library/song')
-                })
+                this.saveUpdateSong(urlAudio, urlAvatar)
               })
             }
-          }else {
+          } else {
             urlAvatar = this.oldSong?.avatar;
-            const songs: Songs = {
-              name: form.name,
-              audio: urlAudio,
-              avatar: urlAvatar,
-              // @ts-ignore
-              users: this.oldSong?.users,
-              singerList: this.editStringSinger(this.stringSinger),
-              composer: form.composer,
-              tagsList: this.editStringTag(this.stringTag)
-            }
-            this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
-              alert(" tạo thành công");
-              this.dataService.changeMessage("update thành công")
-              return this.router.navigateByUrl('/library/song')
-            })
+            this.saveUpdateSong(urlAudio, urlAvatar)
           }
         })
       }
-    }else {
+    } else {
       urlAudio = this.oldSong?.audio;
       if (this.avatar?.nativeElement.files[0]) {
         if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-          return alert("chỗ up ảnh không up mp3")
+          return SwAl.fire({
+            title: 'Audio file must format .mp3',
+            icon: "error",
+            showConfirmButton: false,
+            showCloseButton: true,
+            customClass: {
+              title: 'error-message',
+              popup: 'popup',
+              confirmButton: 'confirm-btn',
+              closeButton: 'close-btn'
+            }
+          }).then()
         } else {
           this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
             urlAvatar = pathAvatar;
-            const songs: Songs = {
-              name: form.name,
-              audio: urlAudio,
-              avatar: urlAvatar,
-              // @ts-ignore
-              users: this.oldSong?.users,
-              singerList: this.editStringSinger(this.stringSinger),
-              composer: form.composer,
-              tagsList: this.editStringTag(this.stringTag)
-            }
-            this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
-              alert(" tạo thành công");
-              this.dataService.changeMessage("update thành công")
-              return this.router.navigateByUrl('/library/song')
-            })
+            this.saveUpdateSong(urlAudio, urlAvatar)
           })
         }
-      }else {
+      } else {
         urlAvatar = this.oldSong?.avatar;
-        const songs: Songs = {
-          name: form.name,
-          audio: urlAudio,
-          avatar: urlAvatar,
-          // @ts-ignore
-          users: this.oldSong?.users,
-          singerList: this.editStringSinger(this.stringSinger),
-          composer: form.composer,
-          tagsList: this.editStringTag(this.stringTag)
-        }
-        this.songService.updateSong(this.oldSong?.id,songs).subscribe(() => {
-          alert(" tạo thành công");
-          this.dataService.changeMessage("update thành công")
-          return this.router.navigateByUrl('/library/song')
-        })
+        this.saveUpdateSong(urlAudio, urlAvatar)
       }
     }
 
   }
+
+  saveUpdateSong(pathAudio: string | any, pathAvatar: string | any) {
+    const songs: Songs = {
+      name: this.formSong.value.name,
+      audio: pathAudio,
+      avatar: pathAvatar,
+      // @ts-ignore
+      users: this.oldSong?.users,
+      singerList: this.editStringSinger.editStringSinger(this.stringSinger),
+      composer: this.formSong.value.composer,
+      tagsList: this.editStringTag.editStringTag(this.stringTag)
+    }
+    this.songService.updateSong(this.oldSong?.id, songs).subscribe(() => {
+      SwAl.fire({
+        title: 'Update Song Success',
+        icon: "success",
+        showConfirmButton: false,
+        showCloseButton: false,
+        timer: 2000,
+        customClass: {
+          title: 'success-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+      this.dataService.changeMessage("Update Success")
+      return this.router.navigateByUrl('/library/song')
+    })
+  }
+
 
   openFormEdit(idSong: any) {
     this.songService.findSongById(idSong).subscribe((data: Songs) => {
@@ -218,43 +277,6 @@ export class SongFormComponent implements OnInit {
       }
       this.titleContent = "Update Playlist"
     })
-  }
-
-  editStringSinger(stringSinger: string): Singer[] {
-    let list = stringSinger.split(",")
-    let singer: Singer[] = []
-    for (let i = 0; i < list.length; i++) {
-      let listIndex = list[i].split(" ")
-      list[i] = "";
-      for (let j = 0; j < listIndex.length; j++) {
-        list[i] += listIndex[j].charAt(0).toUpperCase() + listIndex[j].slice(1) + " ";
-      }
-      // @ts-ignore
-      singer.push({id: null, name: list[i]})
-    }
-    console.log(singer)
-    return singer;
-  }
-
-  editStringTag(stringTag: string): Tags[] {
-    let list = stringTag.split("#")
-    for (let i = 1; i < list.length; i++) {
-      if (list[i] !== "") {
-        //xóa khoảng trắng
-        list[i] = list[i].replaceAll(" ", "");
-        // lowe case
-        list[i] = list[i].toLowerCase();
-      }
-    }
-    list = Array.from(new Set(list));
-    let tag: Tags[] = [];
-    for (let i = 0; i < list.length; i++) {
-      if (list[i] != "") {
-        // @ts-ignore
-        tag.push({id: null, name: list[i]})
-      }
-    }
-    return tag;
   }
 
   openUpload(s: string) {

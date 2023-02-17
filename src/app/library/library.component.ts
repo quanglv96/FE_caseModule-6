@@ -56,6 +56,7 @@ export class LibraryComponent implements OnInit {
         })
       });
     })
+    this.dataService.changeMessage("clearSearch");
   }
 
   option = {
@@ -69,9 +70,8 @@ export class LibraryComponent implements OnInit {
     console.log(this.childPath)
     if (this.childPath === 'song') {
       this.router.navigate(['/library/song/new']).finally()
-    } else if (this.childPath === 'playlist') {
+    }else {
       this.router.navigate(['/library/playlist/new']).finally()
     }
   }
-
 }

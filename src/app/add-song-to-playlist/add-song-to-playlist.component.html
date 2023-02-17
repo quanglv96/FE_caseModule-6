@@ -8,7 +8,7 @@
 
     <div class="my-3" *ngIf="addMode">
       <div *ngIf="!!playlists?.length">
-        <div *ngFor="let p of playlists" class="playlist d-flex justify-content-between">
+        <div *ngFor="let p of playlists;index as i" class="playlist d-flex justify-content-between">
           <div class="left-section d-flex align-items-center">
             <div class="image">
               <img class="fit-image" [src]="p.avatar" alt="">
@@ -24,8 +24,8 @@
             </div>
           </div>
           <div class="right-section d-flex justify-content-end align-items-center">
-            <span class="font-12 added" [hidden]="!isPlaylistContainSong(p)">Added</span>
-            <button class="font-12 add-btn" [hidden]="isPlaylistContainSong(p)">Add</button>
+            <button class="font-12 added add-btn" [hidden]="!isPlaylistContainSong(i)" (click)="deleteSongInPlaylist(i)">Added</button>
+            <button class="font-12 add-btn" [hidden]="isPlaylistContainSong(i)" (click)="addSongToPlaylist(i)" >Add</button>
           </div>
         </div>
       </div>
@@ -35,11 +35,6 @@
     <div class="my-3" *ngIf="!addMode">
       <label for="playlist-name">Playlist name:</label>
       <input type="text" class="input-playlist" id="playlist-name">
-    </div>
-
-    <div class="d-flex justify-content-end pt-3">
-      <button class="button me-2" (click)="cancel()">Cancel</button>
-      <button class="button submit" (click)="save()">Save</button>
     </div>
   </form>
 </div>
