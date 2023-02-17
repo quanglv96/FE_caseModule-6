@@ -41,6 +41,9 @@ import {NgWaveformModule} from "ng-waveform";
 import {NgxWavesurferModule, NgxWavesurferService} from "ngx-wavesurfer";
 import {CanDeactivateGuard} from "./service/can-deactivate";
 import {MomentModule} from "ngx-moment";
+import {MatDialogModule} from "@angular/material/dialog";
+import { AddSongToPlaylistComponent } from './add-song-to-playlist/add-song-to-playlist.component';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -67,6 +70,7 @@ import {MomentModule} from "ngx-moment";
     DiscoveryItemComponent,
     SongComponent,
     PlaylistComponent,
+    AddSongToPlaylistComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,7 +91,9 @@ import {MomentModule} from "ngx-moment";
       relativeTimeThresholdOptions: {
         'm': 59
       }
-    })
+    }),
+    MatDialogModule,
+    MatButtonModule
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard
