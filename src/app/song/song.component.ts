@@ -155,14 +155,18 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   changeLike() {
-    if (!this.statusLike) {
-      this.songs.userLikeSong?.push(this.user)
-    } else {
-      this.songs.userLikeSong = this.songs.userLikeSong?.filter(element => element.id != this.user.id)
+    if(!this.statusLogin) {
+      this.router.navigateByUrl('auth').finally()
+    }else {
+      if (!this.statusLike) {
+        this.songs.userLikeSong?.push(this.user)
+      } else {
+        this.songs.userLikeSong = this.songs.userLikeSong?.filter(element => element.id != this.user.id)
+      }
+      this.statusLike = !this.statusLike
+      this.songService.changeLikeSongOrViews(this.songs).subscribe(() => {
+      })
     }
-    this.statusLike = !this.statusLike
-    this.songService.changeLikeSongOrViews(this.songs).subscribe(() => {
-    })
   }
 
   openCustomModal() {

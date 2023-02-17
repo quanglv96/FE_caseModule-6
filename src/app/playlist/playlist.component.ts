@@ -10,6 +10,7 @@ import {CanComponentDeactivate} from "../service/can-deactivate";
 import {CommentService} from "../service/comment/comment.service";
 import {Comments} from "../model/Comments";
 import {DataService} from "../service/data/data.service";
+import {SongsService} from "../service/songs/songs.service";
 
 @Component({
   selector: 'app-playlist',
@@ -48,7 +49,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
               private userService: UserService,
               private commentService: CommentService,
               private dataService: DataService,
-              private router:Router) {
+              private router:Router,
+              private songService:SongsService) {
   }
 
   ngOnInit() {
@@ -101,7 +103,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.commentService.getPlaylistComments(this.playlistId).subscribe(
       (data: Comments[]) => {
         this.comments = data;
-        console.log(this.comments[0])
       }
     )
     this.dataService.changeMessage("clearSearch");

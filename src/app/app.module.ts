@@ -44,6 +44,7 @@ import {MomentModule} from "ngx-moment";
 import {MatDialogModule} from "@angular/material/dialog";
 import { AddSongToPlaylistComponent } from './add-song-to-playlist/add-song-to-playlist.component';
 import {MatButtonModule} from "@angular/material/button";
+import {ToStringSinger} from "./service/pipe/toStringSinger";
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {MatButtonModule} from "@angular/material/button";
     PlaylistItemComponent,
     HomeComponent,
     FilterPipe,
+    ToStringSinger,
     FooterComponent,
     SongFormComponent,
     PlaylistFormComponent,

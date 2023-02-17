@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import * as $ from "jquery";
 import {OwlOptions} from "ngx-owl-carousel-o";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-discovery-item',
@@ -28,6 +29,8 @@ export class DiscoveryItemComponent implements OnInit{
 
   ngOnInit(): void {
   }
+  constructor(private router:Router) {
+  }
   prev(s: string) {
     $(s).trigger('click')
   }
@@ -37,4 +40,7 @@ export class DiscoveryItemComponent implements OnInit{
   }
 
 
+  redirect(path: string, id: any) {
+    return this.router.navigateByUrl(`${path}/${id}`)
+  }
 }

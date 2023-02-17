@@ -10,7 +10,7 @@
         <div class="col col-9 my-4">
           <div class="user-info-id">
             <div class="user-info-name-wrapper">
-              <span class="font-24 px-3 py-2 bg-dark text-white">{{name}}</span>
+              <span class="font-24 px-3 py-2 bg-dark text-white" [hidden]="!name">{{name}}</span>
             </div>
             <div class="user-info-username-wrapper">
               <span class="font-16 px-3 py-2 bg-dark text-white">{{username}}</span>

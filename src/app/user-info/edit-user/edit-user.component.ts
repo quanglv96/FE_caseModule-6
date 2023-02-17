@@ -63,7 +63,6 @@ export class EditUserComponent implements OnInit {
       this.idUser = localStorage.getItem("idUser");
       this.userService.findById(this.idUser).subscribe(data => {
         this.user = data;
-        this.avatar=data.avatar;
         this.getImage()
         this.userForm.patchValue(this.user);
       })
@@ -71,6 +70,9 @@ export class EditUserComponent implements OnInit {
   }
 
   saveChange() {
+    SwAl.fire('Please wait').then();
+    SwAl.showLoading()
+
     if (!this.userForm.valid) {
       Object.keys(this.userForm.controls).forEach(field => {
         const control = this.userForm.get(field);
@@ -82,7 +84,7 @@ export class EditUserComponent implements OnInit {
       // đk: có up file(bao gồm cả mp3 và img)
       if (files) {
         // check up k phải file ảnh
-        if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
+        if (files.name.includes('mp3')) {
           SwAl.fire({
             title: 'Avatar file must format .jpg',
             icon: "error",
@@ -160,7 +162,7 @@ export class EditUserComponent implements OnInit {
 
 
   getImage() {
-    let image = !!this.user.avatar ? this.user.avatar : 'assets/avt-default.png'
+    const image =!!this.user.avatar ? this.user.avatar : 'assets/avt-default.png'
     return !!this.editImage ? this.editImage : image;
   }
 
