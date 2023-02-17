@@ -6,8 +6,8 @@ import {Playlist} from "../../../model/Playlist";
 import {PlaylistService} from "../../../service/playlist/playlist.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DataService} from "../../../service/data/data.service";
-import {EditStringTagsService} from "../../../service/edit-string-tags.service";
 import SwAl from "sweetalert2";
+import {EditStringTagsService} from "../../../service/edit-string-tags.service";
 
 @Component({
   selector: 'app-playlist-form',

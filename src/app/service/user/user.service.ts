@@ -43,9 +43,9 @@ export class UserService {
     return this.http.get<string[]>(`${API_URL}/users/usernames`)
   }
 
-  updatePass(id: number, password: String): Observable<User> {
+  updatePass(user?: User): Observable<User> {
     // @ts-ignore
-    return this.http.put(`${API_URL}/users/changePass/${id}?password=${password}`)
+    return this.http.put(`${API_URL}/users/changePass/`, user)
   }
 
   countByUser(id: string | undefined){

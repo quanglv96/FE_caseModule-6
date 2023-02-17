@@ -74,6 +74,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
             this.user = users;
             this.statusLike=false;
+            console.log(this.songs.userLikeSong?.find(id => id.id == this.user.id))
             if (this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id) {
               this.statusLike = true;
             }
