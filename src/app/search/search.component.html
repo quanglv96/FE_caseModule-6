@@ -1,12 +1,10 @@
 <div class="body-container container-fluid">
-  <div class="body container pb-5">
-    <div class="row">
+  <div class="body container pb-4">
+    <div class="row pt-3">
 
       <!-- Sidebar -->
-      <div>
-        <h4>Search {{resultContent}}</h4>
-      </div>
       <div class="sidebar col col-lg-3">
+        <h4 class="px-3" style="font-weight: 500; letter-spacing: 2px">Search {{resultContent}}</h4>
         <div class="search-box">
           <ul class="search-menu p-0 m-0 mt-4">
             <li class="search-item">
@@ -74,7 +72,7 @@
       <!-- Content -->
       <div class="body-content col col-lg-9 pe-4">
         <div>
-          <h5>{{statisticalContent}}</h5>
+          <h4 style="letter-spacing: 2px">{{statisticalContent}}</h4>
         </div>
         <div *ngFor="let r of resultSearch | filter:category" class=" row mt-4">
           <app-search-item-song *ngIf="r['audio']" [song]="r"></app-search-item-song>
