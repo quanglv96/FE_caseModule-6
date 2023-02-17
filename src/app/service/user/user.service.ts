@@ -15,10 +15,10 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  login(username: string, password: string): Observable<any> {
+  login(user?: User): Observable<any> {
 
     // @ts-ignore
-    return this.http.post(`${API_URL}/users/login?username=${username}&pass=${password}`)
+    return this.http.post(`${API_URL}/users/login`, user)
   }
 
   register(user?: User): Observable<any> {
