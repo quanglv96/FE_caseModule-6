@@ -17,8 +17,14 @@ export class ChangePasswordComponent implements OnInit {
   countNumber: number = 0;
   changePassForm = this.formBuilder.group({
     password: ['', {validators: [Validators.required, Validators.minLength(6)], updateOn: 'blur'}],
-    newPassword: ['', {validators: [Validators.required, Validators.minLength(6), this.changePassValidator.bind(this)], updateOn: 'blur'}],
-    confirmNewPassword: ['', {validators: [Validators.required, this.confirmPassValidator.bind(this)], updateOn: 'blur'}]
+    newPassword: ['', {
+      validators: [Validators.required, Validators.minLength(6), this.changePassValidator.bind(this)],
+      updateOn: 'blur'
+    }],
+    confirmNewPassword: ['', {
+      validators: [Validators.required, this.confirmPassValidator.bind(this)],
+      updateOn: 'blur'
+    }]
   });
 
   constructor(private formBuilder: FormBuilder,
@@ -40,7 +46,7 @@ export class ChangePasswordComponent implements OnInit {
     this.idUser = localStorage.getItem("idUser");
   }
 
-  confirmPassValidator(control: FormControl): {[s: string]: boolean} | null {
+  confirmPassValidator(control: FormControl): { [s: string]: boolean } | null {
     // @ts-ignore
     if (control.value !== '' && control.value !== control?.parent?.controls?.['newPassword'].value) {
       return {'notMatch': true};
@@ -48,7 +54,7 @@ export class ChangePasswordComponent implements OnInit {
     return null
   }
 
-  changePassValidator(control: FormControl): {[s: string]: boolean} | null {
+  changePassValidator(control: FormControl): { [s: string]: boolean } | null {
     // @ts-ignore
     if (control.value !== '' && control.value === control?.parent?.controls?.['password'].value) {
       return {'notChange': true};
@@ -72,46 +78,32 @@ export class ChangePasswordComponent implements OnInit {
     if (!this.changePassForm.valid) {
       Object.keys(this.changePassForm.controls).forEach(field => {
         const control = this.changePassForm.get(field);
-        control?.markAsTouched({ onlySelf: true });
+        control?.markAsTouched({onlySelf: true});
       });
     } else {
       this.userService.findById(this.idUser).subscribe(data => {
         this.user = data
         this.newPassword = this.changePassForm.value.newPassword;
         if (this.changePassForm.value.password == this.user.password) {
-          if(this.newPassword==this.user.password){
+          this.user.password = this.newPassword
+          this.userService.updatePass(this.user).subscribe(data => {
+            localStorage.removeItem('idUser')
             SwAl.fire({
-              title: 'New password and old password are not the same',
-              icon: "error",
+              title: 'You have successfully changed your password. Please login again!',
+              icon: "success",
               showConfirmButton: false,
               showCloseButton: false,
-              timer:2000,
+              timer: 2000,
               customClass: {
-                title: 'error-message',
+                title: 'success-message',
                 popup: 'popup',
                 confirmButton: 'confirm-btn',
                 closeButton: 'close-btn'
               }
             }).then()
-          }else {
-            this.userService.updatePass(this.idUser, this.newPassword).subscribe(data => {
-              localStorage.removeItem('idUser')
-              SwAl.fire({
-                title: 'You have successfully changed your password. Please login again!',
-                icon: "success",
-                showConfirmButton: false,
-                showCloseButton: false,
-                timer:2000,
-                customClass: {
-                  title: 'success-message',
-                  popup: 'popup',
-                  confirmButton: 'confirm-btn',
-                  closeButton: 'close-btn'
-                }
-              }).then()
-              return this.router.navigateByUrl("/auth")
-            })
-          }
+            return this.router.navigateByUrl("/auth")
+          })
+
         } else {
           this.countNumber = this.countNumber + 1
           // @ts-ignore
@@ -122,7 +114,7 @@ export class ChangePasswordComponent implements OnInit {
               icon: "error",
               showConfirmButton: false,
               showCloseButton: false,
-              timer:1500,
+              timer: 1500,
               customClass: {
                 title: 'error-message',
                 popup: 'popup',
@@ -137,7 +129,7 @@ export class ChangePasswordComponent implements OnInit {
               icon: "error",
               showConfirmButton: false,
               showCloseButton: false,
-              timer:1500,
+              timer: 1500,
               customClass: {
                 title: 'error-message',
                 popup: 'popup',
@@ -150,5 +142,4 @@ export class ChangePasswordComponent implements OnInit {
       })
     }
   }
-
 }
