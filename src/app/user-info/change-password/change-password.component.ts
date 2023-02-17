@@ -3,7 +3,6 @@ import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {UserService} from "../../service/user/user.service";
 import {User} from "../../model/User";
 import {Router} from "@angular/router";
-import {count} from "rxjs";
 import SwAl from "sweetalert2";
 
 @Component({

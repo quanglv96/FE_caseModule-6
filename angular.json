@@ -13,6 +13,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+
+
             "allowedCommonJsDependencies": [
               "lodash",
               "jquery",
@@ -20,6 +22,8 @@
               "wavesurfer.js",
               "moment"
             ],
+
+
             "outputPath": "dist/fe",
             "index": "src/index.html",
             "main": "src/main.ts",

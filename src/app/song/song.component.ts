@@ -166,16 +166,13 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   openCustomModal() {
-    const dialogRef = this.dialog.open(AddSongToPlaylistComponent, {
+    this.dialog.open(AddSongToPlaylistComponent, {
       width: '500px',
       data: {
-        userId: this.user.id,
-        songId: this.songs.id
+        idUser: this.user.id,
+        song: this.songs
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
   }
 }

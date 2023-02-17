@@ -63,6 +63,7 @@ export class EditUserComponent implements OnInit {
       this.idUser = localStorage.getItem("idUser");
       this.userService.findById(this.idUser).subscribe(data => {
         this.user = data;
+        this.avatar=data.avatar;
         this.getImage()
         this.userForm.patchValue(this.user);
       })

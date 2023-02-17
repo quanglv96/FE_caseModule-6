@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="text-end">
-          <div class="right-section font-12 grey-text">{{pl.lastUpdate}}</div>
+          <div class="right-section font-12 grey-text">{{pl.lastUpdate | amTimeAgo}}</div>
           <span class="font-12 grey-text"><i class="fa-solid fa-play" [routerLink]="['/playlist',pl.id]"></i> {{pl.views}}</span>
         </div>
       </div>
@@ -42,7 +42,7 @@
           <div class="action">
 <!--            <span class="act-btn font-12"><i class="fa-solid fa-heart"  ></i> Like</span>-->
             <span class="act-btn font-12" (click)="editPlaylist(pl.id)"><i class="fa-solid fa-pen"></i> Edit</span>
-            <span class="act-btn font-12" (click)="deletePlaylist(pl.id)"><i class="fa-solid fa-trash"></i> Delete</span>
+            <span class="act-btn font-12" (click)="confirmDelete(pl.id,pl.name)"><i class="fa-solid fa-trash"></i> Delete</span>
           </div>
         </div>
       </div>
