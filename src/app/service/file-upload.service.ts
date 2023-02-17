@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {AngularFireDatabase} from "@angular/fire/compat/database";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {finalize, Observable} from "rxjs";
-import {error} from "jquery";
+
 
 @Injectable()
 export class FileUploadService {

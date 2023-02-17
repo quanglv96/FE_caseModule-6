@@ -4,6 +4,7 @@ import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
 import {Location} from "@angular/common";
+import SwAl from "sweetalert2";
 
 @Component({
   selector: 'app-header',
@@ -29,7 +30,10 @@ export class HeaderComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.dataService.currentMessage.subscribe(()=>{
+    this.dataService.currentMessage.subscribe(message=>{
+      if(message== "clearSearch"){
+        this.textSearch="";
+      }
       if(localStorage.getItem('idUser')){
         this.userService.findById(localStorage.getItem('idUser')).subscribe((data:User)=>{
           this.user=data
@@ -48,6 +52,19 @@ export class HeaderComponent implements OnInit{
     localStorage.removeItem('idUser');
     this.user = null;
     this.dataService.changeMessage('log out');
+    SwAl.fire({
+      title: 'Logout Successful',
+      icon: "success",
+      showConfirmButton: false,
+      showCloseButton: false,
+      timer:1000,
+      customClass: {
+        title: 'success-message',
+        popup: 'popup',
+        confirmButton: 'confirm-btn',
+        closeButton: 'close-btn'
+      }
+    }).then()
   }
 
   toLibrary() {

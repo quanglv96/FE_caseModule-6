@@ -28,9 +28,9 @@ export class UserInfoComponent implements OnInit {
         this.name = this.user.name
         this.username = this.user.username;
         this.avatar = this.user.avatar;
-
       })
     })
+    this.dataService.changeMessage("clearSearch");
   }
 
   back() {

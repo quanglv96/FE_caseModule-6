@@ -34,7 +34,7 @@ export class PlaylistItemComponent implements OnInit {
 
   deletePlaylist(id: number | any) {
     this.playlistService.deletePlaylist(id).subscribe(() => {
-        this.dataService.changeMessage("save thành công");
+        this.dataService.changeMessage("Save Success");
         return this.router.navigateByUrl('/library/playlist')
       }
     )

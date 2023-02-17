@@ -1,12 +1,13 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Tags} from "../../../model/Tags";
 import * as $ from "jquery";
 import {FileUploadService} from "../../../service/file-upload.service";
 import {Playlist} from "../../../model/Playlist";
 import {PlaylistService} from "../../../service/playlist/playlist.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DataService} from "../../../service/data/data.service";
+import {EditStringTagsService} from "../../../service/edit-string-tags.service";
+import SwAl from "sweetalert2";
 
 @Component({
   selector: 'app-playlist-form',
@@ -26,7 +27,12 @@ export class PlaylistFormComponent implements OnInit {
   @Input() stringTag: string | any;
   @ViewChild('avatar') avatar?: ElementRef;
 
-  constructor(private dataService:DataService, private activeRouter: ActivatedRoute, private fileUpload: FileUploadService, private playlistService: PlaylistService, private router: Router) {
+  constructor(private dataService:DataService,
+              private activeRouter: ActivatedRoute,
+              private fileUpload: FileUploadService,
+              private playlistService: PlaylistService,
+              private router: Router,
+              private editStringTag:EditStringTagsService) {
   }
 
   editIdPlaylist: any
@@ -38,72 +44,70 @@ export class PlaylistFormComponent implements OnInit {
     })
   }
 
+  // @ts-ignore
   submitForm() {
+    SwAl.fire('Please wait').then();
+    SwAl.showLoading()
+
     if (!this.editIdPlaylist) {
-      const form: Playlist = this.formPlaylist.value;
       let url: string = ''
       if (this.avatar?.nativeElement.files[0]) {
         if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-          return alert("k đc up file mp3")
+            return SwAl.fire({
+              title: 'Avatar file must format .jpg',
+              icon: "error",
+              showConfirmButton: false,
+              showCloseButton: true,
+              customClass: {
+                title: 'error-message',
+                popup: 'popup',
+                confirmButton: 'confirm-btn',
+                closeButton: 'close-btn'
+              }
+            }).then()
         } else {
           this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(path => {
             url = path;
-            const playlist: Playlist = {
-              avatar: url,
-              name: form.name,
-              description: form.description,
-              // @ts-ignore
-              users: {id: localStorage.getItem('idUser')},
-              tagsList: this.editStringTag(this.stringTag)
-            }
-            this.playlistService.saveCreate(playlist).subscribe(() => {
-              this.dataService.changeMessage("save thành công");
-              return this.router.navigateByUrl('/library/playlist')
-            })
+            this.saveCreate(url)
           })
         }
 
       } else {
         url = 'https://thumbs.dreamstime.com/b/music-collection-line-icon-playlist-outline-logo-illustr-illustration-linear-pictogram-isolated-white-90236357.jpg'
-        console.log('false:' + url)
-        const playlist: Playlist = {
-          avatar: url,
-          name: form.name,
-          description: form.description,
-          // @ts-ignore
-          users: {id: localStorage.getItem('idUser')},
-          tagsList: this.editStringTag(this.stringTag)
-        }
-        this.playlistService.saveCreate(playlist).subscribe(() => {
-          this.dataService.changeMessage("save thành công");
-          return this.router.navigateByUrl('/library/playlist')
-        })
+        this.saveCreate(url)
       }
     } else {
-      this.updatePlaylist();
+      // @ts-ignore
+      this.updatePlaylist().then();
     }
 
   }
-
-  editStringTag(stringTag: string) {
-    let list = stringTag.split("#")
-    for (let i = 1; i < list.length; i++) {
-      if (list[i] !== "") {
-        //xóa khoảng trắng
-        list[i] = list[i].replaceAll(" ", "");
-        // lowe case
-        list[i] = list[i].toLowerCase();
-      }
+  saveCreate(pathAvatar:any){
+    const playlist: Playlist = {
+      avatar: pathAvatar,
+      name: this.formPlaylist.value.name,
+      description: this.formPlaylist.value.description,
+      // @ts-ignore
+      users: {id: localStorage.getItem('idUser')},
+      tagsList: this.editStringTag.editStringTag(this.stringTag)
     }
-    list = Array.from(new Set(list));
-    let tag: Tags[] = [];
-    for (let i = 0; i < list.length; i++) {
-      if (list[i] != "") {
-        // @ts-ignore
-        tag.push({id: null, name: list[i]})
-      }
-    }
-    return tag;
+    this.playlistService.saveCreate(playlist).subscribe(() => {
+      SwAl.fire({
+        title: 'Create New Playlist Success',
+        icon: "success",
+        showConfirmButton: false,
+        showCloseButton: false,
+        timer: 2000,
+        customClass: {
+          title: 'success-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+      this.dataService.changeMessage("Save Success");
+      return this.router.navigateByUrl('/library/playlist')
+    })
   }
 
   openUpload(s: string) {
@@ -137,44 +141,60 @@ export class PlaylistFormComponent implements OnInit {
     })
   }
 
+  // @ts-ignore
   updatePlaylist() {
     const form: Playlist = this.formPlaylist.value;
     let url: string | undefined = '';
     if (this.avatar?.nativeElement.files[0]) {
       if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-        return alert("k đc up file mp3")
+        return SwAl.fire({
+          title: 'Avatar file must format .jpg',
+          icon: "error",
+          showConfirmButton: false,
+          showCloseButton: true,
+          customClass: {
+            title: 'error-message',
+            popup: 'popup',
+            confirmButton: 'confirm-btn',
+            closeButton: 'close-btn'
+          }
+        }).then()
       } else {
         this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(path => {
           url = path;
-          const playlist: Playlist = {
-            avatar: url,
-            name: form.name,
-            description: form.description,
-            // @ts-ignore
-            users: form.users,
-            tagsList: this.editStringTag(this.stringTag)
-          }
-          this.playlistService.updatePlaylist(this.editIdPlaylist,playlist).subscribe(() => {
-            this.dataService.changeMessage("save thành công");
-            return this.router.navigateByUrl('/library/playlist')
-          })
+          this.saveUpdate(url)
         })
       }
     } else {
       url = form.avatar;
-      console.log('false:' + url)
-      const playlist: Playlist = {
-        avatar: url,
-        name: form.name,
-        description: form.description,
-        // @ts-ignore
-        users: form.users,
-        tagsList: this.editStringTag(this.stringTag)
-      }
-      this.playlistService.updatePlaylist(this.editIdPlaylist,playlist).subscribe(() => {
-        this.dataService.changeMessage("save thành công");
-        return this.router.navigateByUrl('/library/playlist')
-      })
+      this.saveUpdate(url)
     }
+  }
+  saveUpdate(pathAvatar:any){
+    const playlist: Playlist = {
+      avatar: pathAvatar,
+      name: this.formPlaylist.value.name,
+      description: this.formPlaylist.value.description,
+      // @ts-ignore
+      users: this.formPlaylist.value.users,
+      tagsList: this.editStringTag.editStringTag(this.stringTag)
+    }
+    this.playlistService.updatePlaylist(this.editIdPlaylist,playlist).subscribe(() => {
+      SwAl.fire({
+        title: 'Update Playlist Success',
+        icon: "success",
+        showConfirmButton: false,
+        showCloseButton: false,
+        timer: 2000,
+        customClass: {
+          title: 'success-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+      this.dataService.changeMessage("Save Success");
+      return this.router.navigateByUrl('/library/playlist')
+    })
   }
 }

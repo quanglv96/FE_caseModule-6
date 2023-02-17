@@ -92,6 +92,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         this.songService.changeLikeSongOrViews(song).subscribe(()=>{})
       })
     })
+    this.dataService.changeMessage("clearSearch");
   }
 
   renderAudioOnStart() {

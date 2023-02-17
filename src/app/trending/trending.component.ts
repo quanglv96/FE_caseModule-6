@@ -4,6 +4,7 @@ import {SongsService} from "../service/songs/songs.service";
 import {Playlist} from "../model/Playlist";
 import {PlaylistService} from "../service/playlist/playlist.service";
 import {data} from "jquery";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-trending',
@@ -19,7 +20,8 @@ export class TrendingComponent implements OnInit {
   topLikePlaylists: Playlist[] = []
 
   constructor(private songService: SongsService,
-              private playlistService: PlaylistService) {
+              private playlistService: PlaylistService,
+              private dataService:DataService) {
 
   }
 
@@ -54,5 +56,7 @@ export class TrendingComponent implements OnInit {
         this.topLikePlaylists = data;
       }
     )
+    this.dataService.changeMessage("clearSearch");
   }
+
 }

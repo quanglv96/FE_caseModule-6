@@ -5,8 +5,8 @@ import {User} from "../../model/User";
 import {UserService} from "../../service/user/user.service";
 import {Router} from "@angular/router";
 import {FileUploadService} from "../../service/file-upload.service";
-import * as url from "url";
 import {DataService} from "../../service/data/data.service";
+import SwAl from "sweetalert2";
 
 
 @Component({
@@ -33,7 +33,7 @@ export class EditUserComponent implements OnInit {
               private userService: UserService,
               private router: Router,
               private fileUpload: FileUploadService,
-              private dataService:DataService) {
+              private dataService: DataService) {
   }
 
   openUpload(s: string) {
@@ -50,8 +50,16 @@ export class EditUserComponent implements OnInit {
       reader.readAsDataURL(files[0])
     }
   }
+
   ngOnInit(): void {
-    this.dataService.currentMessage.subscribe(()=>{
+    // @ts-ignore
+    this.dataService.currentMessage.subscribe((message: string) => {
+      switch (message) {
+        case "log out":
+          return this.router.navigateByUrl('');
+      }
+    })
+    this.dataService.currentMessage.subscribe(() => {
       this.idUser = localStorage.getItem("idUser");
       this.userService.findById(this.idUser).subscribe(data => {
         this.user = data;
@@ -60,6 +68,7 @@ export class EditUserComponent implements OnInit {
       })
     })
   }
+
   saveChange() {
     if (!this.userForm.valid) {
       Object.keys(this.userForm.controls).forEach(field => {
@@ -73,46 +82,59 @@ export class EditUserComponent implements OnInit {
       if (files) {
         // check up k phải file ảnh
         if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-          return alert("k đc up file mp3")
+          SwAl.fire({
+            title: 'Avatar file must format .jpg',
+            icon: "error",
+            showConfirmButton: false,
+            showCloseButton: true,
+            customClass: {
+              title: 'error-message',
+              popup: 'popup',
+              confirmButton: 'confirm-btn',
+              closeButton: 'close-btn'
+            }
+          }).then()
         } else {
           // lấy url file ảnh
           this.fileUpload.pushFileToStorage('image/users', files).subscribe(url => {
             //tạo đối tượng user mới sau khi edit
-            this.user = {
-              id: localStorage.getItem('idUser'),
-              name: this.userForm.value.name,
-              address: this.userForm.value.address,
-              email: this.userForm.value.email,
-              phone: this.userForm.value.phone,
-              // thay thế bằng avt mới
-              avatar: url
-            }
-            // kết nói API với Be
-            this.userService.updateUser(localStorage.getItem('idUser'), this.user).subscribe(data => {
-              this.dataService.changeMessage("changeInfoUser")
-              return this.router.navigateByUrl('/user-info/edit')
-            })
+            this.createNewUser(url)
           })
         }
       } else {
         // tạo mới đối tượng user. dùng avt cũ
-        this.user = {
-          id: localStorage.getItem('idUser'),
-          name: this.userForm.value.name,
-          address: this.userForm.value.address,
-          email: this.userForm.value.email,
-          phone: this.userForm.value.phone,
-          // lấy avt cũ
-          avatar: this.user.avatar
-        }
-        this.userService.updateUser(localStorage.getItem('idUser'), this.user).subscribe(data => {
-          this.dataService.changeMessage("changeInfoUser")
-          return this.router.navigateByUrl('/user-info/edit')
-        })
+        this.createNewUser(this.user.avatar)
       }
     }
   }
 
+  createNewUser(pathAvt: string) {
+    this.user = {
+      id: localStorage.getItem('idUser'),
+      name: this.userForm.value.name,
+      address: this.userForm.value.address,
+      email: this.userForm.value.email,
+      phone: this.userForm.value.phone,
+      avatar: pathAvt
+    }
+    this.userService.updateUser(localStorage.getItem('idUser'), this.user).subscribe(data => {
+      this.dataService.changeMessage("changeInfoUser")
+      SwAl.fire({
+        title: 'Update Successful',
+        icon: "success",
+        showConfirmButton: false,
+        showCloseButton: false,
+        timer: 1500,
+        customClass: {
+          title: 'success-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+      return this.router.navigateByUrl('/user-info/edit')
+    })
+  }
 
   clearValid(event: Event, messDiv: HTMLDivElement) {
     let input = event.target as HTMLInputElement
@@ -136,7 +158,6 @@ export class EditUserComponent implements OnInit {
   }
 
 
-
   getImage() {
     let image = !!this.user.avatar ? this.user.avatar : 'assets/avt-default.png'
     return !!this.editImage ? this.editImage : image;
@@ -145,4 +166,5 @@ export class EditUserComponent implements OnInit {
   clearForm() {
     this.userForm.patchValue(this.user);
   }
+
 }

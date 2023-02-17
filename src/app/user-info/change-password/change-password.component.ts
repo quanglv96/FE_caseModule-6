@@ -4,6 +4,7 @@ import {UserService} from "../../service/user/user.service";
 import {User} from "../../model/User";
 import {Router} from "@angular/router";
 import {count} from "rxjs";
+import SwAl from "sweetalert2";
 
 @Component({
   selector: 'app-change-password',
@@ -79,21 +80,72 @@ export class ChangePasswordComponent implements OnInit {
         this.user = data
         this.newPassword = this.changePassForm.value.newPassword;
         if (this.changePassForm.value.password == this.user.password) {
-          this.userService.updatePass(this.idUser, this.newPassword).subscribe(data => {
-            alert("Change Password successfully")
-            localStorage.removeItem('idUser')
-            return this.router.navigateByUrl("/auth")
-          })
+          if(this.newPassword==this.user.password){
+            SwAl.fire({
+              title: 'New password and old password are not the same',
+              icon: "error",
+              showConfirmButton: false,
+              showCloseButton: false,
+              timer:2000,
+              customClass: {
+                title: 'error-message',
+                popup: 'popup',
+                confirmButton: 'confirm-btn',
+                closeButton: 'close-btn'
+              }
+            }).then()
+          }else {
+            this.userService.updatePass(this.idUser, this.newPassword).subscribe(data => {
+              localStorage.removeItem('idUser')
+              SwAl.fire({
+                title: 'You have successfully changed your password. Please login again!',
+                icon: "success",
+                showConfirmButton: false,
+                showCloseButton: false,
+                timer:2000,
+                customClass: {
+                  title: 'success-message',
+                  popup: 'popup',
+                  confirmButton: 'confirm-btn',
+                  closeButton: 'close-btn'
+                }
+              }).then()
+              return this.router.navigateByUrl("/auth")
+            })
+          }
         } else {
           this.countNumber = this.countNumber + 1
-          console.log(this.countNumber)
           // @ts-ignore
           if (this.countNumber == 3) {
             this.countNumber = 0
-            alert("nhap mat khau sai 3 lan, moi ban dang nhap lai")
+            SwAl.fire({
+              title: 'You have entered your current password incorrectly more than 3 times. Please log in again!',
+              icon: "error",
+              showConfirmButton: false,
+              showCloseButton: false,
+              timer:1500,
+              customClass: {
+                title: 'error-message',
+                popup: 'popup',
+                confirmButton: 'confirm-btn',
+                closeButton: 'close-btn'
+              }
+            }).then()
             this.router.navigateByUrl("/auth")
           } else {
-            alert('mat khau khong dung ' )
+            SwAl.fire({
+              title: 'Current password is incorrect',
+              icon: "error",
+              showConfirmButton: false,
+              showCloseButton: false,
+              timer:1500,
+              customClass: {
+                title: 'error-message',
+                popup: 'popup',
+                confirmButton: 'confirm-btn',
+                closeButton: 'close-btn'
+              }
+            }).then()
           }
         }
       })
