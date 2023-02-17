@@ -13,6 +13,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "jquery",
+              "sweetalert2",
+              "wavesurfer.js",
+              "moment"
+            ],
             "outputPath": "dist/fe",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -47,7 +54,7 @@
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
-                },
+                }
               ],
               "outputHashing": "all"
             },
