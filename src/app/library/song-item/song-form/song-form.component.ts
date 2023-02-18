@@ -296,12 +296,8 @@ export class SongFormComponent implements OnInit {
 
   renderAudioPath(event: any) {
     const files = event.target.files;
-    const reader = new FileReader()
     if (files && files[0]) {
-      reader.onload = () => {
-        this.songAudio = reader.result
-      }
-      reader.readAsDataURL(files[0])
+      this.songAudio = files[0].name;
     }
   }
 

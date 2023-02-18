@@ -16,8 +16,10 @@
             </div>
             <div class="header-right">
               <div class="second-desc-row d-inline-block right-text">
-                <p class="date-upload m-0 font-16 pb-3 text-end">{{songs.date |amTimeAgo}}</p>
-                <span *ngFor="let t of songs?.tagsList" class="item-tag">#{{t.name}}</span>
+                <p class="date-upload m-0 font-14 pb-3 text-end text-white">Updated {{songs.date | amTimeAgo}}</p>
+                <div class="text-end">
+                  <span *ngFor="let t of songs?.tagsList" class="item-tag">#{{t.name}}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -141,7 +143,7 @@
               </div>
               <div class="random-song-desc ms-2">
                 <div class="grey-text line-16 font-12 fit-head">{{ss.users?.name}}</div>
-                <div class="line-16 font-12">{{ss.name}}{{ss.singerList | toStringSinger}}</div>
+                <div class="line-16 font-12">{{ss.name}}</div>
                 <div class="react-box">
                   <span class="font-12 grey-text pe-2">
                     <i class="fa-solid fa-heart"></i> {{ss.userLikeSong?.length}}

@@ -52,6 +52,7 @@
 
 .added {
   color: orangered;
+  border: 1px solid orangered;
 }
 
 .playlist + .playlist {
