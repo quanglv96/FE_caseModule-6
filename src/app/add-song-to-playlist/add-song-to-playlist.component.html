@@ -34,7 +34,8 @@
 
     <div class="my-3" *ngIf="!addMode">
       <label for="playlist-name">Playlist name:</label>
-      <input type="text" class="input-playlist" id="playlist-name">
+      <input type="text" class="input-playlist" [(ngModel)]="newNamePlaylist" name="newNamePlaylist" placeholder="Enter new name playlist"  id="playlist-name">
+      <button class="btn btn-warning" type="button" (click)="addSongNewPlaylist()">ADD</button>
     </div>
   </form>
 </div>

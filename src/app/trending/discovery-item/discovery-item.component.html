@@ -5,9 +5,9 @@
       <owl-carousel-o [options]="customOptions">
         <ng-container *ngFor="let item of items"  >
           <ng-template carouselSlide>
-            <div [routerLink]="[path, item['id']]" class="pointer">
-              <img class="fit-image" [src]="item['avatar']" alt="">
-              <p class="m-0 mt-2 text-start short-paragraph">{{ item['name'] }}</p>
+            <div (click)="redirect(path,item['id'])">
+              <img class="fit-image"  [src]="item['avatar']" alt="">
+              <p class="m-0 text-start short-paragraph">{{ item['name'] }}{{item['singerList']| toStringSinger}}</p>
               <p class="m-0 font-12 grey-text text-start">{{ item['users']['username'] }}</p>
             </div>
           </ng-template>

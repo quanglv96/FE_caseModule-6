@@ -1,5 +1,5 @@
 import {User} from "./User";
-import {Singer} from "./Singer";
+
 import {Tags} from "./Tags";
 import {Songs} from "./Songs";
 

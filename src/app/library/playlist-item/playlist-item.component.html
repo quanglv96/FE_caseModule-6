@@ -28,7 +28,7 @@
               <div class="image" >
                 <img class="fit-image" src="{{s.avatar}}" alt="" [routerLink]="['/song',s.id]">
               </div>
-              <span class="ms-2 d-flex align-items-center font-12"> {{i+1}} - {{s.name}}</span>
+              <span class="ms-2 d-flex align-items-center font-12"> {{i+1}} - {{s.name}}{{s.singerList | toStringSinger}}</span>
             </div>
             <div class="view d-flex align-items-center">
               <span class="font-12 grey-text me-2 d-flex align-items-center" >

@@ -16,7 +16,7 @@
 <!--          User upload-->
           <p class="user-upload m-0 grey-text font-12">{{song?.users?.username}}</p>
 <!--          Song name-->
-          <p class="item-name m-0">{{song.name}}</p>
+          <p class="item-name m-0">{{song.name}}{{song.singerList | toStringSinger}}</p>
         </div>
       </div>
       <div class="second-desc-row d-inline-block right-text">

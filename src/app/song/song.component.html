@@ -11,7 +11,7 @@
               </div>
               <div class="first-desc-row d-inline-block">
                 <p class="s-user m-0 mb-1 font-24">{{songs.users?.username}}</p>
-                <p class="s-name m-0 font-16">{{songs.name}}</p>
+                <p class="s-name m-0 font-16">{{songs.name}}{{songs.singerList | toStringSinger}}</p>
               </div>
             </div>
             <div class="header-right">

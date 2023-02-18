@@ -1,8 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {PlaylistService} from "../service/playlist/playlist.service";
 import {Playlist} from "../model/Playlist";
 import SwAl from "sweetalert2";
+import {User} from "../model/User";
+import {UserService} from "../service/user/user.service";
 
 @Component({
   selector: 'app-add-song-to-playlist',
@@ -13,6 +15,7 @@ export class AddSongToPlaylistComponent implements OnInit {
   addMode = true;
   // idUser,song
   data: any
+  user:User={}
   playlists?: Playlist[]
   alertSwAl = SwAl.mixin({
     toast: true,
@@ -25,8 +28,10 @@ export class AddSongToPlaylistComponent implements OnInit {
       toast.addEventListener('mouseleave', SwAl.resumeTimer)
     }
   })
+  @Input() newNamePlaylist: string|any;
 
   constructor(private dialogRef: MatDialogRef<AddSongToPlaylistComponent>,
+              private userService:UserService,
               private playlistService: PlaylistService,
               @Inject(MAT_DIALOG_DATA) data: any) {
     this.data = data
@@ -77,4 +82,21 @@ export class AddSongToPlaylistComponent implements OnInit {
     })
   }
 
+  addSongNewPlaylist() {
+    this.userService.findById(this.data.idUser).subscribe((user:User)=>{
+      const playlist:Playlist={
+        name:this.newNamePlaylist,
+        users:user,
+        songsList:[this.data.song],
+        views:1000
+      }
+      this.playlistService.changeSongToPlaylist(playlist).subscribe(()=>{
+        this.alertSwAl.fire({
+          icon: 'success',
+          title: 'Add Success'}).then(()=>{
+            this.dialogRef.close();
+        })
+      })
+    })
+  }
 }
