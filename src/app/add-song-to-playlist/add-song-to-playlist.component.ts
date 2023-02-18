@@ -14,7 +14,7 @@ export class AddSongToPlaylistComponent implements OnInit {
   // idUser,song
   data: any
   playlists?: Playlist[]
-  alertSwAl=SwAl.mixin({
+  alertSwAl = SwAl.mixin({
     toast: true,
     heightAuto:true,
     position: 'top-end',

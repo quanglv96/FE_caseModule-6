@@ -16,8 +16,10 @@
             </div>
             <div class="header-right">
               <div class="second-desc-row d-inline-block right-text">
-                <p class="date-upload m-0 font-16 pb-3 text-end">{{songs.date}}</p>
-                <span *ngFor="let t of songs?.tagsList" class="item-tag">#{{t.name}}</span>
+                <p class="date-upload m-0 font-14 pb-3 text-end text-white">Updated {{songs.date | amTimeAgo}}</p>
+                <div class="text-end">
+                  <span *ngFor="let t of songs?.tagsList" class="item-tag">#{{t.name}}</span>
+                </div>
               </div>
             </div>
           </div>

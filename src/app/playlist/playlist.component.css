@@ -23,6 +23,12 @@
   color: white;
   padding: 2px 10px;
   border-radius: 12px;
+  display: inline-block;
+  text-align: right;
+}
+
+.item-tag + .item-tag {
+  margin-left: 1px;
 }
 
 .playlist-info {

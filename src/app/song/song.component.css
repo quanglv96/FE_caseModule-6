@@ -29,6 +29,10 @@
   border-radius: 12px;
 }
 
+.item-tag + .item-tag {
+  margin-left: 1px;
+}
+
 .song-description {
   width: 100%;
 }

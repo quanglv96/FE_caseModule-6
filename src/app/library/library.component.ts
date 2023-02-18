@@ -10,7 +10,7 @@ import {DataService} from "../service/data/data.service";
   styleUrls: ['./library.component.css']
 })
 export class LibraryComponent implements OnInit {
-  childPath: string = ''
+  childPath: string = 'song'
   idUser: any;
   user: User | any;
   avatar: any;
@@ -32,6 +32,7 @@ export class LibraryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.childPath)
     // @ts-ignore
     this.dataService.currentMessage.subscribe((message: string) => {
       switch (message) {
@@ -68,7 +69,7 @@ export class LibraryComponent implements OnInit {
 
   toAddForm() {
     console.log(this.childPath)
-    if (this.childPath === 'song') {
+    if (this.childPath === 'song' || this.childPath === 'library') {
       this.router.navigate(['/library/song/new']).finally()
     }else {
       this.router.navigate(['/library/playlist/new']).finally()

@@ -23,9 +23,9 @@
             <span (click)="openUpload('.input-mp3-file')" class="py-2 px-2 font-12 grey-text">
               Choose mp3 file:
             </span>
-            <input #audio (change)="renderAudioPath($event)" [ngModel]="songAudio"  class="input-mp3-file" type="file" hidden>
+            <input #audio (change)="renderAudioPath($event)" class="input-mp3-file" type="file" hidden>
           </button>
-          <p class="mp3-name font-12 grey-text"></p>
+          <p class="mp3-name font-12 grey-text">{{ songAudio }}</p>
         </div>
         <div class="col-8 border-start">
           <div class="row">

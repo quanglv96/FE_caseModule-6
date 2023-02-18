@@ -17,8 +17,11 @@
               </div>
               <div class="header-right">
                 <div class="d-inline-block right-text">
-                  <p class="m-0 font-16 pb-3 text-end">{{ playlist.lastUpdate }}</p>
-                  <span *ngFor="let t of playlist?.tagsList" class="item-tag">#{{ t.name }}</span>
+                  <p class="m-0 font-14 pb-3 text-end text-white">Updated {{ playlist.lastUpdate | amTimeAgo }}</p>
+                  <div class="text-end">
+                    <span *ngFor="let t of playlist?.tagsList" class="item-tag">#{{ t.name }}</span>
+                  </div>
+
                 </div>
               </div>
             </div>
