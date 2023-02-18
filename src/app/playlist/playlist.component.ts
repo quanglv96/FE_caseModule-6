@@ -74,10 +74,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
             this.user = users;
-            this.statusLike = false;
-            if (this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id) {
-              this.statusLike = true;
-            }
+            this.statusLike = !!this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id;
           })
         }
       }

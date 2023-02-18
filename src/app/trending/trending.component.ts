@@ -3,7 +3,6 @@ import {Songs} from "../model/Songs";
 import {SongsService} from "../service/songs/songs.service";
 import {Playlist} from "../model/Playlist";
 import {PlaylistService} from "../service/playlist/playlist.service";
-import {data} from "jquery";
 import {DataService} from "../service/data/data.service";
 
 @Component({

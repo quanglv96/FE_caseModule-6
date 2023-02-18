@@ -3,7 +3,6 @@ import {Router} from "@angular/router";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
-import {Location} from "@angular/common";
 import SwAl from "sweetalert2";
 
 @Component({
@@ -18,8 +17,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(private router: Router,
               private userService: UserService,
-              private dataService: DataService,
-              private location: Location) {
+              private dataService: DataService) {
   }
 
   // @ts-ignore

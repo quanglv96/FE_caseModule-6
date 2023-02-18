@@ -33,7 +33,7 @@ export class SearchItemSongComponent implements OnInit {
   }
 
   playSong(id: any) {
-
+    console.log(id)
   }
 
   redirectSongDetail(id: any) {
