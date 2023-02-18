@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import {Songs} from "../model/Songs";
 import {Playlist} from "../model/Playlist";
 import {User} from "../model/User";
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, AfterViewInit {
   search: [] = [];
   text:any;
   resultSearch: any[] = [];
@@ -42,7 +43,13 @@ export class SearchComponent implements OnInit {
     })
   }
 
-  result (){
+  ngAfterViewInit() {
+    let width = $('.sidebar').width();
+    // @ts-ignore
+    $('.sidebar-container').width(width);
+  }
+
+  result() {
     this.searchService.resultSearch(this.text).subscribe((data:any)=>{
       this.random(data)
       this.resultSong = data[0]
@@ -78,4 +85,6 @@ export class SearchComponent implements OnInit {
   fillCategory(text: string) {
     this.category = text;
   }
+
+
 }
