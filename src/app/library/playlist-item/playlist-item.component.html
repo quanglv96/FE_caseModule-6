@@ -23,7 +23,9 @@
       <div class="track-desc-second">
         <div style="height: 50px" class="wave-loader"></div>
         <div class="song-list">
-          <div class="song-item d-flex justify-content-between pointer" *ngFor="let s of pl.songsList;index as i" >
+          <div (mouseover)="showDeleteButton(s.id)" (mouseout)="hideDeleteButton(s.id)"
+               class="song-item d-flex justify-content-between"
+               *ngFor="let s of pl.songsList;index as i">
             <div style="height: 100%" class="d-flex" >
               <div class="image" >
                 <img class="fit-image" src="{{s.avatar}}" alt="" [routerLink]="['/song',s.id]">
@@ -31,9 +33,12 @@
               <span class="ms-2 d-flex align-items-center font-12"> {{i+1}} - {{s.name}}{{s.singerList | toStringSinger}}</span>
             </div>
             <div class="view d-flex align-items-center">
-              <span class="font-12 grey-text me-2 d-flex align-items-center" >
+              <span class="font-12 grey-text me-2 d-flex align-items-center view-{{s.id}} show" >
                 <i class="fa-solid fa-play"></i>
                 <span class="ms-1">{{s.views}}</span>
+              </span>
+              <span class="delete-btn delete-{{s.id}} hide" (click)="deleteSongInPlaylist()">
+                <i class="fa-solid fa-trash"></i>
               </span>
             </div>
           </div>

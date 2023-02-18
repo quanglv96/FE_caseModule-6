@@ -48,7 +48,7 @@ export class AddSongToPlaylistComponent implements OnInit {
   isPlaylistContainSong(indexPlaylist: any) {
     // @ts-ignore
     return !!this.playlists[indexPlaylist].songsList?.find((element) => {
-      return element.id== this.data.song.id
+      return element.id == this.data.song.id
     })
   }
 

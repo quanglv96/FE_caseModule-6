@@ -22,11 +22,6 @@
   letter-spacing: 2px;
 }
 
-.submit {
-  background-color: orangered;
-  color: white;
-}
-
 .input-playlist {
   width: 100%;
   padding: 4px 10px;
@@ -57,4 +52,25 @@
 
 .playlist + .playlist {
   margin-top: 6px;
+}
+
+.song-img {
+  width: 30px;
+  height: 30px;
+}
+
+.song-desc {
+  letter-spacing: 1px;
+  line-height: 30px;
+  margin-bottom: 0;
+  font-size: 12px;
+}
+
+.sub-btn {
+  padding: 6px 16px;
+  border: 1px solid orangered;
+  border-radius: 2px;
+  background-color: orangered;
+  letter-spacing: 1px;
+  color: white;
 }

@@ -8,7 +8,7 @@
 
     <div class="my-3" *ngIf="addMode">
       <div *ngIf="!!playlists?.length">
-        <div *ngFor="let p of playlists;index as i" class="playlist d-flex justify-content-between">
+        <div *ngFor="let p of playlists; index as i" class="playlist d-flex justify-content-between">
           <div class="left-section d-flex align-items-center">
             <div class="image">
               <img class="fit-image" [src]="p.avatar" alt="">
@@ -29,13 +29,21 @@
           </div>
         </div>
       </div>
-      <div *ngIf="playlists?.length == 0" class="grey-text text-center">Your play list is empty, please create one</div>
+      <div *ngIf="playlists?.length == 0" class="grey-text text-center">Your playlist is empty, please create one</div>
     </div>
 
     <div class="my-3" *ngIf="!addMode">
       <label for="playlist-name">Playlist name:</label>
       <input type="text" class="input-playlist" [(ngModel)]="newNamePlaylist" name="newNamePlaylist" placeholder="Enter new name playlist"  id="playlist-name">
-      <button class="btn btn-warning" type="button" (click)="addSongNewPlaylist()">ADD</button>
+      <div class="text-end mt-2">
+        <button class="sub-btn" type="button" (click)="addSongNewPlaylist()">Create and add song</button>
+      </div>
+      <div class="d-flex align-items-center mt-2">
+        <div class="song-img me-3">
+          <img class="fit-image" [src]="data['song']['avatar']" alt="">
+        </div>
+        <p class="song-desc">{{ data['song'].name }}{{ data['song']['singerList'] | toStringSinger }}</p>
+      </div>
     </div>
   </form>
 </div>
