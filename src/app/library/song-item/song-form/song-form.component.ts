@@ -17,7 +17,7 @@ import {EditStringSingerService} from "../../../service/edit-string-singer.servi
   styleUrls: ['./song-form.component.css']
 })
 export class SongFormComponent implements OnInit {
-  songImage?: any = 'https://media.istockphoto.com/id/1090431366/vector/love-music-neon-sign.jpg?s=612x612&w=0&k=20&c=FE2W1fcsfPk6N5Bqlbx2Ty3VHBnUXPEFy2P-sizDRE4='
+  songImage?: any ="https://youshark.neocities.org/assets/img/default.png";
   titleContent: string = "Upload My Song";
   formSong: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -38,7 +38,7 @@ export class SongFormComponent implements OnInit {
               private router: Router,
               private dataService: DataService,
               private editStringTag: EditStringTagsService,
-              private editStringSinger:EditStringSingerService) {
+              private editStringSinger: EditStringSingerService) {
   }
 
   ngOnInit(): void {
@@ -47,6 +47,7 @@ export class SongFormComponent implements OnInit {
         this.titleContent = "Update My Song"
         this.openFormEdit(pramMap.get('idSong'))
         this.editIdSong = pramMap.get('idSong');
+
       }
     })
   }
@@ -55,73 +56,20 @@ export class SongFormComponent implements OnInit {
   submitForm() {
     SwAl.fire('Please wait').then();
     SwAl.showLoading()
-
     if (!this.editIdSong) {
-      const form: Songs = this.formSong.value;
-      let urlAvatar: string = 'https://demo.tutorialzine.com/2015/03/html5-music-player/assets/img/default.png'
       if (this.audio?.nativeElement.files[0]) {
-        if (this.audio?.nativeElement.files[0].name.includes('jpg')) {
-          return SwAl.fire({
-            title: 'Audio file must format .mp3',
-            icon: "error",
-            showConfirmButton: false,
-            showCloseButton: true,
-            customClass: {
-              title: 'error-message',
-              popup: 'popup',
-              confirmButton: 'confirm-btn',
-              closeButton: 'close-btn'
-            }
-          }).then()
-        }
-        if (this.avatar?.nativeElement.files[0]) {
-          if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-            return SwAl.fire({
-              title: 'Avatar file must format .jpg',
-              icon: "error",
-              showConfirmButton: false,
-              showCloseButton: true,
-              customClass: {
-                title: 'error-message',
-                popup: 'popup',
-                confirmButton: 'confirm-btn',
-                closeButton: 'close-btn'
-              }
-            }).then()
-          } else {
+        let urlAvatar: string = 'https://demo.tutorialzine.com/2015/03/html5-music-player/assets/img/default.png'
+        let urlAudio: string | undefined = "";
+        this.fileUpload.pushFileToStorage("audio", this.audio?.nativeElement.files[0]).subscribe(pathAudio => {
+          urlAudio = pathAudio;
+          if (this.avatar?.nativeElement.files[0]) {
             this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
               urlAvatar = pathAvatar;
+              this.saveCreateSong(urlAudio, urlAvatar);
             })
+          }else {
+            this.saveCreateSong(urlAudio, urlAvatar);
           }
-        }
-        this.fileUpload.pushFileToStorage("audio", this.audio?.nativeElement.files[0]).subscribe(pathAudio => {
-          const songs: Songs = {
-            name: form.name,
-            audio: pathAudio,
-            avatar: urlAvatar,
-            // @ts-ignore
-            users: {id: localStorage.getItem('idUser')},
-            singerList: this.editStringSinger.editStringSinger(this.stringSinger),
-            composer: form.composer,
-            tagsList: this.editStringTag.editStringTag(this.stringTag)
-          }
-          this.songService.saveCreate(songs).subscribe(() => {
-            SwAl.fire({
-              title: 'Upload Song Success',
-              icon: "success",
-              showConfirmButton: false,
-              showCloseButton: false,
-              timer: 2000,
-              customClass: {
-                title: 'success-message',
-                popup: 'popup',
-                confirmButton: 'confirm-btn',
-                closeButton: 'close-btn'
-              }
-            }).then()
-            this.dataService.changeMessage("Save Success")
-            return this.router.navigateByUrl('/library/song')
-          })
         })
       } else {
         return SwAl.fire({
@@ -138,87 +86,65 @@ export class SongFormComponent implements OnInit {
         }).then()
       }
     } else {
-      // @ts-ignore
-      this.updateSong().then();
+      this.updateSong();
     }
   }
 
-  // @ts-ignore
   updateSong() {
-    let urlAudio: string | undefined = "";
-    let urlAvatar: string | undefined = "";
+    let urlAudio: string | undefined = this.oldSong?.audio;
+    let urlAvatar: string | undefined = this.oldSong?.avatar;
     if (this.audio?.nativeElement?.files[0]) {
-      if (this.audio?.nativeElement.files[0].name.includes('jpg')) {
-        return SwAl.fire({
-          title: 'Audio file must format .mp3',
-          icon: "error",
-          showConfirmButton: false,
-          showCloseButton: true,
-          customClass: {
-            title: 'error-message',
-            popup: 'popup',
-            confirmButton: 'confirm-btn',
-            closeButton: 'close-btn'
-          }
-        }).then()
-      } else {
-        // @ts-ignore
-        this.fileUpload.pushFileToStorage("audio", this.audio?.nativeElement.files[0]).subscribe(pathAudio => {
-          urlAudio = pathAudio;
-          if (this.avatar?.nativeElement.files[0]) {
-            if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-              return SwAl.fire({
-                title: 'Avatar file must format .jpg',
-                icon: "error",
-                showConfirmButton: false,
-                showCloseButton: true,
-                customClass: {
-                  title: 'error-message',
-                  popup: 'popup',
-                  confirmButton: 'confirm-btn',
-                  closeButton: 'close-btn'
-                }
-              }).then()
-            } else {
-              this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
-                urlAvatar = pathAvatar;
-                this.saveUpdateSong(urlAudio, urlAvatar)
-              })
-            }
-          } else {
-            urlAvatar = this.oldSong?.avatar;
-            this.saveUpdateSong(urlAudio, urlAvatar)
-          }
-        })
-      }
-    } else {
-      urlAudio = this.oldSong?.audio;
-      if (this.avatar?.nativeElement.files[0]) {
-        if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-          return SwAl.fire({
-            title: 'Audio file must format .mp3',
-            icon: "error",
-            showConfirmButton: false,
-            showCloseButton: true,
-            customClass: {
-              title: 'error-message',
-              popup: 'popup',
-              confirmButton: 'confirm-btn',
-              closeButton: 'close-btn'
-            }
-          }).then()
-        } else {
+      this.fileUpload.pushFileToStorage("audio", this.audio?.nativeElement.files[0]).subscribe(pathAudio => {
+        urlAudio = pathAudio;
+        if (this.avatar?.nativeElement.files[0]) {
           this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
             urlAvatar = pathAvatar;
-            this.saveUpdateSong(urlAudio, urlAvatar)
+            return this.saveUpdateSong(urlAudio, urlAvatar)
           })
+        } else {
+          return this.saveUpdateSong(urlAudio, urlAvatar)
         }
+      })
+    } else {
+      if (this.avatar?.nativeElement.files[0]) {
+        this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(pathAvatar => {
+          urlAvatar = pathAvatar;
+          return this.saveUpdateSong(urlAudio, urlAvatar)
+        })
       } else {
-        urlAvatar = this.oldSong?.avatar;
-        this.saveUpdateSong(urlAudio, urlAvatar)
+        return this.saveUpdateSong(urlAudio, urlAvatar)
       }
     }
+  }
 
+  saveCreateSong(pathAudio: string | any, pathAvatar: string | any) {
+    const songs: Songs = {
+      name: this.formSong.value.name,
+      audio: pathAudio,
+      avatar: pathAvatar,
+      // @ts-ignore
+      users: {id: localStorage.getItem('idUser')},
+      singerList: this.editStringSinger.editStringSinger(this.stringSinger),
+      composer: this.formSong.value.composer,
+      tagsList: this.editStringTag.editStringTag(this.stringTag)
+    }
+    this.songService.saveCreate(songs).subscribe(() => {
+      SwAl.fire({
+        title: 'Upload Song Success',
+        icon: "success",
+        showConfirmButton: false,
+        showCloseButton: false,
+        timer: 2000,
+        customClass: {
+          title: 'success-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+      this.dataService.changeMessage("Save Success")
+      return this.router.navigateByUrl('/library/song')
+    })
   }
 
   saveUpdateSong(pathAudio: string | any, pathAvatar: string | any) {
@@ -255,6 +181,7 @@ export class SongFormComponent implements OnInit {
   openFormEdit(idSong: any) {
     this.songService.findSongById(idSong).subscribe((data: Songs) => {
       this.oldSong = data;
+      this.songImage=this.oldSong.avatar
       this.formSong.patchValue(data);
       if (data.avatar) {
         this.songAvatar = data.avatar
@@ -280,10 +207,26 @@ export class SongFormComponent implements OnInit {
   }
 
   openUpload(s: string) {
+
     $(s).trigger('click')
   }
 
+  // @ts-ignore
   renderImagePath(event: any) {
+    if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
+      return SwAl.fire({
+        title: 'Audio file must format .mp3',
+        icon: "error",
+        showConfirmButton: false,
+        showCloseButton: true,
+        customClass: {
+          title: 'error-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+    }
     const files = event.target.files;
     const reader = new FileReader()
     if (files && files[0]) {
@@ -294,7 +237,22 @@ export class SongFormComponent implements OnInit {
     }
   }
 
+  // @ts-ignore
   renderAudioPath(event: any) {
+    if (this.audio?.nativeElement.files[0].name.includes('jpg')) {
+      return SwAl.fire({
+        title: 'Audio file must format .mp3',
+        icon: "error",
+        showConfirmButton: false,
+        showCloseButton: true,
+        customClass: {
+          title: 'error-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+    }
     const files = event.target.files;
     if (files && files[0]) {
       this.songAudio = files[0].name;

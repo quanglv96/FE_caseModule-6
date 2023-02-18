@@ -111,14 +111,14 @@ confirmSongInPlaylist(index:number,playlist:Playlist,song :Songs){
     )
   }
 
-  showDeleteButton(id: string | undefined) {
-    $('.view-' + id).removeClass('show').addClass('hide')
-    $('.delete-' + id).removeClass('hide').addClass('show')
+  showDeleteButton(idSong: string | undefined,idPlaylist:string | undefined) {
+    $('.view-' + idSong+'-'+idPlaylist).removeClass('show').addClass('hide')
+    $('.delete-' + idSong+'-'+idPlaylist).removeClass('hide').addClass('show')
   }
 
-  hideDeleteButton(id: string | undefined) {
-    $('.view-' + id).removeClass('hide').addClass('show')
-    $('.delete-' + id).removeClass('show').addClass('hide')
+  hideDeleteButton(idSong: string | undefined,idPlaylist:string | undefined) {
+    $('.view-' + idSong+'-'+idPlaylist).removeClass('hide').addClass('show')
+    $('.delete-' + idSong+'-'+idPlaylist).removeClass('show').addClass('hide')
   }
 
 }
