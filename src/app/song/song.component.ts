@@ -170,7 +170,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     }
   }
 
-  openCustomModal() {
+  openModalAddSongToPlaylist() {
     this.dialog.open(AddSongToPlaylistComponent, {
       width: '500px',
       data: {
@@ -178,6 +178,5 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         song: this.songs
       }
     });
-
   }
 }

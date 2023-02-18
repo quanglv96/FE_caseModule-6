@@ -15,28 +15,25 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  login(user?: User): Observable<any> {
-
-    // @ts-ignore
+  login(user?: User) {
     return this.http.post(`${API_URL}/users/login`, user)
   }
 
-  register(user?: User): Observable<any> {
-    // @ts-ignore
+  register(user?: User) {
     return this.http.post(`${API_URL}/users`, user);
   }
 
 
-  updateUser(id: number|any ,user: User): Observable<any> {
+  updateUser(id: number|any ,user: User) {
     return this.http.put(`${API_URL}/users/${id}`, user);
   }
 
   getUser(id: number,): Observable<User> {
-    return this.http.get(`${API_URL}/users/${id}`)
+    return this.http.get<User>(`${API_URL}/users/${id}`)
   }
 
   findById(id: string | null): Observable<User> {
-    return this.http.get(`${API_URL}/users/${id}`)
+    return this.http.get<User>(`${API_URL}/users/${id}`)
   }
 
   getUsername() {

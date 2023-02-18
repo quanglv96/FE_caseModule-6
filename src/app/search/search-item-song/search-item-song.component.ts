@@ -3,6 +3,8 @@ import {faPlayCircle} from "@fortawesome/free-solid-svg-icons";
 import {Songs} from "../../model/Songs";
 import {Tags} from "../../model/Tags";
 import {Router} from "@angular/router";
+import {AddSongToPlaylistComponent} from "../../add-song-to-playlist/add-song-to-playlist.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-search-item-song',
@@ -26,7 +28,7 @@ export class SearchItemSongComponent implements OnInit {
     return content;
   }
 
-  constructor(private router: Router) {
+  constructor(private router: Router,private dialog: MatDialog) {
 
   }
 
@@ -36,5 +38,18 @@ export class SearchItemSongComponent implements OnInit {
 
   redirectSongDetail(id: any) {
     return this.router.navigateByUrl('song/' + id)
+  }
+  // @ts-ignore
+  openModalAddSongToPlaylist(song:Songs) {
+    if(!localStorage.getItem('idUser')){
+      return this.router.navigateByUrl('auth')
+    }
+    this.dialog.open(AddSongToPlaylistComponent, {
+      width: '500px',
+      data: {
+        idUser: localStorage.getItem('idUser'),
+        song: song
+      }
+    });
   }
 }

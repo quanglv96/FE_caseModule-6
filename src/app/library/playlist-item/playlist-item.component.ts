@@ -38,7 +38,7 @@ export class PlaylistItemComponent implements OnInit {
       title: `Are you sure delete Playlist: "${name}"?`,
       type: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#DD6B55",
+      confirmButtonColor: "#FF4500FF",
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "No, cancel please!",
       closeOnConfirm: false,
