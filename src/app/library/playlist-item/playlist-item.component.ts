@@ -51,10 +51,8 @@ export class PlaylistItemComponent implements OnInit {
       }
      });
   }
-  // awit: thực hiện xong phương thức confirm r mới đến phương thức asyc
   deletePlaylist(id: number | any) {
       this.playlistService.deletePlaylist(id).subscribe(() => {
-        // @ts-ignore
         SwAl.fire({
           title: `Delete Success`,
           icon:"success",

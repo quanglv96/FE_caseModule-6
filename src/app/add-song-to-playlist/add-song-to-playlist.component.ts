@@ -32,9 +32,7 @@ export class AddSongToPlaylistComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<AddSongToPlaylistComponent>,
               private userService:UserService,
-              private playlistService: PlaylistService,
-              @Inject(MAT_DIALOG_DATA) data: any) {
-    this.data = data
+              private playlistService: PlaylistService) {
   }
 
   ngOnInit() {

@@ -58,6 +58,7 @@ export class SongItemComponent implements OnInit {
     return this.router.navigateByUrl("/library/song/edit/" + id)
   }
 
+
   // @ts-ignore
   openModalAddSongToPlaylist(song: Songs) {
     if (!localStorage.getItem('idUser')) {
