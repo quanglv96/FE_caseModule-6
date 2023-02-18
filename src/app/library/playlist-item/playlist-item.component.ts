@@ -5,6 +5,7 @@ import {PlaylistService} from "../../service/playlist/playlist.service";
 import {Router} from "@angular/router";
 import {DataService} from "../../service/data/data.service";
 import SwAl from "sweetalert2";
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-playlist-item',
@@ -71,4 +72,18 @@ export class PlaylistItemComponent implements OnInit {
         }
       )
     }
+
+  showDeleteButton(id: string | undefined) {
+    $('.view-' + id).removeClass('show').addClass('hide')
+    $('.delete-' + id).removeClass('hide').addClass('show')
+  }
+
+  hideDeleteButton(id: string | undefined) {
+    $('.view-' + id).removeClass('hide').addClass('show')
+    $('.delete-' + id).removeClass('show').addClass('hide')
+  }
+
+  deleteSongInPlaylist() {
+    alert('ok')
+  }
 }
