@@ -48,7 +48,7 @@ export class UserService {
     return this.http.put(`${API_URL}/users/changePass/`, user)
   }
 
-  countByUser(id: string | undefined){
+  countByUser(id: string | any){
     return this.http.get<[]>(`${API_URL}/users/countByUser/${id}`)
   }
 }
