@@ -28,3 +28,11 @@
 .sidebar .tag:hover {
   background-color: #615e5e;
 }
+
+.sidebar-container {
+  position: fixed;
+}
+
+.content {
+  min-height: 355px;
+}
