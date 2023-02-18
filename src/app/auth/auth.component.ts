@@ -120,7 +120,7 @@ export class AuthComponent implements OnInit {
             this.loginForm.patchValue(data)
           }
         )
-      }, error => {
+      }, () => {
         SwAl.fire({
           title: 'Account already exist',
           icon: "error",
@@ -147,7 +147,7 @@ export class AuthComponent implements OnInit {
     } else {
       this.user = this.loginForm.value
       this.userService.login(this.user).subscribe(data => {
-        localStorage.setItem('idUser', data.id)
+        localStorage.setItem('idUser', <string>data.id)
         this.dataService.changeMessage('Login successfully')
         SwAl.fire({
           title: 'Login successfully',

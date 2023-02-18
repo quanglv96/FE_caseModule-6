@@ -3,6 +3,7 @@ import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Songs} from "../../model/Songs";
 import {Comments} from "../../model/Comments";
+import {Observable} from "rxjs";
 const API_URL = `${environment.apiUrl}`;
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class SongsService {
 
   constructor(private http: HttpClient) { }
   findSongByUser(id:number){
-    return this.http.get(`${API_URL}/songs/listSongsByUser/${id}`)
+    return this.http.get<Songs[]>(`${API_URL}/songs/listSongsByUser/${id}`)
   }
 
   getTopSongs() {
@@ -22,7 +23,7 @@ export class SongsService {
     return this.http.get<Songs[]>(`${API_URL}/songs/listNewSongs`)
   }
   listTop10SongsTrending(){
-    return this.http.get(`${API_URL}/songs/listTop10SongsTrending`)
+    return this.http.get<Songs[]>(`${API_URL}/songs/listTop10SongsTrending`)
   }
   listTop10SongsLikeTrending(){
     return this.http.get<Songs[]>(`${API_URL}/songs/listTop10SongsLikeTrending`)
@@ -34,19 +35,19 @@ export class SongsService {
     return  this.http.delete(`${API_URL}/songs/${idSong}`)
   }
   findSongById(idSong:number|any){
-    return this.http.get(`${API_URL}/songs/${idSong}`)
+    return this.http.get<Songs>(`${API_URL}/songs/${idSong}`)
   }
   updateSong(idSong:number|any,newSong:Songs){
     return this.http.put(`${API_URL}/songs/${idSong}`,newSong)
   }
   getCommentSong(idSong:number|any){
-    return this.http.get(`${API_URL}/comment/song/${idSong}`)
+    return this.http.get<Comments[]>(`${API_URL}/comment/song/${idSong}`)
   }
   saveComment(comment:Comments){
     return this.http.post(`${API_URL}/comment`, comment)
   }
   getSuggest5Songs(){
-    return this.http.get(`${API_URL}/songs/suggest`)
+    return this.http.get<Songs[]>(`${API_URL}/songs/suggest`)
   }
   changeLikeSongOrViews(songs:Songs){
     return this.http.put(`${API_URL}/songs/like`,songs)
