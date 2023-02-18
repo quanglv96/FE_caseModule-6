@@ -36,3 +36,7 @@
 .row + .row {
   margin-top: 24px;
 }
+.like {
+  border: 1px solid orangered;
+  color: orangered;
+}
