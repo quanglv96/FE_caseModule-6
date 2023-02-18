@@ -33,33 +33,71 @@ export class PlaylistItemComponent implements OnInit {
   editPlaylist(id: number | any) {
     return this.router.navigateByUrl("/library/playlist/edit/" + id)
   }
-  confirmDelete( id: number | any, name: string|any){
+
+  confirmDeletePlaylist(id: number | any, name: string | any) {
     // @ts-ignore
-     return SwAl.fire({
-      title: `Are you sure delete Playlist: "${name}"?`,
+    return SwAl.fire({
+      title: `Are you sure remove Playlist: "${name}"?`,
       type: "warning",
       showCancelButton: true,
       confirmButtonColor: "#FF4500FF",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, remove it!",
       cancelButtonText: "No, cancel please!",
       closeOnConfirm: false,
       closeOnCancel: false
-    }).then(result=>{
-      if(result.isConfirmed){
+    }).then(result => {
+      if (result.isConfirmed) {
         this.deletePlaylist(id)
-      }else if (result.isDenied) {
+      } else if (result.isDenied) {
         SwAl.fire('Changes are not saved', '', 'info').then()
       }
-     });
+    });
+  }
+confirmSongInPlaylist(index:number,playlist:Playlist,song :Songs){
+  // @ts-ignore
+  return SwAl.fire({
+    title: `Are you sure remove Song: "${song.name}"?`,
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#FF4500FF",
+    confirmButtonText: "Yes, remove it!",
+    cancelButtonText: "No, cancel please!",
+    closeOnConfirm: false,
+    closeOnCancel: false
+  }).then(result => {
+    if (result.isConfirmed) {
+      playlist.songsList=playlist.songsList?.filter(element=>element.id!=song.id)
+      this.deleteSongInPlaylist(playlist)
+    } else if (result.isDenied) {
+      SwAl.fire('Changes are not saved', '', 'info').then()
+    }
+  });
+}
+  deleteSongInPlaylist(playlist:Playlist){
+    this.playlistService.changeSongToPlaylist(playlist).subscribe(()=>{
+      SwAl.fire({
+        title: `Remove Success`,
+        icon: "success",
+        showCancelButton: false,
+        showCloseButton: false,
+        timer: 2000,
+        customClass: {
+          title: 'error-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then();
+    });
   }
   deletePlaylist(id: number | any) {
-      this.playlistService.deletePlaylist(id).subscribe(() => {
+    this.playlistService.deletePlaylist(id).subscribe(() => {
         SwAl.fire({
           title: `Delete Success`,
-          icon:"success",
+          icon: "success",
           showCancelButton: false,
           showCloseButton: false,
-          timer:2000,
+          timer: 2000,
           customClass: {
             title: 'error-message',
             popup: 'popup',
@@ -67,11 +105,11 @@ export class PlaylistItemComponent implements OnInit {
             closeButton: 'close-btn'
           }
         }).then();
-          this.dataService.changeMessage("Save Success");
-          return this.router.navigateByUrl('/library/playlist')
-        }
-      )
-    }
+        this.dataService.changeMessage("Save Success");
+        return this.router.navigateByUrl('/library/playlist')
+      }
+    )
+  }
 
   showDeleteButton(id: string | undefined) {
     $('.view-' + id).removeClass('show').addClass('hide')
@@ -83,7 +121,4 @@ export class PlaylistItemComponent implements OnInit {
     $('.delete-' + id).removeClass('show').addClass('hide')
   }
 
-  deleteSongInPlaylist() {
-    alert('ok')
-  }
 }

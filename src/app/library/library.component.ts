@@ -32,7 +32,6 @@ export class LibraryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.childPath)
     // @ts-ignore
     this.dataService.currentMessage.subscribe((message: string) => {
       switch (message) {

@@ -4,7 +4,12 @@
 .slider {
   margin-top: 53.5px;
 }
-
+.nowrap{
+  width: 97%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .home-input-group {
   position: relative;
 }

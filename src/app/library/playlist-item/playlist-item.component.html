@@ -37,7 +37,7 @@
                 <i class="fa-solid fa-play"></i>
                 <span class="ms-1">{{s.views}}</span>
               </span>
-              <span class="delete-btn delete-{{s.id}} hide" (click)="deleteSongInPlaylist()">
+              <span class="delete-btn delete-{{s.id}} hide" (click)="confirmSongInPlaylist(i,pl,s)">
                 <i class="fa-solid fa-trash"></i>
               </span>
             </div>
@@ -45,9 +45,8 @@
         </div>
         <div class="action-btn d-flex justify-content-between mt-3">
           <div class="action">
-<!--            <span class="act-btn font-12"><i class="fa-solid fa-heart"  ></i> Like</span>-->
             <span class="act-btn font-12" (click)="editPlaylist(pl.id)"><i class="fa-solid fa-pen"></i> Edit</span>
-            <span class="act-btn font-12" (click)="confirmDelete(pl.id,pl.name)"><i class="fa-solid fa-trash"></i> Delete</span>
+            <span class="act-btn font-12" (click)="confirmDeletePlaylist(pl.id,pl.name)"><i class="fa-solid fa-trash"></i> Delete</span>
           </div>
         </div>
       </div>
