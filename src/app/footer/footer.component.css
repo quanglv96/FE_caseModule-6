@@ -3,7 +3,7 @@
 .footer {
   background-color: black;
   position: relative;
-  z-index: 5;
+  z-index: 3;
 }
 
 .footer__container {
