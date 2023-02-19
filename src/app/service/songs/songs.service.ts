@@ -46,7 +46,7 @@ export class SongsService {
   saveComment(comment:Comments){
     return this.http.post(`${API_URL}/comment`, comment)
   }
-  getSuggest5Songs(){
+  getHint5Songs(){
     return this.http.get<Songs[]>(`${API_URL}/songs/suggest`)
   }
   changeLikeSongOrViews(songs:Songs){

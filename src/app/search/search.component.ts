@@ -1,10 +1,9 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
-import {Songs} from "../model/Songs";
-import {Playlist} from "../model/Playlist";
-import {User} from "../model/User";
 import * as $ from "jquery";
+import {Tags} from "../model/Tags";
+import {TagsService} from "../service/tags/tags.service";
 
 @Component({
   selector: 'app-search',
@@ -15,14 +14,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
   search: [] = [];
   text:any;
   resultSearch: any[] = [];
-  resultSong:Songs[]=[];
-  resultPlaylist:Playlist[]=[];
-  resultUser:User[]=[];
   category:string ='';
   resultContent: string='';
   statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
+  hintTag:Tags[]=[]
 
-  constructor(private activatedRoute: ActivatedRoute, private searchService:SearchService ) {
+  constructor(private activatedRoute: ActivatedRoute,
+              private searchService:SearchService,
+              private tagService:TagsService) {
 
   }
 
@@ -41,6 +40,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
       }
 
     })
+    this.tagService.getHint5Tag().subscribe((listTag:Tags[])=>{
+      this.hintTag=listTag;
+    })
   }
 
   ngAfterViewInit() {
@@ -52,11 +54,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   result() {
     this.searchService.resultSearch(this.text).subscribe((data:any)=>{
       this.random(data)
-      this.resultSong = data[0]
-      this.resultPlaylist = data[1]
-      this.resultUser = data[2]
-      this.statisticalContent = `Found ${this.resultSong.length} Songs, ${this.resultUser.length} people, ${this.resultPlaylist.length} playlists`
-
+      this.statisticalContent = `Found ${data[0].length} Songs, ${data[1].length} people, ${data[2].length} playlists`
     })
   }
   random(data: any) {
@@ -79,12 +77,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < random.length; i++) {
       this.resultSearch.push(list[random[i]]);
     }
-
   }
 
   fillCategory(text: string) {
     this.category = text;
   }
-
-
 }

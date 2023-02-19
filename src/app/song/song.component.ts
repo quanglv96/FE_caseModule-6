@@ -87,7 +87,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
           this.listComment = comment
           // @ts-ignore
-          this.songService.getSuggest5Songs().subscribe((data: Songs[]) => {
+          this.songService.getHint5Songs().subscribe((data: Songs[]) => {
             this.suggestSongs = data;
           })
         })
