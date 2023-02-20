@@ -1,11 +1,9 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
-import {Songs} from "../model/Songs";
-import {Playlist} from "../model/Playlist";
-import {User} from "../model/User";
 import * as $ from "jquery";
 import {Tags} from "../model/Tags";
+import {TagsService} from "../service/tags/tags.service";
 import {DataService} from "../service/data/data.service";
 
 @Component({
@@ -17,17 +15,15 @@ export class SearchComponent implements OnInit, AfterViewInit {
   search: [] = [];
   text: any;
   resultSearch: any[] = [];
-  resultSong: Songs[] = [];
-  resultPlaylist: Playlist[] = [];
-  resultUser: User[] = [];
-  category: string = '';
-  resultContent: string = '';
-  statisticalContent: string = 'Search for tracks, artists, podcasts, and playlists.';
-  tags?: Tags[];
+  category:string ='';
+  resultContent: string='';
+  statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
+  hintTag:Tags[]=[]
 
   constructor(private activatedRoute: ActivatedRoute,
-              private searchService: SearchService,
-              private dataService: DataService) {
+              private searchService:SearchService,
+              private tagService:TagsService,
+  private dataService: DataService) {
 
   }
 
@@ -47,10 +43,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.resultContent = '';
         this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
       }
+
     })
-    this.searchService.getAllTag().subscribe(data => {
-      // @ts-ignore
-      this.tags = data
+    this.tagService.getHint5Tag().subscribe((listTag:Tags[])=>{
+      this.hintTag=listTag;
     })
   }
 
@@ -61,16 +57,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   result() {
-    this.searchService.resultSearch(this.text).subscribe((data: any) => {
+    this.searchService.resultSearch(this.text).subscribe((data:any)=>{
       this.random(data)
-      this.resultSong = data[0]
-      this.resultPlaylist = data[1]
-      this.resultUser = data[2]
-      this.statisticalContent = `Found ${this.resultSong.length} Songs, ${this.resultUser.length} people, ${this.resultPlaylist.length} playlists`
-
+      this.statisticalContent = `Found ${data[0].length} Songs, ${data[1].length} people, ${data[2].length} playlists`
     })
   }
-
   random(data: any) {
 
     let index: number = 0;

@@ -1,0 +1,152 @@
+.play-area {
+  background: linear-gradient(315deg, rgb(105, 190, 253) 0%, rgb(255, 189, 66) 100%);
+}
+
+.play-button {
+  width: 60px;
+  height: 60px;
+  background-color: orangered;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.p-singer {
+  padding: 8px 16px;
+  color: white;
+  background-color: black;
+}
+
+.list-info {
+  width: 110px;
+  height: 110px;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.song-num {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.song-play {
+  padding: 8px 16px;
+  color: white;
+  background-color: #e74000;
+  letter-spacing: 1px;
+}
+
+.comment {
+  position: relative;
+  width: 100%;
+}
+
+.send-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+  cursor: pointer;
+}
+
+.user-img {
+  height: 50px;
+  width: 50px;
+  object-fit: contain;
+  aspect-ratio: 1 / 1;
+}
+
+.input-comment, .input-container {
+  width: 100%;
+}
+
+.input-container {
+  background-color: #f2f2f2;
+}
+
+.input-comment {
+  outline: none;
+  border: none;
+  padding: 0 8px;
+}
+
+.c-avt {
+  width: 50px;
+  height: 50px;
+}
+
+.c-content, .c-uname, c-time {
+  line-height: 14px;
+}
+
+.p-song-img {
+  width: 35px;
+  height: 35px;
+}
+
+.p-count {
+  width: 40px;
+  text-align: center;
+}
+
+.singer-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.play-line {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: 100%;
+  right: 0;
+  left: 0;
+  padding: 0 3px;
+  height: 2px;
+}
+
+.line {
+  border-top: 2px solid #a8a8a8;
+  width: 100%;
+  z-index: 4;
+  display: block;
+}
+
+.time {
+  position: absolute;
+  bottom: 50%;
+  z-index: 4;
+}
+
+.time-start-container {
+  left: 0;
+}
+
+.time-end-container {
+  right: 0;
+}
+
+.time-start, .time-end {
+  font-size: 10px;
+  padding: 0 2px;
+  line-height: 14px;
+  background-color: #333333;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.time-start {
+  margin-left: 3px;
+}
+
+.time-end {
+  margin-right: 3px;
+}
