@@ -96,4 +96,8 @@ export class SongItemComponent implements OnInit {
       return this.router.navigateByUrl('/library/song');
     })
   }
+
+  changeLike(s: Songs) {
+    
+  }
 }
