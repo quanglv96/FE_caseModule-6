@@ -74,10 +74,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
             this.user = users;
-            this.statusLike = false;
-            if (this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id) {
-              this.statusLike = true;
-            }
+            this.statusLike = !!this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id;
           })
         }
       }
@@ -94,8 +91,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         )
       }
     )
-    // @ts-ignore
-    this.userService.countByUser(+this.userId).subscribe(
+    this.userService.countByUser(this.userId).subscribe(
       data => {
         this.userData = data;
       }
@@ -128,7 +124,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.isStartPlaying = true
     this.wavesurfer = this.waveSurferService.create(this.option)
     // @ts-ignore
-    this.loadAudio(this.wavesurfer, this.playlist?.songsList[i].audio).then(
+    this.loadAudio(this.wavesurfer, this.playlist?.songsList[i]?.audio).then(
       () => {
         // @ts-ignore
         this.songPlay = this.playlist?.songsList[i].name;
@@ -151,7 +147,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     })
   }
 
-  loadAudio(wavesurfer: any, url: string | undefined) {
+  loadAudio(wavesurfer: any, url: string | any) {
     return new Promise((resolve, reject) => {
       wavesurfer.on('error', reject);
       wavesurfer.on('ready', resolve);

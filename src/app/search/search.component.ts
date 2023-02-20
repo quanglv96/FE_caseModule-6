@@ -1,16 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import {Songs} from "../model/Songs";
 import {Playlist} from "../model/Playlist";
 import {User} from "../model/User";
+import * as $ from "jquery";
+
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, AfterViewInit {
   search: [] = [];
   text:any;
   resultSearch: any[] = [];
@@ -21,11 +23,15 @@ export class SearchComponent implements OnInit {
   resultContent: string='';
   statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
 
-  constructor(private activatedRoute: ActivatedRoute, private searchService:SearchService ) {
+
+  constructor(private activatedRoute: ActivatedRoute, private searchService:SearchService) {
 
   }
 
   ngOnInit(): void {
+    let footerHeight = localStorage.getItem('footer-height') as string;
+    let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
+    $('.content').css('min-height', 'calc(' + height + ')')
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.resultSearch = [];
       const textSearch: string | null = param.get('textSearch');
@@ -42,7 +48,13 @@ export class SearchComponent implements OnInit {
     })
   }
 
-  result (){
+  ngAfterViewInit() {
+    let width = $('.sidebar').width();
+    // @ts-ignore
+    $('.sidebar-container').width(width);
+  }
+
+  result() {
     this.searchService.resultSearch(this.text).subscribe((data:any)=>{
       this.random(data)
       this.resultSong = data[0]
@@ -78,4 +90,8 @@ export class SearchComponent implements OnInit {
   fillCategory(text: string) {
     this.category = text;
   }
+
+
+
+
 }

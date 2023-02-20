@@ -86,7 +86,7 @@ export class ChangePasswordComponent implements OnInit {
         this.newPassword = this.changePassForm.value.newPassword;
         if (this.changePassForm.value.password == this.user.password) {
           this.user.password = this.newPassword
-          this.userService.updatePass(this.user).subscribe(data => {
+          this.userService.updatePass(this.user).subscribe(() => {
             localStorage.removeItem('idUser')
             SwAl.fire({
               title: 'You have successfully changed your password. Please login again!',
@@ -122,7 +122,7 @@ export class ChangePasswordComponent implements OnInit {
                 closeButton: 'close-btn'
               }
             }).then()
-            this.router.navigateByUrl("/auth")
+            this.router.navigateByUrl("/auth").finally();
           } else {
             SwAl.fire({
               title: 'Current password is incorrect',

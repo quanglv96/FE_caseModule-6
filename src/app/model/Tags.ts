@@ -1,5 +1,5 @@
 export  interface Tags{
-  id?:string;
+  id?: number;
   name?:string
 
 }

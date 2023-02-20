@@ -10,7 +10,8 @@ const API_URL = `${environment.apiUrl}`;
 export class TagsService {
 
   constructor(private http: HttpClient) {}
-  findSongsByTags(id : number){
-    return this.http.get(`${API_URL}/tags/findSongsByTag/${id}`)
+
+  findSongsByTags(id: number){
+    return this.http.get<Songs[]>(`${API_URL}/tags/findSongsByTag/${id}`)
   }
 }

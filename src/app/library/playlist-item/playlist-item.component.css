@@ -26,14 +26,15 @@
 }
 
 .song-item {
-  border: 1px solid rgba(157, 157, 157, 0.3);
+  border: 1px solid rgba(208, 208, 208, 0.3);
   padding: 4px;
   height: 30px;
   margin-bottom: 2px;
+  cursor: pointer;
 }
 
 .song-item:hover {
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(238, 238, 238);
 }
 
 .image {
@@ -43,4 +44,17 @@
 
 .row + .row {
   margin-top: 24px;
+}
+
+.delete-btn {
+  padding: 0 4px;
+  color: grey;
+}
+
+.show {
+  display: block !important;
+}
+
+.hide {
+  display: none !important;
 }

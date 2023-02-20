@@ -120,7 +120,7 @@ export class EditUserComponent implements OnInit {
       phone: this.userForm.value.phone,
       avatar: pathAvt
     }
-    this.userService.updateUser(localStorage.getItem('idUser'), this.user).subscribe(data => {
+    this.userService.updateUser(localStorage.getItem('idUser'), this.user).subscribe(() => {
       this.dataService.changeMessage("changeInfoUser")
       SwAl.fire({
         title: 'Update Successful',

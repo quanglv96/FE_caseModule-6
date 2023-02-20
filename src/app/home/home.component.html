@@ -10,8 +10,8 @@
 <div class="container">
   <div class="text-center my-5">
     <span class="text-center home-input-group">
-      <input type="text" class="home-input" placeholder="Search for artists, bands, tracks, podcasts">
-      <span class="home-input-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+      <input type="text" class="home-input" [(ngModel)]="textSearch" placeholder="Search for artists, bands, tracks, podcasts">
+      <span class="home-input-icon" (click)="routeSearch()"><i class="fa-solid fa-magnifying-glass"></i></span>
     </span>
   </div>
 
@@ -22,7 +22,7 @@
       <div class="col-20 mb-4" *ngFor="let song of songs" [routerLink]="['/song',song.id]">
         <div class="item">
           <img class="fit-image" src="{{song.avatar}}" alt="">
-          <p class="m-0 item-title" >{{song.name}}{{song.singerList | toStringSinger}}</p>
+          <p class="nowrap m-0 mt-2">{{song.name}}{{song.singerList | toStringSinger}}</p>
           <p class="m-0 item-description font-12 grey-text">{{song.users?.username}}</p>
         </div>
       </div>

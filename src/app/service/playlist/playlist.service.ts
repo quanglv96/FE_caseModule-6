@@ -46,7 +46,7 @@ export class PlaylistService {
   changeLikePlaylistOrViews(playlist:Playlist){
     return this.http.put(`${API_URL}/playlist/like`,playlist)
   }
-  changeSongToPlaylist(playlist:Playlist){
+  changeSongToPlaylist(playlist:Playlist|any){
     return this.http.put(`${API_URL}/playlist/changeSongToPlaylist`,playlist)
   }
 }

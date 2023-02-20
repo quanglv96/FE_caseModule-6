@@ -4,6 +4,10 @@ import {Songs} from "../../model/Songs";
 import {DataService} from "../../service/data/data.service";
 import {Router} from "@angular/router";
 import SwAl from "sweetalert2";
+import {AddSongToPlaylistComponent} from "../../add-song-to-playlist/add-song-to-playlist.component";
+import {MatDialog} from "@angular/material/dialog";
+import {UserService} from "../../service/user/user.service";
+import {User} from "../../model/User";
 
 @Component({
   selector: 'app-song-item',
@@ -13,63 +17,91 @@ import SwAl from "sweetalert2";
 export class SongItemComponent implements OnInit {
   idUser: any = null;
   listSongs: Songs[] = [];
+  user: User={};
 
   constructor(private songService: SongsService,
-              private dataService:DataService,
-              private router:Router) {
+              private dataService: DataService,
+              private router: Router,
+              private dialog: MatDialog,
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
-    this.dataService.currentMessage.subscribe(()=>{
+    this.dataService.currentMessage.subscribe(() => {
       this.idUser = localStorage.getItem('idUser')
 
       if (this.idUser) {
-        // @ts-ignore
         this.songService.findSongByUser(this.idUser).subscribe((data: Songs[]) => {
           this.listSongs = data;
+        })
+        this.userService.findById(this.idUser).subscribe((data:User)=>{
+          this.user=data;
         })
       }
     })
   }
-  likeSong(id: any) {
 
+  statusLike: boolean | undefined;
+
+  changeLike(song: Songs) {
+    if (!this.statusLike) {
+      song.userLikeSong?.push(this.user)
+    } else {
+      song.userLikeSong = song.userLikeSong?.filter(element => element.id != this.user.id)
+    }
+    this.statusLike = !this.statusLike
+    this.songService.changeLikeSongOrViews(song).subscribe(() => {
+    })
   }
 
   editSong(id: any) {
     return this.router.navigateByUrl("/library/song/edit/" + id)
   }
 
-  addPlayList(id: any) {
 
+  // @ts-ignore
+  openModalAddSongToPlaylist(song: Songs) {
+    if (!localStorage.getItem('idUser')) {
+      return this.router.navigateByUrl('auth')
+    }
+    this.dialog.open(AddSongToPlaylistComponent, {
+      width: '500px',
+      data: {
+        idUser: localStorage.getItem('idUser'),
+        song: song
+      }
+    });
   }
-  confirmDelete( id: number | any, name: string|any){
+
+  confirmDelete(id: number | any, name: string | any) {
     // @ts-ignore
     return SwAl.fire({
       title: `Are you sure delete song: "${name}"?`,
       type: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#DD6B55",
+      confirmButtonColor: "#FF4500FF",
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "No, cancel please!",
       closeOnConfirm: false,
       closeOnCancel: false
-    }).then(result=>{
-      if(result.isConfirmed){
+    }).then(result => {
+      if (result.isConfirmed) {
         this.deleteSong(id)
-      }else if (result.isDenied) {
+      } else if (result.isDenied) {
         SwAl.fire('Changes are not saved', '', 'info').then()
       }
     });
   }
+
   deleteSong(id: any) {
     SwAl.fire({
       title: `Delete Success`,
-      icon:"success",
+      icon: "success",
       showCancelButton: false,
       showCloseButton: false,
-      timer:2000
+      timer: 2000
     }).then();
-    this.songService.deleteSong(id).subscribe(()=>{
+    this.songService.deleteSong(id).subscribe(() => {
       this.dataService.changeMessage("delete");
       return this.router.navigateByUrl('/library/song');
     })

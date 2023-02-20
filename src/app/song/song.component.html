@@ -55,11 +55,11 @@
           </div>
         </div>
         <div class="user-action px-3">
-          <span [class.like]="statusLike" class="like-count border py-1 px-2 me-1 pointer" (click)="changeLike()">
+          <span [class.like]="statusLike" class="like-count border py-1 px-2 me-1 pointer song_1" (click)="changeLike()">
 <!--            //đã like và chưa like-->
             <i class="fa-sharp fa-solid fa-heart"></i> {{songs.userLikeSong?.length}}
           </span>
-          <span (click)="openCustomModal()" class="like-count border py-1 px-2 me-1 pointer">
+          <span (click)="openModalAddSongToPlaylist()" class="like-count border py-1 px-2 me-1 pointer">
             <i class="fa-solid fa-square-plus"></i> Add to playlist
           </span>
           <span class="play-count border py-1 px-2 me-1 pointer">
