@@ -9,16 +9,17 @@ import {Router} from "@angular/router";
   templateUrl: './search-item-playlist.component.html',
   styleUrls: ['./search-item-playlist.component.css']
 })
-export class SearchItemPlaylistComponent implements OnInit{
-  @Input('playlist') playlist:Playlist|any;
+export class SearchItemPlaylistComponent implements OnInit {
+  @Input('playlist') playlist: Playlist | any;
 
   ngOnInit(): void {
 
   }
-constructor(private router:Router) {
-}
 
-  redirectPlaylist(id:any) {
-    return this.router.navigateByUrl('playlist/'+id)
+  constructor(private router: Router) {
+  }
+
+  redirectPlaylist(id: any) {
+    return this.router.navigateByUrl('playlist/' + id)
   }
 }

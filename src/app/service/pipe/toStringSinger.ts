@@ -10,7 +10,7 @@ export class ToStringSinger implements PipeTransform {
 
   transform(list: Singer[]|any):string {
     let content='';
-    if(list.length>0){
+    if(list!=undefined){
       content=" - ";
       for (let i = 0; i < list.length; i++) {
         content+=list[i].name

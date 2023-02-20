@@ -42,6 +42,8 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   statusLike: boolean|undefined;
   statusLogin: boolean|undefined;
   countByUser: any
+  countSongByUser:number|any=0;
+  countPlaylistByUser: number|any=0;
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
@@ -74,7 +76,6 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
             this.user = users;
             this.statusLike=false;
-            console.log(this.songs.userLikeSong?.find(id => id.id == this.user.id))
             if (this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id) {
               this.statusLike = true;
             }
@@ -82,7 +83,10 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         }
         this.url = song.audio;
         this.renderAudioOnStart()
-        this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{this.countByUser=list})
+        this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{
+          this.countSongByUser=list[1];
+          this.countPlaylistByUser=list[0];
+        })
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
           this.listComment = comment
         })

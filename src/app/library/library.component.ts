@@ -39,10 +39,9 @@ export class LibraryComponent implements OnInit {
           return this.router.navigateByUrl('');
       }
     })
-    // @ts-ignore
     this.dataService.currentMessage.subscribe(() => {
-      if(!localStorage.getItem('idUser')){
-        return this.router.navigateByUrl('');
+      if (!localStorage.getItem('idUser')) {
+        this.router.navigateByUrl('').finally()
       }
       this.idUser = localStorage.getItem('idUser');
       this.userService.findById(this.idUser).subscribe((data: User) => {
@@ -70,7 +69,7 @@ export class LibraryComponent implements OnInit {
     console.log(this.childPath)
     if (this.childPath === 'song' || this.childPath === 'library') {
       this.router.navigate(['/library/song/new']).finally()
-    }else {
+    } else {
       this.router.navigate(['/library/playlist/new']).finally()
     }
   }

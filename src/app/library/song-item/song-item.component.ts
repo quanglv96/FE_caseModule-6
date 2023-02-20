@@ -43,16 +43,6 @@ export class SongItemComponent implements OnInit {
 
   statusLike: boolean | undefined;
 
-  changeLike(song: Songs) {
-    if (!this.statusLike) {
-      song.userLikeSong?.push(this.user)
-    } else {
-      song.userLikeSong = song.userLikeSong?.filter(element => element.id != this.user.id)
-    }
-    this.statusLike = !this.statusLike
-    this.songService.changeLikeSongOrViews(song).subscribe(() => {
-    })
-  }
 
   editSong(id: any) {
     return this.router.navigateByUrl("/library/song/edit/" + id)

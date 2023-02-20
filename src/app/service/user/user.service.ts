@@ -46,6 +46,6 @@ export class UserService {
   }
 
   countByUser(id: string | any){
-    return this.http.get<[]>(`${API_URL}/users/countByUser/${id}`)
+    return this.http.get<number[]>(`${API_URL}/users/countByUser/${id}`)
   }
 }

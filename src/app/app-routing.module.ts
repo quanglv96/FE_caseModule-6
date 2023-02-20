@@ -37,13 +37,11 @@ const routes: Routes = [
           {path: 'edit/:id', component: PlaylistFormComponent}
       ]}
   ]},
-  {path: 'trending', component: TrendingComponent},
+  {path: 'trending', component: TrendingComponent,pathMatch:"full"},
   {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: 'singer/:id', component: SingerComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: '', component: HomeComponent, pathMatch: 'full'}
-
-
 ];
 
 @NgModule({
