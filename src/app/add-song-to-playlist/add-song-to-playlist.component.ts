@@ -5,6 +5,7 @@ import {Playlist} from "../model/Playlist";
 import SwAl from "sweetalert2";
 import {User} from "../model/User";
 import {UserService} from "../service/user/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-song-to-playlist',
@@ -32,17 +33,18 @@ export class AddSongToPlaylistComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<AddSongToPlaylistComponent>,
               private userService:UserService,
+              private router:Router,
               private playlistService: PlaylistService,
               @Inject(MAT_DIALOG_DATA) data: any) {
     this.data=data;
   }
 
   ngOnInit() {
-    this.playlistService.getPlaylistByUser(this.data.idUser).subscribe(
-      playlist => {
-        this.playlists = playlist;
-      }
-    )
+      this.playlistService.getPlaylistByUser(this.data.idUser).subscribe(
+        playlist => {
+          this.playlists = playlist;
+        }
+      )
   }
 
   isPlaylistContainSong(indexPlaylist: any) {
