@@ -11,4 +11,11 @@ export class SearchService {
   resultSearch(textSearch:string){
     return this.http.get(`${API_URL}/search?search=${textSearch}`)
   }
+
+  getPlaylistByTag(id: number) {
+    return this.http.get(`${API_URL}/playlist/taglist/${id}`)
+  }
+  getAllTag() {
+    return this.http.get(`${API_URL}/tags`)
+  }
 }

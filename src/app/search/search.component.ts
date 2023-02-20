@@ -5,6 +5,7 @@ import {Songs} from "../model/Songs";
 import {Playlist} from "../model/Playlist";
 import {User} from "../model/User";
 import * as $ from "jquery";
+import {Tags} from "../model/Tags";
 
 @Component({
   selector: 'app-search',
@@ -21,6 +22,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   category:string ='';
   resultContent: string='';
   statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
+  tags?: Tags[];
 
   constructor(private activatedRoute: ActivatedRoute, private searchService:SearchService ) {
 
@@ -40,6 +42,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
       }
 
+    })
+    this.searchService.getAllTag().subscribe(data => {
+      console.log(data)
+      // @ts-ignore
+      this.tags = data
     })
   }
 

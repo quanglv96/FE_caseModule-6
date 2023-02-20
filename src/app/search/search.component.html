@@ -75,9 +75,8 @@
           <div class="filter-box px-3">
             <p class="tag-header">Filter by tag</p>
             <div class="tag-list">
-              <div class="tag px-2 font-12">#Pop</div>
-              <div class="tag px-2 font-12">#Rock</div>
-              <div class="tag px-2 font-12">#Ballad</div>
+              <div class="tag px-2 font-12" *ngFor="let tag of tags">#{{tag.name}}</div>
+
             </div>
           </div>
         </div>
