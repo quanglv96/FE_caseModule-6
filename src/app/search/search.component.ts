@@ -6,6 +6,7 @@ import {Playlist} from "../model/Playlist";
 import {User} from "../model/User";
 import * as $ from "jquery";
 import {Tags} from "../model/Tags";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-search',
@@ -14,17 +15,19 @@ import {Tags} from "../model/Tags";
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   search: [] = [];
-  text:any;
+  text: any;
   resultSearch: any[] = [];
-  resultSong:Songs[]=[];
-  resultPlaylist:Playlist[]=[];
-  resultUser:User[]=[];
-  category:string ='';
-  resultContent: string='';
-  statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
+  resultSong: Songs[] = [];
+  resultPlaylist: Playlist[] = [];
+  resultUser: User[] = [];
+  category: string = '';
+  resultContent: string = '';
+  statisticalContent: string = 'Search for tracks, artists, podcasts, and playlists.';
   tags?: Tags[];
 
-  constructor(private activatedRoute: ActivatedRoute, private searchService:SearchService ) {
+  constructor(private activatedRoute: ActivatedRoute,
+              private searchService: SearchService,
+              private dataService: DataService) {
 
   }
 
@@ -44,10 +47,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.resultContent = '';
         this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
       }
-
     })
     this.searchService.getAllTag().subscribe(data => {
-      console.log(data)
       // @ts-ignore
       this.tags = data
     })
@@ -60,7 +61,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   result() {
-    this.searchService.resultSearch(this.text).subscribe((data:any)=>{
+    this.searchService.resultSearch(this.text).subscribe((data: any) => {
       this.random(data)
       this.resultSong = data[0]
       this.resultPlaylist = data[1]
@@ -69,6 +70,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     })
   }
+
   random(data: any) {
 
     let index: number = 0;
@@ -97,4 +99,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
 
+  getPlaylistByTag(id: number | undefined) {
+    this.searchService.getPlaylistByTag(id).subscribe((data :[])=> {
+      this.resultSearch = data
+    })
+  }
 }
