@@ -10,6 +10,7 @@
 .sidebar .search-item:hover .filter-option {
   background-color: black;
   color: white;
+  cursor: pointer;
 }
 
 .sidebar .tag-header {
@@ -26,13 +27,14 @@
 }
 
 .sidebar .tag:hover {
-  background-color: #615e5e;
+  opacity: 80%;
 }
 
 .sidebar-container {
   position: fixed;
 }
 
-/*.content {*/
-/*  min-height: 355px;*/
-/*}*/
+.active {
+  background-color: black;
+  color: white !important;
+}

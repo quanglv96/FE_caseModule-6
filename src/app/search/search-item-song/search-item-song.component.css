@@ -3,14 +3,14 @@
 .play-btn {
   width: 40px;
   height: 40px;
-  background-color: black;
+  background-color: orangered;
   color: white;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .play-btn:hover {
-  background-color: #615e5e;
+  opacity: 80%;
 }
 
 .tag-ref {
@@ -29,14 +29,22 @@
   width: 100%;
 }
 
-.wave-song > wave > wave {
-  border: none !important;
-}
 .item-tag {
   background-color: #999999;
   color: white;
   padding: 2px 10px;
   border-radius: 12px;
+  font-size: 12px;
+  margin-top: 1px;
+  line-height: 14px;
+}
+
+.play-btn-icon {
+  margin-left: 2px;
+}
+
+.action-box {
+  margin-bottom: 2px !important;
 }
 
 

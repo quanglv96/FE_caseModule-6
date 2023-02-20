@@ -26,7 +26,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   songUser?: string = '';
   playlist: Playlist = {};
   playlistId?: number
-  userId?: number
+  userId?: string | null
   user: User | any;
   wavesurfer: any
   option = {
@@ -98,6 +98,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         )
       }
     )
+    // @ts-ignore
+    this.userId = +localStorage.getItem('idUser')
     this.userService.countByUser(this.userId).subscribe(
       data => {
         this.userData = data;
@@ -121,6 +123,9 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   }
 
   loadSong(i: number) {
+    $('.song.active').removeClass('active')
+    // @ts-ignore
+    $('.song-' + this.playlist.songsList[i].id).addClass('active')
     this.load(i)
   }
 
@@ -149,6 +154,9 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       // @ts-ignore
       if (i < this.playlist?.songsList?.length - 1) {
         this.load(i + 1);
+        $('.song.active').removeClass('active')
+        // @ts-ignore
+        $('.song-' + this.playlist.songsList[i + 1].id).addClass('active')
       } else {
         this.isPlaying = false;
         $('.p-avt').trigger('click')

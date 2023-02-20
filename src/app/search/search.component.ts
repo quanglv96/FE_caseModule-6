@@ -17,7 +17,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   category:string ='';
   resultContent: string='';
   statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
-  hintTag:Tags[]=[]
+  hintTag: Tags[] = []
 
   constructor(private activatedRoute: ActivatedRoute,
               private searchService:SearchService,
@@ -82,7 +82,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
   }
 
-  fillCategory(text: string) {
+  fillCategory(text: string, index: number) {
     this.category = text;
+    $('.filter-option.active').removeClass('active')
+    $('.tab-' + index).addClass('active')
   }
 }

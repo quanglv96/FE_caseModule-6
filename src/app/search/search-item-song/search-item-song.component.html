@@ -1,43 +1,47 @@
 <div class="row">
   <div class="item-image col-3">
-    <div class="image-search">
+    <div class="image-search pointer">
 <!--      AVT-->
       <img alt="" class="fit-image" src="{{song.avatar}}" (click)="redirectSongDetail(song.id)">
     </div>
   </div>
   <div class="item-desc audio-feedback col-9 d-flex flex-column justify-content-between">
-    <div class="desc-box d-flex d-flex justify-content-between">
-      <div class="d-flex">
-        <div class="play-btn-1 play-btn d-flex justify-content-center align-items-center me-2">
-<!--          play Song-->
-          <i class="fa-solid fa-play" (click)="playSong(song.id)"></i>
-        </div>
-        <div class="first-desc-row d-inline-block">
-<!--          User upload-->
-          <p class="user-upload m-0 grey-text font-12">{{song?.users?.username}}</p>
-<!--          Song name-->
-          <p class="item-name m-0">{{song.name}}{{song.singerList | toStringSinger}}</p>
+    <div class="desc-box row">
+      <div class="col-8 g-2 mt-0">
+        <div class="d-flex px-2">
+          <div class="play-btn-1 play-btn d-flex justify-content-center align-items-center me-2" (click)="playSong(song.id)">
+            <!--          play Song-->
+            <i class="fa-solid fa-play play-btn-icon"></i>
+          </div>
+          <div class="first-desc-row d-inline-block">
+            <!--          User upload-->
+            <p class="user-upload m-0 grey-text font-12">{{song?.users?.username}}</p>
+            <!--          Song name-->
+            <p class="item-name m-0">{{song.name}}{{song.singerList | toStringSinger}}</p>
+          </div>
         </div>
       </div>
-      <div class="second-desc-row d-inline-block right-text">
-<!--        Time upload-->
-        <p class="date-upload m-0 grey-text font-12" style="text-align: right">{{song.date|amTimeAgo}}</p>
-<!--        Tag-->
-        <p style="text-align: right"><span *ngFor="let s of song?.tagsList" class="item-tag"> #{{ s.name }}</span></p>
+      <div class="col-4 g-2 mt-0">
+        <div class="second-desc-row right-text px-2">
+          <!--        Time upload-->
+          <p class="date-upload m-0 grey-text font-12" style="text-align: right">{{song.date | amTimeAgo}}</p>
+          <!--        Tag-->
+          <div style="text-align: right; display: flex; flex-wrap: wrap; justify-content: flex-end"><span *ngFor="let s of song?.tagsList" class="item-tag pointer"> #{{ s.name }}</span></div>
+        </div>
       </div>
     </div>
     <div class="play-box">
-      <div class="wave-song" id="wave-1">
+      <div class="wave-song-{{ song.id }}">
 
       </div>
-      <div class="action-box d-flex justify-content-between mt-2 mb-1">
+      <div class="action-box d-flex justify-content-between mt-2">
         <div class="like-box">
         <span
-          class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1">
+          class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
 <!--          Lượt like-->
-          <i class="fa-solid fa-heart"></i>{{song?.userLikeSong?.length}}
+          <i class="fa-solid fa-heart"></i> {{song?.userLikeSong?.length}}
         </span>
-          <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1" (click)="openModalAddSongToPlaylist(song)">
+          <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1 pointer" (click)="openModalAddSongToPlaylist(song)">
           <i class="fa-solid fa-square-plus"></i> Add to playlist
         </span>
         </div>
