@@ -43,7 +43,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   statusLogin: boolean|undefined;
   countByUser: any
   countSongByUser:number|any=0;
-  countPlaylistByUser: any;
+  countPlaylistByUser: number|any=0;
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
@@ -84,7 +84,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         this.url = song.audio;
         this.renderAudioOnStart()
         this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{
-          this.countSongByUser=list[0];
+          this.countSongByUser=list[1];
           this.countPlaylistByUser=list[0];
         })
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {

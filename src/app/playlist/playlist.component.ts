@@ -23,8 +23,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   songPlay?: string = '';
   songUser?: string = '';
   playlist: Playlist = {};
-  playlistId?: number
-  userId?: number
+  playlistId?: number = +this.activatedRoute.snapshot.params['id'];
   user: User | any;
   wavesurfer: any
   option = {
@@ -43,6 +42,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   statusLike: boolean | undefined;
   statusLogin: boolean | undefined;
   singerSong: any;
+  countSongByUser: number = 0;
+  countPlaylistByUser: number = 0;
 
   constructor(private playlistService: PlaylistService,
               public waveSurferService: NgxWavesurferService,
@@ -50,8 +51,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
               private userService: UserService,
               private commentService: CommentService,
               private dataService: DataService,
-              private router:Router,
-              private songService:SongsService) {
+              private router: Router,
+              private songService: SongsService) {
   }
 
   ngOnInit() {
@@ -66,7 +67,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
           break;
       }
     })
-    this.playlistId = +this.activatedRoute.snapshot.params['id']
 
     this.playlistService.findPlaylistById(this.playlistId).subscribe(data => {
         this.playlist = data;
@@ -79,9 +79,15 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
             this.statusLike = !!this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id;
           })
         }
-      this.playlistService.changeLikePlaylistOrViews(this.playlist).subscribe(()=>{
+        this.playlistService.changeLikePlaylistOrViews(this.playlist).subscribe(() => {
 
-      })
+        })
+        this.userService.countByUser(this.playlist.users?.id).subscribe(
+          data => {
+            this.countSongByUser = data[1];
+            this.countPlaylistByUser = data[0];
+          }
+        )
       }
     )
     this.activatedRoute.params.subscribe(
@@ -96,11 +102,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         )
       }
     )
-    this.userService.countByUser(this.userId).subscribe(
-      data => {
-        this.userData = data;
-      }
-    )
+
     this.commentService.getPlaylistComments(this.playlistId).subscribe(
       (data: Comments[]) => {
         this.comments = data;
@@ -194,9 +196,9 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   }
 
   changeLike() {
-    if(!this.statusLogin){
+    if (!this.statusLogin) {
       this.router.navigateByUrl('auth').finally()
-    }else {
+    } else {
       if (!this.statusLike) {
         this.playlist?.userLikesPlaylist?.push(this.user)
       } else {
