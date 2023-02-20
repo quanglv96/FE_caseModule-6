@@ -33,7 +33,7 @@ export class PlaylistService {
   deletePlaylist(idPlaylist:number){
     return this.http.delete<Playlist>(`${API_URL}/playlist/${idPlaylist}`)
   }
-  findPlaylistById(idPlaylist:number){
+  findPlaylistById(idPlaylist:number|any){
     return this.http.get<Playlist>(`${API_URL}/playlist/${idPlaylist}`)
   }
   updatePlaylist(idPlaylist:number, playlist:Playlist){

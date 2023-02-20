@@ -23,7 +23,6 @@ export class TrendingComponent implements OnInit {
               private dataService:DataService) {
 
   }
-
   ngOnInit() {
     this.songService.getTopSongs().subscribe(
       data => {
