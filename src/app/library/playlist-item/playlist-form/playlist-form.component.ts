@@ -27,12 +27,12 @@ export class PlaylistFormComponent implements OnInit {
   @Input() stringTag: string | any;
   @ViewChild('avatar') avatar?: ElementRef;
 
-  constructor(private dataService:DataService,
+  constructor(private dataService: DataService,
               private activeRouter: ActivatedRoute,
               private fileUpload: FileUploadService,
               private playlistService: PlaylistService,
               private router: Router,
-              private editStringTag:EditStringTagsService) {
+              private editStringTag: EditStringTagsService) {
   }
 
   editIdPlaylist: any
@@ -44,45 +44,27 @@ export class PlaylistFormComponent implements OnInit {
     })
   }
 
-  // @ts-ignore
   submitForm() {
     SwAl.fire('Please wait').then();
     SwAl.showLoading()
-
     if (!this.editIdPlaylist) {
       let url: string = ''
       if (this.avatar?.nativeElement.files[0]) {
-        if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-            return SwAl.fire({
-              title: 'Avatar file must format .jpg',
-              icon: "error",
-              showConfirmButton: false,
-              showCloseButton: true,
-              customClass: {
-                title: 'error-message',
-                popup: 'popup',
-                confirmButton: 'confirm-btn',
-                closeButton: 'close-btn'
-              }
-            }).then()
-        } else {
           this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(path => {
             url = path;
             this.saveCreate(url)
           })
-        }
-
       } else {
         url = 'https://thumbs.dreamstime.com/b/music-collection-line-icon-playlist-outline-logo-illustr-illustration-linear-pictogram-isolated-white-90236357.jpg'
         this.saveCreate(url)
       }
     } else {
-      // @ts-ignore
-      this.updatePlaylist().then();
+      this.updatePlaylist();
     }
 
   }
-  saveCreate(pathAvatar:any){
+
+  saveCreate(pathAvatar: any) {
     const playlist: Playlist = {
       avatar: pathAvatar,
       name: this.formPlaylist.value.name,
@@ -115,14 +97,30 @@ export class PlaylistFormComponent implements OnInit {
   }
 
   renderImagePath(event: any) {
-    const files = event.target.files;
-    const reader = new FileReader()
-    if (files && files[0]) {
-      reader.onload = () => {
-        this.playlistImage = reader.result
+    if (!this.avatar?.nativeElement.files[0].type.includes('image/')) {
+      SwAl.fire({
+        title: 'Incorrect Image Format',
+        icon: "error",
+        showConfirmButton: false,
+        showCloseButton: true,
+        customClass: {
+          title: 'error-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+    }else {
+      const files = event.target.files;
+      const reader = new FileReader()
+      if (files && files[0]) {
+        reader.onload = () => {
+          this.playlistImage = reader.result
+        }
+        reader.readAsDataURL(files[0])
       }
-      reader.readAsDataURL(files[0])
     }
+
   }
 
   openFormEdit(id: any) {
@@ -141,36 +139,21 @@ export class PlaylistFormComponent implements OnInit {
     })
   }
 
-  // @ts-ignore
   updatePlaylist() {
     const form: Playlist = this.formPlaylist.value;
     let url: string | undefined = '';
     if (this.avatar?.nativeElement.files[0]) {
-      if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-        return SwAl.fire({
-          title: 'Avatar file must format .jpg',
-          icon: "error",
-          showConfirmButton: false,
-          showCloseButton: true,
-          customClass: {
-            title: 'error-message',
-            popup: 'popup',
-            confirmButton: 'confirm-btn',
-            closeButton: 'close-btn'
-          }
-        }).then()
-      } else {
-        this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(path => {
-          url = path;
-          this.saveUpdate(url)
-        })
-      }
+      this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(path => {
+        url = path;
+        this.saveUpdate(url)
+      })
     } else {
       url = form.avatar;
       this.saveUpdate(url)
     }
   }
-  saveUpdate(pathAvatar:any){
+
+  saveUpdate(pathAvatar: any) {
     const playlist: Playlist = {
       avatar: pathAvatar,
       name: this.formPlaylist.value.name,
@@ -179,7 +162,7 @@ export class PlaylistFormComponent implements OnInit {
       users: this.formPlaylist.value.users,
       tagsList: this.editStringTag.editStringTag(this.stringTag)
     }
-    this.playlistService.updatePlaylist(this.editIdPlaylist,playlist).subscribe(() => {
+    this.playlistService.updatePlaylist(this.editIdPlaylist, playlist).subscribe(() => {
       SwAl.fire({
         title: 'Update Playlist Success',
         icon: "success",

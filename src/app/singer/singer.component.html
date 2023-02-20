@@ -1,0 +1,142 @@
+<div class="body-container container-fluid">
+  <div class="container bg-white" style="border-bottom: 0 !important;">
+    <div class="play-area row">
+      <div class="col-4 p-0">
+        <div class="p-3">
+          <div class="d-flex align-items-start">
+            <div class="play-button d-flex justify-content-center align-items-center me-3" (click)="playPause()">
+              <i *ngIf="!isPlaying" style="font-size: 24px; margin-left: 4px" class="fa-solid fa-play"></i>
+              <i *ngIf="isPlaying" style="font-size: 24px" class="fa-solid fa-pause"></i>
+            </div>
+            <div>
+              <div class="d-block">
+                <p class="p-singer m-0 mb-1 font-24">{{ singer?.name }} tracklist</p>
+              </div>
+              <div class="mt-3" [hidden]="!isStartPlaying">
+                <span class="song-play">{{ songPlay }}&nbsp;&nbsp;-&nbsp;&nbsp;<span style="color: #cccccc">{{ songUser }}</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-8 p-0">
+        <div class="d-flex justify-content-end p-3" *ngIf="!isStartPlaying">
+          <div class="list-info">
+            <span class="song-num">{{ songLists.length }}</span>
+            <span class="track">TRACKS</span>
+          </div>
+        </div>
+        <div class="p-3" [hidden]="!isStartPlaying">
+          <div id="waveform" style="position: relative;">
+            <span class="time time-start-container"><span class="time-start">00:00</span></span>
+            <span class="time time-end-container"><span class="time-end">{{ endTime }}</span></span>
+            <span class="play-line">
+            <span class="line"></span>
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="row">
+          <div class="col-12 g-0">
+            <div class="songs-list mb-3 px-4 pt-4">
+              <p class="h4">List song:</p>
+
+              <div (click)="loadSong(i)" *ngFor="let s of songLists; let i = index"
+                   class="py-1 border-bottom d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <div class="p-song-img">
+                    <img class="fit-image" [src]="s?.avatar" alt="">
+                  </div>
+                  <div class="p-count grey-text">{{ i + 1 }}</div>
+                  <div class="grey-text"><span>{{ s?.users?.username }}</span> - <span class="text-dark">{{ s?.name }}</span></div>
+                </div>
+                <div>
+              <span class="font-12 grey-text pe-2">
+                <i class="fa-solid fa-play"></i> {{ s?.views }}
+              </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="row">
+          <div class="col-12 g-0">
+            <div style="width: 100%" class="px-4 pt-4">
+              <img class="fit-image singer-avt" src="/assets/avt-default.png" alt="">
+            </div>
+            <div class="text-center px-4 pt-4">
+              <span class="singer-name">{{ singer?.name }}</span>
+            </div>
+            <div class="px-4"><hr></div>
+            <div class="px-4">
+              <div class="feedback">
+                <div class="comment border d-flex">
+                  <img class="user-img" src="/assets/avt-default.png" alt="">
+                  <div class="input-container d-flex align-item-center justify-content-center py-2 px-2">
+                    <input class="input-comment" type="text">
+                  </div>
+                  <span class="send-btn" (click)="sendComment()">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </span>
+                </div>
+              </div>
+              <p class="comment-header grey-text mt-3">
+                <i class="fa-solid fa-comment"></i>
+                2 comment
+              </p>
+              <hr>
+              <div class="row">
+                <div class="col-12">
+                  <div class="row d-flex align-items-center justify-content-between mb-3">
+                    <div class="col-8">
+                      <div class="d-flex align-items-center">
+                        <div class="c-avt me-2">
+                          <img class="fit-image circle mt-1" src="assets/avt-default.png" alt="">
+                        </div>
+                        <div class="c-desc">
+                          <p class="m-0 c-uname mb-2 grey-text font-12">Username</p>
+                          <p class="m-0 c-content font-12">Lorem</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="font-12 text-end">
+                        <span class="c-time align-text-top">a day ago</span>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row d-flex align-items-center justify-content-between mb-3">
+                    <div class="col-8">
+                      <div class="d-flex align-items-center">
+                        <div class="c-avt me-2">
+                          <img class="fit-image circle mt-1" src="assets/avt-default.png" alt="">
+                        </div>
+                        <div class="c-desc">
+                          <p class="m-0 c-uname mb-2 grey-text font-12">Username</p>
+                          <p class="m-0 c-content font-12">Lorem</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="font-12 text-end">
+                        <span class="c-time align-text-top">a day ago</span>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

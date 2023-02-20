@@ -61,7 +61,7 @@ export class SearchItemSongComponent implements OnInit {
     this.tagsService.findSongsByTags(id).subscribe((data:Songs[]) => {
       this.resultSong = data;
       console.log(data)
-      this.router.navigateByUrl(`search/`);
+      this.router.navigateByUrl(`tag/` + id);
     })
   }
 }

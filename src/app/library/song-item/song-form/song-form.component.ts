@@ -52,7 +52,7 @@ export class SongFormComponent implements OnInit {
     })
   }
 
-  // @ts-ignore
+
   submitForm() {
     SwAl.fire('Please wait').then();
     SwAl.showLoading()
@@ -72,7 +72,7 @@ export class SongFormComponent implements OnInit {
           }
         })
       } else {
-        return SwAl.fire({
+       SwAl.fire({
           title: 'You have not updated the audio file',
           icon: "error",
           showConfirmButton: false,
@@ -207,15 +207,14 @@ export class SongFormComponent implements OnInit {
   }
 
   openUpload(s: string) {
-
     $(s).trigger('click')
   }
 
-  // @ts-ignore
+
   renderImagePath(event: any) {
-    if (this.avatar?.nativeElement.files[0].name.includes('mp3')) {
-      return SwAl.fire({
-        title: 'Audio file must format .mp3',
+    if (!this.avatar?.nativeElement.files[0].type.includes('image/')) {
+      SwAl.fire({
+        title: 'Incorrect Image Format',
         icon: "error",
         showConfirmButton: false,
         showCloseButton: true,
@@ -226,22 +225,23 @@ export class SongFormComponent implements OnInit {
           closeButton: 'close-btn'
         }
       }).then()
-    }
-    const files = event.target.files;
-    const reader = new FileReader()
-    if (files && files[0]) {
-      reader.onload = () => {
-        this.songImage = reader.result
+    }else {
+      const files = event.target.files;
+      const reader = new FileReader()
+      if (files && files[0]) {
+        reader.onload = () => {
+          this.songImage = reader.result
+        }
+        reader.readAsDataURL(files[0])
       }
-      reader.readAsDataURL(files[0])
     }
+
   }
 
-  // @ts-ignore
   renderAudioPath(event: any) {
-    if (this.audio?.nativeElement.files[0].name.includes('jpg')) {
-      return SwAl.fire({
-        title: 'Audio file must format .mp3',
+    if (!this.audio?.nativeElement.files[0].type.includes('audio/')) {
+      SwAl.fire({
+        title: 'Incorrect Audio Format audio',
         icon: "error",
         showConfirmButton: false,
         showCloseButton: true,
@@ -252,11 +252,13 @@ export class SongFormComponent implements OnInit {
           closeButton: 'close-btn'
         }
       }).then()
+    }else {
+      const files = event.target.files;
+      if (files && files[0]) {
+        this.songAudio = files[0].name;
+      }
     }
-    const files = event.target.files;
-    if (files && files[0]) {
-      this.songAudio = files[0].name;
-    }
+
   }
 
 

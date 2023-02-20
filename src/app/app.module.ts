@@ -45,6 +45,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { AddSongToPlaylistComponent } from './add-song-to-playlist/add-song-to-playlist.component';
 import {MatButtonModule} from "@angular/material/button";
 import {ToStringSinger} from "./service/pipe/toStringSinger";
+import { SingerComponent } from './singer/singer.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import {ToStringSinger} from "./service/pipe/toStringSinger";
     DiscoveryItemComponent,
     SongComponent,
     PlaylistComponent,
-    AddSongToPlaylistComponent
+    AddSongToPlaylistComponent,
+    SingerComponent,
   ],
   imports: [
     BrowserModule,

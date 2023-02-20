@@ -73,11 +73,9 @@
           </div>
           <hr class="mx-3">
           <div class="filter-box px-3">
-            <p class="tag-header">Filter by tag</p>
+            <p class="tag-header">Tags:</p>
             <div class="tag-list">
-              <div class="tag px-2 font-12">#Pop</div>
-              <div class="tag px-2 font-12">#Rock</div>
-              <div class="tag px-2 font-12">#Ballad</div>
+              <div class="tag px-2 font-12" *ngFor="let t of hintTag">#{{t.name}}</div>
             </div>
           </div>
         </div>
