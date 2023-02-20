@@ -39,11 +39,18 @@ export class PlaylistFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeRouter.paramMap.subscribe((paramMap: ParamMap) => {
-      this.openFormEdit(paramMap.get('id'));
-      this.editIdPlaylist = paramMap.get('id');
+      if(paramMap.get('id')){
+        this.playlistService.findPlaylistById(paramMap.get('id')).subscribe((data: Playlist) => {
+          if (data.users?.id != localStorage.getItem('idUser')) {
+            this.router.navigateByUrl('').finally()
+          } else {
+            this.openFormEdit(data);
+            this.editIdPlaylist = paramMap.get('id');
+          }
+        })
+      }
     })
   }
-
   submitForm() {
     SwAl.fire('Please wait').then();
     SwAl.showLoading()
@@ -123,20 +130,18 @@ export class PlaylistFormComponent implements OnInit {
 
   }
 
-  openFormEdit(id: any) {
-    this.playlistService.findPlaylistById(id).subscribe((data: Playlist) => {
+  openFormEdit(data: Playlist) {
       this.formPlaylist.patchValue(data);
       if (data.avatar) {
         this.playlistImage = data.avatar
       }
       this.stringTag = '';
-      // @ts-ignore
-      for (let i = 0; i < data.tagsList.length; i++) {
-        // @ts-ignore
-        this.stringTag += '#' + data.tagsList[i].name + ' '
+      if(data.tagsList!=undefined){
+        for (let i = 0; i < data.tagsList.length; i++) {
+          this.stringTag += '#' + data.tagsList[i].name + ' '
+        }
       }
       this.titleContent = "Update Playlist"
-    })
   }
 
   updatePlaylist() {
@@ -158,7 +163,6 @@ export class PlaylistFormComponent implements OnInit {
       avatar: pathAvatar,
       name: this.formPlaylist.value.name,
       description: this.formPlaylist.value.description,
-      // @ts-ignore
       users: this.formPlaylist.value.users,
       tagsList: this.editStringTag.editStringTag(this.stringTag)
     }

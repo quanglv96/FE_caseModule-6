@@ -11,8 +11,6 @@ import {CommentService} from "../service/comment/comment.service";
 import {Comments} from "../model/Comments";
 import {DataService} from "../service/data/data.service";
 import {SongsService} from "../service/songs/songs.service";
-import {EditStringSingerService} from "../service/edit-string-singer.service";
-import {ToStringSinger} from "../service/pipe/toStringSinger";
 
 @Component({
   selector: 'app-playlist',
