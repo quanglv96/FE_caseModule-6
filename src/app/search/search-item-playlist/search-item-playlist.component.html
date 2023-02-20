@@ -7,23 +7,22 @@
   <div class="item-desc col-9 d-flex align-items-center">
     <div class="d-block">
       <div>
-<!--         name Playlist-->
+        <!--         name Playlist-->
         <p class="m-0 font-16 bold">{{playlist.name}}</p>
-<!--        Name-->
+        <!--        Name-->
         <p class="m-0 grey-text">{{playlist?.users?.name}}</p>
       </div>
-      <div class="action-box d-flex justify-content-between mt-2">
-        <div class="like-box">
+    </div>
+    <div class="action-box d-flex justify-content-between mt-2">
+      <div class="like-box">
         <span class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
           <i class="fa-solid fa-heart"></i> {{playlist?.userLikesPlaylist?.length}}
         </span>
-
-        </div>
-        <div class="like-box">
+      </div>
+      <div class="like-box">
         <span class="play-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
           <i class="fa-solid fa-play"></i> {{playlist?.views}}
         </span>
-        </div>
       </div>
     </div>
   </div>

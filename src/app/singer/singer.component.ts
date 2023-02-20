@@ -6,7 +6,7 @@ import {SingerService} from "../service/singer/singer.service";
 import {ActivatedRoute, Params} from "@angular/router";
 import {CanComponentDeactivate} from "../service/can-deactivate";
 import {Singer} from "../model/Singer";
-import {data} from "jquery";
+
 
 @Component({
   selector: 'app-singer',

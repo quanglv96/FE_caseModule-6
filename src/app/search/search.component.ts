@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import * as $ from "jquery";
@@ -10,18 +10,18 @@ import {TagsService} from "../service/tags/tags.service";
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit, AfterViewInit {
+export class SearchComponent implements OnInit {
   search: [] = [];
-  text:any;
+  text: any;
   resultSearch: any[] = [];
-  category:string ='';
-  resultContent: string='';
-  statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
-  hintTag:Tags[]=[]
+  category: string = '';
+  resultContent: string = '';
+  statisticalContent: string = 'Search for tracks, artists, podcasts, and playlists.';
+  hintTag: Tags[] = []
 
   constructor(private activatedRoute: ActivatedRoute,
-              private searchService:SearchService,
-              private tagService:TagsService) {
+              private searchService: SearchService,
+              private tagService: TagsService) {
 
   }
 
@@ -29,23 +29,44 @@ export class SearchComponent implements OnInit, AfterViewInit {
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')
+    const routerPath = this.activatedRoute.routeConfig?.path
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
-      this.resultSearch = [];
-      const textSearch: string | null = param.get('textSearch');
-      if (textSearch != '') {
-        this.text = textSearch;
-        this.result();
-        this.resultContent = 'result for "' + this.text + '"'
-        this.category = '';
-      } else {
-        this.resultContent = '';
-        this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
+      if (routerPath == 'search/:textSearch') {
+        this.searchText(param.get('textSearch'))
       }
+      if (routerPath == "search/tag/:idTag/:nameTag") {
+        this.searchTag(param.get('idTag'),param.get('nameTag'))
+      }
+    })
+    this.tagService.getHint5Tag().subscribe((listTag: Tags[]) => {
+      this.hintTag = listTag;
+    })
+  }
 
+  searchTag(idTag: string | null, nameTag:string|null) {
+    this.resultSearch=[];
+    this.searchService.findAllByTag(idTag).subscribe((data: any) => {
+      this.text =nameTag;
+      this.random(data)
+      this.statisticalContent = `Found ${data[0].length} Songs, ${data[1].length} playlists`
+      this.resultContent = 'Result for Tag "' + this.text + '"'
+      this.category = '';
+      this.fillCategory(this.category)
     })
-    this.tagService.getHint5Tag().subscribe((listTag:Tags[])=>{
-      this.hintTag=listTag;
-    })
+  }
+  searchText(text: string | null) {
+    this.resultSearch = [];
+    const textSearch: string | null = text;
+    if (textSearch != '') {
+      this.text = textSearch;
+      this.result();
+      this.resultContent = 'Result for "' + this.text + '"'
+      this.category = '';
+      this.fillCategory(this.category)
+    } else {
+      this.resultContent = '';
+      this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
+    }
   }
 
   ngAfterViewInit() {
@@ -55,11 +76,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   result() {
-    this.searchService.resultSearch(this.text).subscribe((data:any)=>{
+    this.searchService.resultSearch(this.text).subscribe((data: any) => {
       this.random(data)
       this.statisticalContent = `Found ${data[0].length} Songs, ${data[2].length} people, ${data[1].length} playlists`
     })
   }
+
   random(data: any) {
 
     let index: number = 0;
@@ -83,6 +105,15 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   fillCategory(text: string) {
+    const category=['singer','playlist','users','songs','']
     this.category = text;
+    for (let i = 0; i <category.length ; i++) {
+      $('.selectCategory-'+category[i]).removeClass('selectCategory')
+      if(text==category[i]){
+        $('.selectCategory-'+text).addClass('selectCategory')
+      }
+    }
   }
+
+
 }

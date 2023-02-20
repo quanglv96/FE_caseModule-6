@@ -13,4 +13,5 @@ export class TagsService {
   getHint5Tag():Observable<Tags[]>{
     return this.http.get<Tags[]>(`${API_URL}/tags/hint5Tags`)
   }
+
 }

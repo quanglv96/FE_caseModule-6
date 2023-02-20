@@ -40,7 +40,8 @@ const routes: Routes = [
   {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: 'singer/:id', component: SingerComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
-  {path: '', component: HomeComponent, pathMatch: 'full'}
+  {path: '', component: HomeComponent, pathMatch: 'full'},
+  {path:'search/tag/:idTag/:nameTag', component:SearchComponent,pathMatch:"full"}
 ];
 
 @NgModule({

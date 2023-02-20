@@ -13,7 +13,8 @@ export class ToStringSinger implements PipeTransform {
     if(list!=undefined){
       content=" - ";
       for (let i = 0; i < list.length; i++) {
-        content+=list[i].name
+        content+=`<a routerLink="singer/${list[i].id}">${list[i].name}</a>`
+        // content+=list[i].name
         if(i<list.length-1){
           content+=' x ';
         }

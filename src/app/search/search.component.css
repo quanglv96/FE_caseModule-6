@@ -32,7 +32,10 @@
 .sidebar-container {
   position: fixed;
 }
-
+.selectCategory{
+  background-color: #ff4400!important;
+  color: white;
+}
 /*.content {*/
 /*  min-height: 355px;*/
 /*}*/
