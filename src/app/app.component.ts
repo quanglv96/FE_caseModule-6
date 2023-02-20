@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
-import {AddSongToPlaylistComponent} from "./add-song-to-playlist/add-song-to-playlist.component";
+import * as $ from 'jquery'
 
 @Component({
   selector: 'app-root',
