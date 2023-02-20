@@ -29,7 +29,6 @@ export class FilterPipe implements PipeTransform {
         list.push(value[i]);
       }
     }
-    console.log(list)
     return list;
   }
 

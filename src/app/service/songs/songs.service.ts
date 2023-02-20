@@ -3,7 +3,6 @@ import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Songs} from "../../model/Songs";
 import {Comments} from "../../model/Comments";
-import {Observable} from "rxjs";
 const API_URL = `${environment.apiUrl}`;
 @Injectable({
   providedIn: 'root'
@@ -46,8 +45,8 @@ export class SongsService {
   saveComment(comment:Comments){
     return this.http.post(`${API_URL}/comment`, comment)
   }
-  getSuggest5Songs(){
-    return this.http.get<Songs[]>(`${API_URL}/songs/suggest`)
+  getHint5Songs(idSongNow:any){
+    return this.http.get<Songs[]>(`${API_URL}/songs/suggest/${idSongNow}`)
   }
   changeLikeSongOrViews(songs:Songs){
     return this.http.put(`${API_URL}/songs/like`,songs)

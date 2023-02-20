@@ -83,13 +83,11 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         this.url = song.audio;
         this.renderAudioOnStart()
         this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{this.countByUser=list})
-        // @ts-ignore
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
           this.listComment = comment
-          // @ts-ignore
-          this.songService.getSuggest5Songs().subscribe((data: Songs[]) => {
-            this.suggestSongs = data;
-          })
+        })
+        this.songService.getHint5Songs(this.songs.id).subscribe((data: Songs[]) => {
+          this.suggestSongs = data;
         })
         // tăng view
         this.songService.changeLikeSongOrViews(song).subscribe(()=>{})
