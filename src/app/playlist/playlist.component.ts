@@ -11,6 +11,8 @@ import {CommentService} from "../service/comment/comment.service";
 import {Comments} from "../model/Comments";
 import {DataService} from "../service/data/data.service";
 import {SongsService} from "../service/songs/songs.service";
+import {EditStringSingerService} from "../service/edit-string-singer.service";
+import {ToStringSinger} from "../service/pipe/toStringSinger";
 
 @Component({
   selector: 'app-playlist',
@@ -42,6 +44,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   endTime: string = '';
   statusLike: boolean | undefined;
   statusLogin: boolean | undefined;
+  singerSong: any;
 
   constructor(private playlistService: PlaylistService,
               public waveSurferService: NgxWavesurferService,
@@ -66,6 +69,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     })
     this.playlistId = +this.activatedRoute.snapshot.params['id']
+
     this.playlistService.findPlaylistById(this.playlistId).subscribe(data => {
         this.playlist = data;
         // @ts-ignore
@@ -77,6 +81,9 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
             this.statusLike = !!this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id;
           })
         }
+      this.playlistService.changeLikePlaylistOrViews(this.playlist).subscribe(()=>{
+
+      })
       }
     )
     this.activatedRoute.params.subscribe(
@@ -128,6 +135,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       () => {
         // @ts-ignore
         this.songPlay = this.playlist?.songsList[i].name;
+        // @ts-ignore
+        this.singerSong = this.playlist?.songsList[i].singerList;
         // @ts-ignore
         this.songUser = this.playlist?.songsList[i].users.name
         this.endTime = this.getDuration();

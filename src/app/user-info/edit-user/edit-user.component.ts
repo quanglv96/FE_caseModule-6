@@ -7,8 +7,6 @@ import {Router} from "@angular/router";
 import {FileUploadService} from "../../service/file-upload.service";
 import {DataService} from "../../service/data/data.service";
 import SwAl from "sweetalert2";
-
-
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -39,16 +37,31 @@ export class EditUserComponent implements OnInit {
   openUpload(s: string) {
     $(s).trigger('click')
   }
-
   renderImagePath(event: any) {
-    const files = event.target.files;
-    const reader = new FileReader()
-    if (files && files[0]) {
-      reader.onload = () => {
-        this.editImage = reader.result
+    if (!this.userAvatar?.nativeElement.files[0].type.includes("image/")) {
+      SwAl.fire({
+        title: 'Incorrect Image Format',
+        icon: "error",
+        showConfirmButton: false,
+        showCloseButton: true,
+        customClass: {
+          title: 'error-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+    }else {
+      const files = event.target.files;
+      const reader = new FileReader()
+      if (files && files[0]) {
+        reader.onload = () => {
+          this.editImage = reader.result
+        }
+        reader.readAsDataURL(files[0])
       }
-      reader.readAsDataURL(files[0])
     }
+
   }
 
   ngOnInit(): void {
@@ -83,27 +96,11 @@ export class EditUserComponent implements OnInit {
       let files = this.userAvatar?.nativeElement.files[0]
       // đk: có up file(bao gồm cả mp3 và img)
       if (files) {
-        // check up k phải file ảnh
-        if (files.name.includes('mp3')) {
-          SwAl.fire({
-            title: 'Avatar file must format .jpg',
-            icon: "error",
-            showConfirmButton: false,
-            showCloseButton: true,
-            customClass: {
-              title: 'error-message',
-              popup: 'popup',
-              confirmButton: 'confirm-btn',
-              closeButton: 'close-btn'
-            }
-          }).then()
-        } else {
-          // lấy url file ảnh
-          this.fileUpload.pushFileToStorage('image/users', files).subscribe(url => {
-            //tạo đối tượng user mới sau khi edit
-            this.createNewUser(url)
-          })
-        }
+        // lấy url file ảnh
+        this.fileUpload.pushFileToStorage('image/users', files).subscribe(url => {
+          //tạo đối tượng user mới sau khi edit
+          this.createNewUser(url)
+        })
       } else {
         // tạo mới đối tượng user. dùng avt cũ
         this.createNewUser(this.user.avatar)
@@ -162,7 +159,7 @@ export class EditUserComponent implements OnInit {
 
 
   getImage() {
-    const image =!!this.user.avatar ? this.user.avatar : 'assets/avt-default.png'
+    const image = !!this.user.avatar ? this.user.avatar : 'assets/avt-default.png'
     return !!this.editImage ? this.editImage : image;
   }
 
