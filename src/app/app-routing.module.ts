@@ -15,6 +15,7 @@ import {TrendingComponent} from "./trending/trending.component";
 import {SongComponent} from "./song/song.component";
 import {PlaylistComponent} from "./playlist/playlist.component";
 import {CanDeactivateGuard} from "./service/can-deactivate";
+import {SingerComponent} from "./singer/singer.component";
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent},
@@ -36,8 +37,9 @@ const routes: Routes = [
       ]}
   ]},
   {path: 'trending', component: TrendingComponent},
-  {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard],pathMatch: 'full'},
-  {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard],pathMatch: 'full'},
+  {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
+  {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
+  {path: 'singer/:id', component: SingerComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: '', component: HomeComponent, pathMatch: 'full'}
 
 

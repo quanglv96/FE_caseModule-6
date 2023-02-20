@@ -58,7 +58,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       switch (message) {
         case "log out":
           this.statusLogin = false;
-          this.statusLike=false;
+          this.statusLike = false;
           break;
         case "Login successfully":
           this.statusLogin = true;
