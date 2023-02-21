@@ -23,7 +23,9 @@ export class HeaderComponent implements OnInit {
   // @ts-ignore
   routeSearch() {
     if (this.textSearch != undefined) {
-      return this.router.navigateByUrl(`search/${this.textSearch}`)
+      let searchValue = this.textSearch;
+      this.textSearch = ''
+      return this.router.navigateByUrl(`search/${searchValue}`)
     }
   }
 

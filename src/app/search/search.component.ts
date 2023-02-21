@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {ActivatedRoute, ParamMap, Params, Router} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import * as $ from "jquery";
 import {Tags} from "../model/Tags";
@@ -23,7 +23,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private searchService:SearchService,
               private tagService:TagsService,
-  private dataService: DataService) {
+              private dataService: DataService,
+              private router: Router) {
 
   }
 
@@ -43,8 +44,19 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.resultContent = '';
         this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
       }
-
     })
+
+    this.activatedRoute.params.subscribe(
+      (params: Params) => {
+        if (!!params['id']) {
+          let tagId = +params['id']
+          console.log(tagId)
+          let tagName = params['name']
+          console.log(tagName)
+          this.getPlaylistByTag(tagId, tagName)
+        }
+      }
+    )
     this.tagService.getHint5Tag().subscribe((listTag:Tags[])=>{
       this.hintTag=listTag;
     })
@@ -90,9 +102,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
 
-  getPlaylistByTag(id: number | undefined) {
+  getPlaylistByTag(id: number | undefined, name: string | undefined) {
     this.searchService.getPlaylistByTag(id).subscribe((data :[])=> {
       this.resultSearch = data
+      this.resultContent = 'result for "' + "#" + name + '"'
+      this.statisticalContent = `Found ${data.length} playlists`
+    })
+    this.tagService.getHint5Tag().subscribe(data => {
+      this.hintTag = data
     })
   }
 }
