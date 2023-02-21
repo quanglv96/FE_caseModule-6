@@ -52,4 +52,7 @@ export class SearchItemSongComponent implements OnInit {
       }
     });
   }
+  test(){
+    $('test').contents()
+  }
 }

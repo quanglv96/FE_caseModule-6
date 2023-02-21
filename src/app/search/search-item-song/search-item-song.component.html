@@ -16,8 +16,8 @@
 <!--          User upload-->
           <p class="user-upload m-0 grey-text font-12">{{song?.users?.username}}</p>
 <!--          Song name-->
-<!--          <p class="item-name m-0">{{song.name}}{{song.singerList | toStringSinger}}</p>-->
-          <p class="m-0 font-14">{{song.name}}<span *ngIf="song?.singerList"> - <span *ngFor="let sg of song['singerList'];index as i;" routerLink="/singer/{{sg.id}}">{{sg.name}}<span *ngif=" (song['singerList']['length']-1-i)"> x </span></span> </span></p>
+          <p class="item-name m-0">{{song.name}}{{song.singerList | toStringSinger}}</p>
+<!--          <p class="m-0 font-14">{{song.name}}<span *ngIf="song?.singerList"> - <a class="text" *ngFor="let sg of song['singerList'];index as i;" routerLink="/singer/{{sg.id}}">{{sg.name}} x </a> </span></p>-->
 
         </div>
       </div>
