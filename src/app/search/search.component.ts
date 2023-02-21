@@ -56,30 +56,15 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   result() {
     this.searchService.resultSearch(this.text).subscribe((data:any)=>{
-      this.random(data)
+      this.resultSearch=[]
+      for (let i = 0; i < data.length; i++) {
+        const demo = data[i]
+        for (let j = 0; j < demo.length; j++) {
+          this.resultSearch.push(demo[j]);
+        }
+      }
       this.statisticalContent = `Found ${data[0].length} Songs, ${data[2].length} people, ${data[1].length} playlists`
     })
-  }
-  random(data: any) {
-
-    let index: number = 0;
-    let list: any = [];
-    let random: any = []
-    for (let i = 0; i < data.length; i++) {
-      const demo = data[i]
-      for (let j = 0; j < demo.length; j++) {
-        list.push(demo[j]);
-      }
-    }
-    const demoRandom: any = [];
-    while (index != list.length) {
-      demoRandom[index] = Math.floor(Math.random() * list.length);
-      random = Array.from(new Set(demoRandom));
-      index = random.length;
-    }
-    for (let i = 0; i < random.length; i++) {
-      this.resultSearch.push(list[random[i]]);
-    }
   }
 
   fillCategory(text: string) {
