@@ -50,10 +50,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
       (params: Params) => {
         if (!!params['id']) {
           let tagId = +params['id']
-          console.log(tagId)
           let tagName = params['name']
-          console.log(tagName)
-          this.getPlaylistByTag(tagId, tagName)
+          this.getPlayAndSongByTag(tagId, tagName)
         }
       }
     )
@@ -75,7 +73,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     })
   }
   random(data: any) {
-
     let index: number = 0;
     let list: any = [];
     let random: any = []
@@ -101,14 +98,13 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.category = text;
   }
 
-
-  getPlaylistByTag(id: number | undefined, name: string | undefined) {
-    this.searchService.getPlaylistByTag(id).subscribe((data :[])=> {
-      this.resultSearch = data
+  getPlayAndSongByTag(id?: number | undefined, name?: string | undefined) {
+    this.searchService.getPlayAndSongByTag(id).subscribe((data: any) => {
+      this.random(data)
       this.resultContent = 'result for "' + "#" + name + '"'
-      this.statisticalContent = `Found ${data.length} playlists`
+      this.statisticalContent = `Found ${data[0].length} Playlist, ${data[1].length} Songs`
     })
-    this.tagService.getHint5Tag().subscribe(data => {
+    this.tagService.getHint5Tag().subscribe((data) => {
       this.hintTag = data
     })
   }

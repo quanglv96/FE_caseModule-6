@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Playlist} from "../../model/Playlist";
 import {Tags} from "../../model/Tags";
+import {Songs} from "../../model/Songs";
 const API_URL = `${environment.apiUrl}`;
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,12 @@ export class SearchService {
   }
   getAllTag() {
     return this.http.get(`${API_URL}/tags`)
+  }
+  getAllSongByTag(id?: number): Observable<Songs[]> {
+    return this.http.get<Songs[]>(`${API_URL}/songs/tag/${id}`)
+  }
+
+  getPlayAndSongByTag(id?: number) {
+    return this.http.get(`${API_URL}/search/tag/${id}`)
   }
 }
