@@ -49,7 +49,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
-              private route: ActivatedRoute,
+              private activatedRoute: ActivatedRoute,
               private songService: SongsService,
               private userService: UserService,
               private dataService: DataService,
@@ -69,11 +69,9 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           break;
       }
     })
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+    this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
-        // @ts-ignore
-        this.songs.views = this.songs.views + 1;
         if (localStorage.getItem('idUser')) {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
@@ -97,9 +95,12 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           this.suggestSongs = data;
         })
         // tăng view
+        // @ts-ignore
+        this.songs.views=this.songs.views +1;
         this.songService.changeLikeSongOrViews(song).subscribe(()=>{})
       })
     })
+
     this.dataService.changeMessage("clearSearch");
   }
 
@@ -115,8 +116,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     })
     this.waveSurfer.on('finish', () => {
       this.isPlaying = false;
-      let number = Math.floor(Math.random() * 5)
-      $('.random-item-' + number).trigger('click')
+      $('.random-item-' + 0).trigger('click')
     })
   }
 
@@ -178,12 +178,17 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   openModalAddSongToPlaylist() {
-    this.dialog.open(AddSongToPlaylistComponent, {
-      width: '500px',
-      data: {
-        idUser: this.user.id,
-        song: this.songs
-      }
-    });
+    if(localStorage.getItem('idUser')){
+      this.dialog.open(AddSongToPlaylistComponent, {
+        width: '500px',
+        data: {
+          idUser: this.user.id,
+          song: this.songs
+        }
+      });
+    }else {
+      this.router.navigateByUrl('auth').finally()
+    }
+
   }
 }

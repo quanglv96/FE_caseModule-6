@@ -19,6 +19,7 @@ import {ToStringSinger} from "../service/pipe/toStringSinger";
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.css']
 })
+
 export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   comments: Comments[] = []
   userData: any = [];
@@ -139,6 +140,18 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     if (!!this.wavesurfer) {
       this.wavesurfer.destroy();
     }
+    // @ts-ignore
+    if(this.playlist.songsList[i]){
+      // @ts-ignore
+      if (this.playlist.songsList[i].views) {
+        // @ts-ignore
+        this.playlist.songsList[i].views = this.playlist.songsList[i].views + 1;
+        // @ts-ignore
+        this.songService.changeLikeSongOrViews(this.playlist?.songsList[i]).subscribe(()=>{
+        });
+      }
+    }
+
     this.isStartPlaying = true
     this.wavesurfer = this.waveSurferService.create(this.option)
     // @ts-ignore
@@ -154,6 +167,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         this.wavesurfer.playPause();
         this.isPlaying = this.wavesurfer.isPlaying()
         $('.p-avt').trigger('click')
+
       }
     )
     this.wavesurfer.on('finish', () => {

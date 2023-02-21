@@ -42,7 +42,10 @@
 <!--          Lượt like-->
           <i class="fa-solid fa-heart"></i> {{ song['userLikeSong'].length }}
         </span>
-          <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1 pointer" (click)="openModalAddSongToPlaylist(song)">
+          <span class="play-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
+          <i class="fa-solid fa-play"></i> {{song?.views}}
+        </span>
+          <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1" (click)="openModalAddSongToPlaylist(song)">
           <i class="fa-solid fa-square-plus"></i> Add to playlist
         </span>
         </div>

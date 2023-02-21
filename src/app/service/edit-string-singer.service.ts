@@ -14,12 +14,11 @@ export class EditStringSingerService {
       let listIndex = list[i].split(" ")
       list[i] = "";
       for (let j = 0; j < listIndex.length; j++) {
-        list[i] += listIndex[j].charAt(0).toUpperCase() + listIndex[j].slice(1) + " ";
+        list[i] += listIndex[j].charAt(0).toUpperCase() + listIndex[j].slice(1).toLowerCase() + " ";
       }
       // @ts-ignore
       singer.push({id: null, name: list[i]})
     }
-    console.log(singer)
     return singer;
   }
 }
