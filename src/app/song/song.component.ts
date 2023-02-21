@@ -69,8 +69,6 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
-        // @ts-ignore
-        this.songs.views=this.songs.views +1;
         if (localStorage.getItem('idUser')) {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
@@ -94,9 +92,12 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           this.suggestSongs = data;
         })
         // tăng view
+        // @ts-ignore
+        this.songs.views=this.songs.views +1;
         this.songService.changeLikeSongOrViews(song).subscribe(()=>{})
       })
     })
+
     this.dataService.changeMessage("clearSearch");
   }
 
