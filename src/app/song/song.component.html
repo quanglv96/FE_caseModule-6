@@ -139,7 +139,7 @@
           <div class="random-list mt-3 mb-3">
             <div class="random-item random-item-{{ i }} d-flex mb-1 pointer" *ngFor="let ss of suggestSongs; let i = index" routerLink="/song/{{ss.id}}">
               <div class="random-img">
-                <img class="fit-image" src="{{ss.users?.avatar}}" alt="">
+                <img class="fit-image" src="{{ss.avatar}}" alt="">
               </div>
               <div class="random-song-desc ms-2">
                 <div class="grey-text line-16 font-12 fit-head">{{ss.users?.name}}</div>

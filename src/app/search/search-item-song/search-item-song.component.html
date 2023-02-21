@@ -2,7 +2,7 @@
   <div class="item-image col-3">
     <div class="image-search pointer">
 <!--      AVT-->
-      <img alt="" class="fit-image" src="{{song.avatar}}" (click)="redirectSongDetail(song.id)">
+      <img alt="" class="fit-image" src="{{song['avatar']}}" (click)="redirectSongDetail(song.id)">
     </div>
   </div>
   <div class="item-desc audio-feedback col-9 d-flex flex-column justify-content-between">
@@ -11,13 +11,14 @@
         <div class="d-flex px-2">
           <div class="play-btn-1 play-btn d-flex justify-content-center align-items-center me-2" (click)="playSong(song.id)">
             <!--          play Song-->
-            <i class="fa-solid fa-play play-btn-icon"></i>
+            <i *ngIf="!isPlaying" class="fa-solid fa-play play-btn-icon"></i>
+            <i *ngIf="isPlaying" class="fa-solid fa-pause"></i>
           </div>
           <div class="first-desc-row d-inline-block">
             <!--          User upload-->
-            <p class="user-upload m-0 grey-text font-12">{{song?.users?.username}}</p>
+            <p class="user-upload m-0 grey-text font-12">{{song['users'].username}}</p>
             <!--          Song name-->
-            <p class="item-name m-0">{{song.name}}{{song.singerList | toStringSinger}}</p>
+            <p class="item-name m-0">{{song.name}}{{song['singerList'] | toStringSinger}}</p>
           </div>
         </div>
       </div>
@@ -39,7 +40,7 @@
         <span
           class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
 <!--          Lượt like-->
-          <i class="fa-solid fa-heart"></i> {{song?.userLikeSong?.length}}
+          <i class="fa-solid fa-heart"></i> {{ song['userLikeSong'].length }}
         </span>
           <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1 pointer" (click)="openModalAddSongToPlaylist(song)">
           <i class="fa-solid fa-square-plus"></i> Add to playlist

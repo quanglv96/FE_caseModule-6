@@ -42,13 +42,15 @@ import {NgxWavesurferModule, NgxWavesurferService} from "ngx-wavesurfer";
 import {CanDeactivateGuard} from "./service/can-deactivate";
 import {MomentModule} from "ngx-moment";
 import {MatDialogModule} from "@angular/material/dialog";
-import { AddSongToPlaylistComponent } from './add-song-to-playlist/add-song-to-playlist.component';
+import {AddSongToPlaylistComponent} from './add-song-to-playlist/add-song-to-playlist.component';
 import {MatButtonModule} from "@angular/material/button";
 import {ToStringSinger} from "./service/pipe/toStringSinger";
-import { SingerComponent } from './singer/singer.component';
-import { AudioPlayerComponent } from './audio-player/audio-player.component';
+import {SingerComponent} from './singer/singer.component';
+import {AudioPlayerComponent } from './audio-player/audio-player.component';
 import {NgxAudioPlayerModule} from "ngx-audio-player";
 import {AudioPlayerService} from "./service/audio-player.service";
+import {PlyrModule} from "ngx-plyr";
+import {AngMusicPlayerModule} from "ang-music-player";
 
 @NgModule({
   declarations: [
@@ -102,7 +104,9 @@ import {AudioPlayerService} from "./service/audio-player.service";
     }),
     MatDialogModule,
     MatButtonModule,
-    NgxAudioPlayerModule
+    NgxAudioPlayerModule,
+    PlyrModule,
+    AngMusicPlayerModule
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard, AudioPlayerService

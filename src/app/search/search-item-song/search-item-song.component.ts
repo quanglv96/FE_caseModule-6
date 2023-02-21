@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {faPlayCircle} from "@fortawesome/free-solid-svg-icons";
 import {Songs} from "../../model/Songs";
 import {Tags} from "../../model/Tags";
@@ -12,16 +12,17 @@ import {NgxWavesurferService} from "ngx-wavesurfer";
   templateUrl: './search-item-song.component.html',
   styleUrls: ['./search-item-song.component.css']
 })
-export class SearchItemSongComponent implements OnInit {
-  faPlay = faPlayCircle
+export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('song') song: Songs | any;
   tagString: string | any;
+  playable: boolean = false;
+  isPlaying: boolean = false;
   option = {
     container: '',
     waveColor: '#989898',
     progressColor: '#fc821d',
     barWidth: 2,
-    height: 80,
+    height: 90,
     hideScrollbar: true,
     hideCursor: true,
     cursorColor: 'transparent',
@@ -30,7 +31,16 @@ export class SearchItemSongComponent implements OnInit {
 
   ngOnInit(): void {
     this.tagString = this.toStringTag(this.song.tagsList);
+  }
+
+  ngAfterViewInit() {
     this.option.container = '.wave-song-' + this.song.id
+    this.wavesurfer = this.wavesurferService.create(this.option);
+    this.loadAudio(this.wavesurfer, this.song.audio).then(
+      () => {
+        this.playable = true
+      }
+    )
   }
 
   toStringTag(listTag: Tags[]) {
@@ -48,15 +58,9 @@ export class SearchItemSongComponent implements OnInit {
   }
 
   playSong(id: any) {
-    if (this.wavesurfer === undefined) {
-      this.wavesurfer = this.wavesurferService.create(this.option);
-      this.loadAudio(this.wavesurfer, this.song.audio).then(
-        () => {
-          this.wavesurfer.playPause()
-        }
-      )
-    } else {
+    if (this.playable) {
       this.wavesurfer.playPause()
+      this.isPlaying = this.wavesurfer.isPlaying();
     }
   }
 
@@ -83,5 +87,9 @@ export class SearchItemSongComponent implements OnInit {
         song: song
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.wavesurfer.destroy();
   }
 }

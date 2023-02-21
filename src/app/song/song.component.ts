@@ -107,13 +107,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.waveSurfer = this.waveSurferService.create(this.option)
     this.loadAudio(this.waveSurfer, this.url).then(() => {
       this.endTime = this.getDuration();
-      // @ts-ignore
-      let track: Track = {
-        title: this.songs?.name as string,
-        link: this.songs?.audio as string,
-        artist: this.songs?.composer,
-        duration: this.waveSurfer.getDuration()
-      }
+      this.audioService.audioChange.next([this.songs]);
       if (this.autoplay) {
         this.waveSurfer.playPause();
         this.isPlaying = this.waveSurfer.isPlaying()
@@ -137,6 +131,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   playPause() {
     this.autoplay = true;
     this.waveSurfer.playPause();
+    this.audioService.playState.next(true)
     this.isPlaying = this.waveSurfer.isPlaying()
   }
 
