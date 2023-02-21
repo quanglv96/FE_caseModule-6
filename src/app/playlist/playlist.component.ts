@@ -105,8 +105,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     )
     // @ts-ignore
-    this.userId = +localStorage.getItem('idUser')
-    this.userService.countByUser(this.userId).subscribe(
+    let userId = +localStorage.getItem('idUser')
+    this.userService.countByUser(userId).subscribe(
       data => {
         this.userData = data;
       }

@@ -12,6 +12,8 @@ import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
 import {MatDialog} from "@angular/material/dialog";
 import {AddSongToPlaylistComponent} from "../add-song-to-playlist/add-song-to-playlist.component";
+import {Track} from "ngx-audio-player";
+import {AudioPlayerService} from "../service/audio-player.service";
 
 @Component({
   selector: 'app-song',
@@ -51,7 +53,8 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
               private songService: SongsService,
               private userService: UserService,
               private dataService: DataService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private audioService: AudioPlayerService) {
   }
 
   ngOnInit() {
@@ -70,7 +73,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       this.songService.findSongById(paramMap.get('id')).subscribe((song: Songs) => {
         this.songs = song;
         // @ts-ignore
-        this.songs.views=this.songs.views +1;
+        this.songs.views = this.songs.views + 1;
         if (localStorage.getItem('idUser')) {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
@@ -84,8 +87,8 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         this.url = song.audio;
         this.renderAudioOnStart()
         this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{
-          this.countSongByUser=list[1];
-          this.countPlaylistByUser=list[0];
+          this.countSongByUser = list[1];
+          this.countPlaylistByUser = list[0];
         })
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
           this.listComment = comment
@@ -104,6 +107,13 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.waveSurfer = this.waveSurferService.create(this.option)
     this.loadAudio(this.waveSurfer, this.url).then(() => {
       this.endTime = this.getDuration();
+      // @ts-ignore
+      let track: Track = {
+        title: this.songs?.name as string,
+        link: this.songs?.audio as string,
+        artist: this.songs?.composer,
+        duration: this.waveSurfer.getDuration()
+      }
       if (this.autoplay) {
         this.waveSurfer.playPause();
         this.isPlaying = this.waveSurfer.isPlaying()

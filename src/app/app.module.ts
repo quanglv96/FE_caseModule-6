@@ -46,6 +46,9 @@ import { AddSongToPlaylistComponent } from './add-song-to-playlist/add-song-to-p
 import {MatButtonModule} from "@angular/material/button";
 import {ToStringSinger} from "./service/pipe/toStringSinger";
 import { SingerComponent } from './singer/singer.component';
+import { AudioPlayerComponent } from './audio-player/audio-player.component';
+import {NgxAudioPlayerModule} from "ngx-audio-player";
+import {AudioPlayerService} from "./service/audio-player.service";
 
 @NgModule({
   declarations: [
@@ -75,6 +78,7 @@ import { SingerComponent } from './singer/singer.component';
     PlaylistComponent,
     AddSongToPlaylistComponent,
     SingerComponent,
+    AudioPlayerComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,10 +101,11 @@ import { SingerComponent } from './singer/singer.component';
       }
     }),
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    NgxAudioPlayerModule
   ],
   providers: [
-    ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard
+    ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard, AudioPlayerService
   ],
   bootstrap: [AppComponent]
 })
