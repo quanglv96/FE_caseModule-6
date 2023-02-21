@@ -71,7 +71,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   result() {
     this.searchService.resultSearch(this.text).subscribe((data:any)=>{
       this.random(data)
-      this.statisticalContent = `Found ${data[0].length} Songs, ${data[1].length} people, ${data[2].length} playlists`
+      this.statisticalContent = `Found ${data[0].length} Songs, ${data[2].length} people, ${data[1].length} playlists`
     })
   }
   random(data: any) {

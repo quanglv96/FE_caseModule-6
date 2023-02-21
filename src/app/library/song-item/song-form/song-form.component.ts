@@ -17,7 +17,7 @@ import {EditStringSingerService} from "../../../service/edit-string-singer.servi
   styleUrls: ['./song-form.component.css']
 })
 export class SongFormComponent implements OnInit {
-  songImage?: any ="https://youshark.neocities.org/assets/img/default.png";
+  songImage?: any = "https://youshark.neocities.org/assets/img/default.png";
   titleContent: string = "Upload My Song";
   formSong: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -44,14 +44,18 @@ export class SongFormComponent implements OnInit {
   ngOnInit(): void {
     this.activeRouter.paramMap.subscribe((pramMap: ParamMap) => {
       if (pramMap.get('idSong')) {
-        this.titleContent = "Update My Song"
-        this.openFormEdit(pramMap.get('idSong'))
-        this.editIdSong = pramMap.get('idSong');
-
+        this.songService.findSongById(pramMap.get('idSong')).subscribe((data: Songs) => {
+          if (data.users?.id != localStorage.getItem('idUser')) {
+            this.router.navigateByUrl('').then();
+          } else {
+            this.titleContent = "Update My Song"
+            this.openFormEdit(data)
+            this.editIdSong = pramMap.get('idSong');
+          }
+        })
       }
     })
   }
-
 
   submitForm() {
     SwAl.fire('Please wait').then();
@@ -67,16 +71,17 @@ export class SongFormComponent implements OnInit {
               urlAvatar = pathAvatar;
               this.saveCreateSong(urlAudio, urlAvatar);
             })
-          }else {
+          } else {
             this.saveCreateSong(urlAudio, urlAvatar);
           }
         })
       } else {
-       SwAl.fire({
+        SwAl.fire({
           title: 'You have not updated the audio file',
           icon: "error",
           showConfirmButton: false,
           showCloseButton: true,
+          scrollbarPadding: true,
           customClass: {
             title: 'error-message',
             popup: 'popup',
@@ -119,13 +124,13 @@ export class SongFormComponent implements OnInit {
 
   saveCreateSong(pathAudio: string | any, pathAvatar: string | any) {
     const songs: Songs = {
-      name: this.formSong.value.name,
+      name: this.editNameSong(this.formSong.value.name),
       audio: pathAudio,
       avatar: pathAvatar,
       // @ts-ignore
       users: {id: localStorage.getItem('idUser')},
       singerList: this.editStringSinger.editStringSinger(this.stringSinger),
-      composer: this.formSong.value.composer,
+      composer: this.editSingerSong(this.formSong.value.composer),
       tagsList: this.editStringTag.editStringTag(this.stringTag)
     }
     this.songService.saveCreate(songs).subscribe(() => {
@@ -149,13 +154,13 @@ export class SongFormComponent implements OnInit {
 
   saveUpdateSong(pathAudio: string | any, pathAvatar: string | any) {
     const songs: Songs = {
-      name: this.formSong.value.name,
+      name: this.editNameSong(this.formSong.value.name),
       audio: pathAudio,
       avatar: pathAvatar,
       // @ts-ignore
       users: this.oldSong?.users,
       singerList: this.editStringSinger.editStringSinger(this.stringSinger),
-      composer: this.formSong.value.composer,
+      composer: this.editSingerSong(this.formSong.value.composer),
       tagsList: this.editStringTag.editStringTag(this.stringTag)
     }
     this.songService.updateSong(this.oldSong?.id, songs).subscribe(() => {
@@ -178,38 +183,53 @@ export class SongFormComponent implements OnInit {
   }
 
 
-  openFormEdit(idSong: any) {
-    this.songService.findSongById(idSong).subscribe((data: Songs) => {
-      this.oldSong = data;
-      this.songImage=this.oldSong.avatar
-      this.formSong.patchValue(data);
-      if (data.avatar) {
-        this.songAvatar = data.avatar
-      }
-      this.stringTag = '';
+  openFormEdit(data: Songs) {
+    this.oldSong = data;
+    this.songImage = this.oldSong.avatar
+    this.formSong.patchValue(data);
+    if (data.avatar) {
+      this.songAvatar = data.avatar
+    }
+    this.stringTag = '';
+    // @ts-ignore
+    for (let i = 0; i < data.tagsList.length; i++) {
       // @ts-ignore
-      for (let i = 0; i < data.tagsList.length; i++) {
-        // @ts-ignore
-        this.stringTag += '#' + data.tagsList[i].name + ' '
-      }
-      this.stringSinger = '';
+      this.stringTag += '#' + data.tagsList[i].name + ' '
+    }
+    this.stringSinger = '';
+    // @ts-ignore
+    for (let i = 0; i < data.singerList.length; i++) {
       // @ts-ignore
-      for (let i = 0; i < data.singerList.length; i++) {
-        // @ts-ignore
-        this.stringSinger += data.singerList[i].name
-        // @ts-ignore
-        if (i != (data.singerList.length - 1)) {
-          this.stringSinger += ", "
-        }
+      this.stringSinger += data.singerList[i].name
+      // @ts-ignore
+      if (i != (data.singerList.length - 1)) {
+        this.stringSinger += ", "
       }
-      this.titleContent = "Update Playlist"
-    })
+    }
+    this.titleContent = "Update Playlist"
   }
 
   openUpload(s: string) {
     $(s).trigger('click')
   }
 
+  editSingerSong(singerValue: string) {
+    let list = singerValue.split(",")
+    let content = '';
+    for (let i = 0; i < list.length; i++) {
+      content+=this.editNameSong(list[i])
+    }
+    return content;
+  }
+
+  editNameSong(nameValue: string) {
+    let list = nameValue.split(" ")
+    let content = '';
+    for (let i = 0; i < list.length; i++) {
+      content += list[i].charAt(0).toUpperCase() + list[i].slice(1).toLowerCase() + " ";
+    }
+    return content;
+  }
 
   renderImagePath(event: any) {
     if (!this.avatar?.nativeElement.files[0].type.includes('image/')) {
@@ -218,6 +238,7 @@ export class SongFormComponent implements OnInit {
         icon: "error",
         showConfirmButton: false,
         showCloseButton: true,
+        scrollbarPadding: false,
         customClass: {
           title: 'error-message',
           popup: 'popup',
@@ -225,7 +246,7 @@ export class SongFormComponent implements OnInit {
           closeButton: 'close-btn'
         }
       }).then()
-    }else {
+    } else {
       const files = event.target.files;
       const reader = new FileReader()
       if (files && files[0]) {
@@ -252,7 +273,7 @@ export class SongFormComponent implements OnInit {
           closeButton: 'close-btn'
         }
       }).then()
-    }else {
+    } else {
       const files = event.target.files;
       if (files && files[0]) {
         this.songAudio = files[0].name;

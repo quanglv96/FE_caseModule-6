@@ -53,6 +53,10 @@ export class HeaderComponent implements OnInit {
 
   }
 
+  toTrending(){
+    console.log(this.router)
+this.router.navigateByUrl('/trending').finally()
+  }
   logOut() {
     localStorage.removeItem('idUser');
     this.user = null;
