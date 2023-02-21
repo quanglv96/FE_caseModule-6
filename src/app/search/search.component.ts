@@ -26,6 +26,9 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(-1){
+      console.log(true)
+    }
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')
