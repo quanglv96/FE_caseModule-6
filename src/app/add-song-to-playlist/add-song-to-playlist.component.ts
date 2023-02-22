@@ -16,11 +16,11 @@ export class AddSongToPlaylistComponent implements OnInit {
   addMode = true;
   // idUser,song
   data: any
-  user:User={}
+  user: User = {}
   playlists?: Playlist[]
   alertSwAl = SwAl.mixin({
     toast: true,
-    heightAuto:true,
+    heightAuto: true,
     position: 'top-end',
     showConfirmButton: false,
     timer: 3000,
@@ -29,22 +29,22 @@ export class AddSongToPlaylistComponent implements OnInit {
       toast.addEventListener('mouseleave', SwAl.resumeTimer)
     }
   })
-  @Input() newNamePlaylist: string|any;
+  @Input() newNamePlaylist: string | any;
 
   constructor(private dialogRef: MatDialogRef<AddSongToPlaylistComponent>,
-              private userService:UserService,
-              private router:Router,
+              private userService: UserService,
+              private router: Router,
               private playlistService: PlaylistService,
               @Inject(MAT_DIALOG_DATA) data: any) {
-    this.data=data;
+    this.data = data;
   }
 
   ngOnInit() {
-      this.playlistService.getPlaylistByUser(this.data.idUser).subscribe(
-        playlist => {
-          this.playlists = playlist;
-        }
-      )
+    this.playlistService.getPlaylistByUser(this.data.idUser).subscribe(
+      playlist => {
+        this.playlists = playlist;
+      }
+    )
   }
 
   isPlaylistContainSong(indexPlaylist: any) {
@@ -64,39 +64,43 @@ export class AddSongToPlaylistComponent implements OnInit {
     // @ts-ignore
     this.isPlaylistContainSong(indexPlaylist)
     // @ts-ignore
-    this.playlistService.changeSongToPlaylist(this.playlists[indexPlaylist]).subscribe(()=>{
+    this.playlistService.changeSongToPlaylist(this.playlists[indexPlaylist]).subscribe(() => {
       this.alertSwAl.fire({
         icon: 'success',
-        title: 'Add Success'}).then()
+        title: 'Add Success'
+      }).then()
     })
   }
 
   deleteSongInPlaylist(indexPlaylist: number) {
     // @ts-ignore
-    this.playlists[indexPlaylist].songsList=this.playlists[indexPlaylist].songsList.filter(element=>element.id!=this.data.song.id)
+    this.playlists[indexPlaylist].songsList = this.playlists[indexPlaylist].songsList.filter(element => element.id != this.data.song.id)
     // @ts-ignore
     this.isPlaylistContainSong(indexPlaylist)
     // @ts-ignore
-    this.playlistService.changeSongToPlaylist(this.playlists[indexPlaylist]).subscribe(()=>{
+    this.playlistService.changeSongToPlaylist(this.playlists[indexPlaylist]).subscribe(() => {
       this.alertSwAl.fire({
         icon: 'success',
-        title: 'Remove Success'}).then()
+        title: 'Remove Success'
+      }).then()
     })
   }
 
   addSongNewPlaylist() {
-    this.userService.findById(this.data.idUser).subscribe((user:User)=>{
-      const playlist:Playlist={
-        name:this.newNamePlaylist,
-        users:user,
-        songsList:[this.data.song],
-        views:1000
+    this.userService.findById(this.data.idUser).subscribe((user: User) => {
+      const playlist: Playlist = {
+        name: this.newNamePlaylist,
+        users: user,
+        songsList: [this.data.song],
+        views: 1000
       }
-      this.playlistService.changeSongToPlaylist(playlist).subscribe(()=>{
+      this.playlistService.changeSongToPlaylist(playlist).subscribe(() => {
         this.alertSwAl.fire({
           icon: 'success',
-          title: 'Add Success'}).then(()=>{
-            this.dialogRef.close();
+          title: 'Add Success'
+        }).then(() => {
+          this.ngOnInit()
+          this.switchTo('create-new')
         })
       })
     })
