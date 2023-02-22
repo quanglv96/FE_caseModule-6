@@ -44,7 +44,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
           this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
         }
       }
-      if (routerPath == "search/tag/:idTag/:nameTag") {
+      if (routerPath == "search/tags/:idTag/:nameTag") {
         this.getPlayAndSongByTag(param.get('idTag'),param.get('nameTag'))
       }
     })
