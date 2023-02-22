@@ -82,6 +82,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
         for (let j = 0; j < demo.length; j++) {
           this.resultSearch.push(demo[j]);
         }
+
       }
       this.statisticalContent = `Found ${data[0].length} Playlist, ${data[1].length} Songs`
     })
