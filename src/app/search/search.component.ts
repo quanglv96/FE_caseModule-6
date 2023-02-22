@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {ActivatedRoute, ParamMap, Params} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import * as $ from "jquery";
 import {Tags} from "../model/Tags";
@@ -12,7 +12,7 @@ import {TagsService} from "../service/tags/tags.service";
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   search: [] = [];
-  text:any;
+  text: any;
   resultSearch: any[] = [];
   category:string ='';
   resultContent: string='';
@@ -41,8 +41,17 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.resultContent = '';
         this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
       }
-
     })
+
+    this.activatedRoute.params.subscribe(
+      (params: Params) => {
+        if (!!params['id']) {
+          let tagId = +params['id']
+          let tagName = params['name']
+          this.getPlayAndSongByTag(tagId, tagName)
+        }
+      }
+    )
     this.tagService.getHint5Tag().subscribe((listTag:Tags[])=>{
       this.hintTag=listTag;
     })
@@ -54,6 +63,28 @@ export class SearchComponent implements OnInit, AfterViewInit {
     $('.sidebar-container').width(width);
   }
 
+
+
+  fillCategory(text: string) {
+    this.category = text;
+  }
+
+  getPlayAndSongByTag(id?: number | undefined, name?: string | undefined) {
+    this.resultContent = 'result for "' + "#" + name + '"'
+    this.searchService.getPlayAndSongByTag(id).subscribe((data: any) => {
+      this.resultSearch=[]
+      for (let i = 0; i < data.length; i++) {
+        const demo = data[i]
+        for (let j = 0; j < demo.length; j++) {
+          this.resultSearch.push(demo[j]);
+        }
+      }
+      this.statisticalContent = `Found ${data[0].length} Playlist, ${data[1].length} Songs`
+    })
+    this.tagService.getHint5Tag().subscribe((data) => {
+      this.hintTag = data
+    })
+  }
   result() {
     this.searchService.resultSearch(this.text).subscribe((data:any)=>{
       this.resultSearch=[]
@@ -67,7 +98,5 @@ export class SearchComponent implements OnInit, AfterViewInit {
     })
   }
 
-  fillCategory(text: string) {
-    this.category = text;
-  }
+
 }

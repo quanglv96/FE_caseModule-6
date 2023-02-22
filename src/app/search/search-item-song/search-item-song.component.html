@@ -23,7 +23,7 @@
 <!--        Time upload-->
         <p class="date-upload m-0 grey-text font-12" style="text-align: right">{{song.date|amTimeAgo}}</p>
 <!--        Tag-->
-        <p style="text-align: right"><span *ngFor="let s of song?.tagsList" class="item-tag"> #{{ s.name }}</span></p>
+        <p style="text-align: right"><span *ngFor="let s of song?.tagsList" class="item-tag" [routerLink]="['/tags', s.id, s.name]"> #{{ s.name }}</span></p>
       </div>
     </div>
     <div class="play-box">
