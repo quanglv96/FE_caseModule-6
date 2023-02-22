@@ -34,6 +34,7 @@
     "jquery": "^3.6.3",
     "moment": "^2.29.4",
     "ng-waveform": "^0.2.0",
+    "ngx-infinite-scroll": "^15.0.0",
     "ngx-moment": "^6.0.2",
     "ngx-owl-carousel-o": "^15.0.0",
     "ngx-wavesurfer": "^1.0.4",

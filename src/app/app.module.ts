@@ -46,6 +46,7 @@ import { AddSongToPlaylistComponent } from './add-song-to-playlist/add-song-to-p
 import {MatButtonModule} from "@angular/material/button";
 import {ToStringSinger} from "./service/pipe/toStringSinger";
 import { SingerComponent } from './singer/singer.component';
+import {InfiniteScrollModule} from "ngx-infinite-scroll";
 
 @NgModule({
   declarations: [
@@ -74,7 +75,7 @@ import { SingerComponent } from './singer/singer.component';
     SongComponent,
     PlaylistComponent,
     AddSongToPlaylistComponent,
-    SingerComponent,
+    SingerComponent
   ],
   imports: [
     BrowserModule,
@@ -97,7 +98,8 @@ import { SingerComponent } from './singer/singer.component';
       }
     }),
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    InfiniteScrollModule
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard
