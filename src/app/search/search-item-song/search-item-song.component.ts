@@ -5,6 +5,7 @@ import {Tags} from "../../model/Tags";
 import {Router} from "@angular/router";
 import {AddSongToPlaylistComponent} from "../../add-song-to-playlist/add-song-to-playlist.component";
 import {MatDialog} from "@angular/material/dialog";
+import {TagsService} from "../../service/tags/tags.service";
 
 @Component({
   selector: 'app-search-item-song',
@@ -15,6 +16,7 @@ export class SearchItemSongComponent implements OnInit {
   faPlay = faPlayCircle
   @Input('song') song: Songs | any;
   tagString: string | any;
+  resultSong: Songs[] = []
 
   ngOnInit(): void {
     this.tagString = this.toStringTag(this.song.tagsList);
@@ -28,7 +30,8 @@ export class SearchItemSongComponent implements OnInit {
     return content;
   }
 
-  constructor(private router: Router,private dialog: MatDialog) {
+  constructor(private router: Router,private dialog: MatDialog,
+              private tagsService : TagsService) {
 
   }
 
@@ -51,5 +54,14 @@ export class SearchItemSongComponent implements OnInit {
         song: song
       }
     });
+  }
+
+  findSongsByTag(id: number) {
+    console.log(id)
+    this.tagsService.findSongsByTags(id).subscribe((data:Songs[]) => {
+      this.resultSong = data;
+      console.log(data)
+      // this.router.navigateByUrl(`tag/` + id);
+    })
   }
 }

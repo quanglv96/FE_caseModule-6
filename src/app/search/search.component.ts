@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Params} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import * as $ from "jquery";
@@ -31,12 +31,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
-    $('.content'
-    ).css('min-height', 'calc(' + height + ')')
+    $('.content').css('min-height', 'calc(' + height + ')')
     const routerPath = this.activatedRoute.routeConfig?.path
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.resultSearch = [];
-      if (routerPath == 'search/:textSearch') {
+      if(routerPath == 'search/:textSearch'){
         const textSearch: string | null = param.get('textSearch');
         if (textSearch != '') {
           this.text = textSearch;
@@ -110,13 +109,13 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
 
-  show: Array<Object> = []
+  dataShow: Array<Object> = []
   resultSearch$: Observable<Array<Object>>;
 
   loadMore() {
-    this.LoadMoreService.onload(this.show, this.resultSearch)
+    this.LoadMoreService.onload(this.dataShow, this.resultSearch)
     this.resultSearch$.subscribe((data: Array<Object>) => {
-      this.show = data;
+      this.dataShow = data;
     })
   }
 

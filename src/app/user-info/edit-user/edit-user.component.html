@@ -17,12 +17,12 @@
       <div class="row">
         <div class="col col-6">
           <div class="form-group mb-2 disable">
-            <label class="modal-label my-1" for="i-username">Username:</label><br>
+            <label class="modal-label my-1" for="i-username">Username</label><br>
             <input class="modal-input" name="username" type="text"
                    id="i-username" disabled placeholder="Username" value="{{ user?.username }}">
           </div>
           <div class="form-group mb-2">
-            <label class="modal-label my-1" for="i-name">Name:</label><br>
+            <label class="modal-label my-1" for="i-name">Name</label><br>
             <input (input)="clearValid($event, name)" (blur)="checkValid($event, name)"
                    class="modal-input" name="name" type="text" id="i-name"
                    placeholder="Name" formControlName="name">
@@ -36,14 +36,14 @@
             </div>
           </div>
           <div class="form-group mb-2">
-            <label class="modal-label my-1" for="i-address">Address:</label><br>
+            <label class="modal-label my-1" for="i-address">Address</label><br>
             <input class="modal-input" name="address" type="text" id="i-address"
                    placeholder="Address" formControlName="address">
           </div>
         </div>
         <div class="col col-6">
           <div class="form-group mb-2">
-            <label class="modal-label my-1" for="i-email">Email:</label><br>
+            <label class="modal-label my-1" for="i-email">Email</label><br>
             <input (input)="clearValid($event, email)" (blur)="checkValid($event, email)"
                    class="modal-input" name="email" type="text" id="i-email"
                    placeholder="Email" formControlName="email">
@@ -63,7 +63,7 @@
             </div>
           </div>
           <div class="form-group mb-2">
-            <label class="modal-label my-1" for="i-phone_number">Phone number:</label><br>
+            <label class="modal-label my-1" for="i-phone_number">Phone number</label><br>
             <input (input)="clearValid($event, phoneNumber)" (blur)="checkValid($event, phoneNumber)"
                    class="modal-input" name="phone_number" type="text" id="i-phone_number"
                    placeholder="Phone number" formControlName="phone">

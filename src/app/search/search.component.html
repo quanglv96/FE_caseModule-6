@@ -94,7 +94,7 @@
                [infiniteScrollDistance]="1"
                [infiniteScrollThrottle]="0"
                (scrolled)="loadMore()">
-            <div *ngFor="let r of show | filter:category" class=" row mt-4">
+            <div *ngFor="let r of dataShow | filter:category" class=" row mt-4">
               <app-search-item-song *ngIf="r['audio']" [song]="r"></app-search-item-song>
               <app-search-item-user *ngIf="r['username']" [user]="r"></app-search-item-user>
               <app-search-item-playlist *ngIf="r['description']" [playlist]="r"></app-search-item-playlist>

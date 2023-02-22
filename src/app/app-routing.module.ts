@@ -20,6 +20,7 @@ import {SingerComponent} from "./singer/singer.component";
 const routes: Routes = [
   {path: 'auth', component: AuthComponent},
   {path: 'search/:textSearch', component: SearchComponent},
+  {path: 'tag/:id', component: SearchComponent},
   {path: 'auth', component: AuthComponent},
   {path: 'user-info', component: UserInfoComponent, children: [
       {path: 'edit', component: EditUserComponent},
