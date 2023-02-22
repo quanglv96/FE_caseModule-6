@@ -29,17 +29,23 @@ export class SearchComponent implements OnInit, AfterViewInit {
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')
+    const routerPath = this.activatedRoute.routeConfig?.path
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.resultSearch = [];
-      const textSearch: string | null = param.get('textSearch');
-      if (textSearch != '') {
-        this.text = textSearch;
-        this.result();
-        this.resultContent = 'result for "' + this.text + '"'
-        this.category = '';
-      } else {
-        this.resultContent = '';
-        this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
+      if(routerPath == 'search/:textSearch'){
+        const textSearch: string | null = param.get('textSearch');
+        if (textSearch != '') {
+          this.text = textSearch;
+          this.result();
+          this.resultContent = 'result for "' + this.text + '"'
+          this.category = '';
+        } else {
+          this.resultContent = '';
+          this.statisticalContent = 'Search for tracks, artists, podcasts, and playlists.';
+        }
+      }
+      if (routerPath == "search/tag/:idTag/:nameTag") {
+        this.getPlayAndSongByTag(param.get('idTag'),param.get('nameTag'))
       }
     })
 
@@ -69,7 +75,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.category = text;
   }
 
-  getPlayAndSongByTag(id?: number | undefined, name?: string | undefined) {
+  getPlayAndSongByTag(id?: number | any, name?: string | any) {
     this.resultContent = 'result for "' + "#" + name + '"'
     this.searchService.getPlayAndSongByTag(id).subscribe((data: any) => {
       this.resultSearch=[]
