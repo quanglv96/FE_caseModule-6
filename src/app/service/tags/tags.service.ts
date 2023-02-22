@@ -13,7 +13,7 @@ export class TagsService {
 
   constructor(private http: HttpClient) {}
 
-  findSongsByTags(id: number){
+  findSongsByTags(id: number): Observable<Songs[]>{
     return this.http.get<Songs[]>(`${API_URL}/tags/findSongsByTag/${id}`)
   }
   getHint5Tag():Observable<Tags[]>{

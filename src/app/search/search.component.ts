@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {ActivatedRoute, ParamMap, Params} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import {Songs} from "../model/Songs";
 import {Playlist} from "../model/Playlist";
@@ -7,6 +7,7 @@ import {User} from "../model/User";
 import * as $ from "jquery";
 import {Tags} from "../model/Tags";
 import {TagsService} from "../service/tags/tags.service";
+import {data, param} from "jquery";
 
 @Component({
   selector: 'app-search',
@@ -35,6 +36,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')
+
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.resultSearch = [];
       const textSearch: string | null = param.get('textSearch');
@@ -51,6 +53,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
     })
     this.tagService.getHint5Tag().subscribe((listTag:Tags[])=>{
       this.hintTag=listTag;
+    })
+    this.activatedRoute.params.subscribe((params:Params) =>{
+      let tagId = params['id']
+      this.listSongsByTag(tagId)
     })
   }
 
@@ -91,6 +97,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   fillCategory(text: string) {
     this.category = text;
+  }
+
+  listSongsByTag(id: number) {
+    this.tagService.findSongsByTags(id).subscribe((data:any) => {
+      this.resultSearch = data
+    });
   }
 
 
