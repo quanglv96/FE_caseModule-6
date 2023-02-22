@@ -40,6 +40,7 @@ const routes: Routes = [
   {path: 'trending', component: TrendingComponent,pathMatch:"full"},
   {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
+  {path: 'tags/:id/:name', component: SearchComponent},
   {path: 'singer/:id', component: SingerComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: '', component: HomeComponent, pathMatch: 'full'}
 ];

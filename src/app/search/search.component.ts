@@ -1,13 +1,10 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Params} from "@angular/router";
+import {ActivatedRoute, ParamMap, Params, Router} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
-import {Songs} from "../model/Songs";
-import {Playlist} from "../model/Playlist";
-import {User} from "../model/User";
 import * as $ from "jquery";
 import {Tags} from "../model/Tags";
 import {TagsService} from "../service/tags/tags.service";
-import {data, param} from "jquery";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-search',
@@ -16,11 +13,8 @@ import {data, param} from "jquery";
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   search: [] = [];
-  text:any;
+  text: any;
   resultSearch: any[] = [];
-  resultSong:Songs[]=[];
-  resultPlaylist:Playlist[]=[];
-  resultUser:User[]=[];
   category:string ='';
   resultContent: string='';
   statisticalContent: string='Search for tracks, artists, podcasts, and playlists.';
@@ -28,7 +22,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private searchService:SearchService,
-              private tagService:TagsService) {
+              private tagService:TagsService,
+              private dataService: DataService,
+              private router: Router) {
 
   }
 
@@ -36,7 +32,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')
-
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.resultSearch = [];
       const textSearch: string | null = param.get('textSearch');
@@ -51,12 +46,18 @@ export class SearchComponent implements OnInit, AfterViewInit {
       }
 
     })
+
+    this.activatedRoute.params.subscribe(
+      (params: Params) => {
+        if (!!params['id']) {
+          let tagId = +params['id']
+          let tagName = params['name']
+          this.getPlayAndSongByTag(tagId, tagName)
+        }
+      }
+    )
     this.tagService.getHint5Tag().subscribe((listTag:Tags[])=>{
       this.hintTag=listTag;
-    })
-    this.activatedRoute.params.subscribe((params:Params) =>{
-      let tagId = params['id']
-      this.listSongsByTag(tagId)
     })
   }
 
@@ -73,7 +74,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     })
   }
   random(data: any) {
-
     let index: number = 0;
     let list: any = [];
     let random: any = []
@@ -92,11 +92,21 @@ export class SearchComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < random.length; i++) {
       this.resultSearch.push(list[random[i]]);
     }
-
   }
 
   fillCategory(text: string) {
     this.category = text;
+  }
+
+  getPlayAndSongByTag(id?: number | undefined, name?: string | undefined) {
+    this.searchService.getPlayAndSongByTag(id).subscribe((data: any) => {
+      this.random(data)
+      this.resultContent = 'result for "' + "#" + name + '"'
+      this.statisticalContent = `Found ${data[0].length} Playlist, ${data[1].length} Songs`
+    })
+    this.tagService.getHint5Tag().subscribe((data) => {
+      this.hintTag = data
+    })
   }
 
   listSongsByTag(id: number) {
