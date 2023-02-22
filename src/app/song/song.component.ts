@@ -39,11 +39,11 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   user: User = {}
   @Input() contentComment: string = "";
   suggestSongs: Songs[] = []
-  statusLike: boolean|undefined;
-  statusLogin: boolean|undefined;
+  statusLike: boolean | undefined;
+  statusLogin: boolean | undefined;
   countByUser: any
-  countSongByUser:number|any=0;
-  countPlaylistByUser: number|any=0;
+  countSongByUser: number | any = 0;
+  countPlaylistByUser: number | any = 0;
 
   constructor(public waveSurferService: NgxWavesurferService,
               private router: Router,
@@ -56,13 +56,13 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
 
   ngOnInit() {
     this.dataService.currentMessage.subscribe(message => {
-      switch (message){
+      switch (message) {
         case "log out":
-          this.statusLogin=false;
-          this.statusLike=false;
+          this.statusLogin = false;
+          this.statusLike = false;
           break;
         case "Login successfully":
-          this.statusLogin=true;
+          this.statusLogin = true;
           break;
       }
     })
@@ -73,17 +73,14 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
             this.user = users;
-            this.statusLike=false;
-            if (this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id) {
-              this.statusLike = true;
-            }
+            this.statusLike = !!this.songs.userLikeSong?.find(id => id.id == this.user.id)?.id;
           })
         }
         this.url = song.audio;
         this.renderAudioOnStart()
-        this.userService.countByUser(this.songs?.users?.id).subscribe(list=>{
-          this.countSongByUser=list[1];
-          this.countPlaylistByUser=list[0];
+        this.userService.countByUser(this.songs?.users?.id).subscribe(list => {
+          this.countSongByUser = list[1];
+          this.countPlaylistByUser = list[0];
         })
         this.songService.getCommentSong(this.songs.id).subscribe((comment: Comments[]) => {
           this.listComment = comment
@@ -93,13 +90,15 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         })
         // tăng view
         // @ts-ignore
-        this.songs.views=this.songs.views +1;
-        this.songService.changeLikeSongOrViews(song).subscribe(()=>{})
+        this.songs.views = +this.songs.views + 1;
+        this.songService.changeLikeSongOrViews(song).subscribe(() => {
+        })
       })
     })
 
     this.dataService.changeMessage("clearSearch");
   }
+
 
   renderAudioOnStart() {
     this.waveSurfer = this.waveSurferService.create(this.option)
@@ -136,10 +135,9 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       users: this.user,
       songs: this.songs
     }
-    // @ts-ignore
     this.songService.saveComment(comment).subscribe((comment: Comments[]) => {
       this.contentComment = '';
-        this.listComment = comment;
+      this.listComment = comment;
     })
   }
 
@@ -158,9 +156,9 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   changeLike() {
-    if(!this.statusLogin) {
+    if (!this.statusLogin) {
       this.router.navigateByUrl('auth').finally()
-    }else {
+    } else {
       if (!this.statusLike) {
         this.songs.userLikeSong?.push(this.user)
       } else {
@@ -173,7 +171,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   openModalAddSongToPlaylist() {
-    if(localStorage.getItem('idUser')){
+    if (localStorage.getItem('idUser')) {
       this.dialog.open(AddSongToPlaylistComponent, {
         width: '500px',
         data: {
@@ -181,7 +179,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           song: this.songs
         }
       });
-    }else {
+    } else {
       this.router.navigateByUrl('auth').finally()
     }
 

@@ -9,7 +9,7 @@ export class FilterPipe implements PipeTransform {
 
   transform<T, U>(value: T[], name: U): any {
     let list:T[]=[]
-    let colum:string='';
+    let colum:string|undefined;
     switch (name) {
       case 'songs':
         colum='audio'
@@ -21,14 +21,28 @@ export class FilterPipe implements PipeTransform {
         colum='username';
         break;
       default:
-        return value;
+        list=value;
+        break;
     }
-    for (let i = 0; i < value.length; i++) {
-      // @ts-ignore
-      if(value[i][colum]){
-        list.push(value[i]);
+    if(colum){
+      for (let i = 0; i < value.length; i++) {
+        // @ts-ignore
+        if(value[i][colum]){
+          list.push(value[i]);
+        }
       }
     }
+    list.sort((a,b)=>{
+      // @ts-ignore
+      if ( a['name'].toLowerCase()  < b['name'].toLowerCase()){
+        return -1;
+      }
+      // @ts-ignore
+      if ( a['name'].toLowerCase() > b['name'].toLowerCase() ){
+        return 1;
+      }
+      return 0;
+    })
     return list;
   }
 

@@ -33,10 +33,14 @@
   border: none !important;
 }
 .item-tag {
+  cursor: pointer;
   background-color: #999999;
   color: white;
   padding: 2px 10px;
   border-radius: 12px;
+}
+.item-tag:hover {
+  background-color: #615e5e;
 }
 
 

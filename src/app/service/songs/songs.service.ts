@@ -43,8 +43,8 @@ export class SongsService {
   getCommentSong(idSong:number|any){
     return this.http.get<Comments[]>(`${API_URL}/comment/song/${idSong}`)
   }
-  saveComment(comment:Comments){
-    return this.http.post(`${API_URL}/comment`, comment)
+  saveComment(comment:Comments):Observable<Comments[]>{
+    return this.http.post<Comments[]>(`${API_URL}/comment`, comment)
   }
   getHint5Songs(idSongNow:any){
     return this.http.get<Songs[]>(`${API_URL}/songs/suggest/${idSongNow}`)
