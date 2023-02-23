@@ -123,7 +123,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
   dataShow: [] = []
   resultSearch$: Observable<Array<Object>>;
 
-  fillCategory(text: string) {
+  fillCategory(text: string, index: number) {
+    this.category = text;
+    $('.filter-option.active').removeClass('active')
+    $('.tab-' + index).addClass('active')
     let list = []
     window.scrollTo(0, 0)
     this.category = text;
@@ -149,9 +152,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
           break;
       }
     }
-   this.listAll=list
+    this.listAll = list
     this.loadMore([], list)
   }
+
   loadMore(dataShow: Object[], listAll: Object[]) {
 
     let count = true;

@@ -1,7 +1,7 @@
 <div class="row" scrollTracker >
   <div class="item-image col-3">
     <div class="image-search">
-      <img class="fit-image" src="{{playlist.avatar}}" alt="" (click)="redirectPlaylist(playlist.id)">
+      <img class="fit-image pointer" src="{{playlist['avatar']}}" alt="" (click)="redirectPlaylist(playlist.id)">
     </div>
   </div>
   <div class="item-desc col-9 d-flex align-items-center">
@@ -10,19 +10,19 @@
 <!--         name Playlist-->
         <p class="m-0 font-16 bold">{{playlist.name}}</p>
 <!--        Name-->
-        <p class="m-0 grey-text">{{playlist?.users?.name}}</p>
+        <p class="m-0 grey-text">{{playlist['users'].name}}</p>
       </div>
-      <div class="action-box d-flex justify-content-between mt-2">
+      <div class="action-box d-flex justify-content-start mt-2">
         <div class="like-box">
-        <span class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
-          <i class="fa-solid fa-heart"></i> {{playlist?.userLikesPlaylist?.length}}
-        </span>
+          <span class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
+            <i class="fa-solid fa-heart"></i> {{playlist['userLikesPlaylist'].length}}
+          </span>
 
         </div>
         <div class="like-box">
-        <span class="play-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
-          <i class="fa-solid fa-play"></i> {{playlist?.views}}
-        </span>
+          <span class="play-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
+            <i class="fa-solid fa-play"></i> {{playlist['views']}}
+          </span>
         </div>
       </div>
     </div>

@@ -27,8 +27,9 @@
   width: 100%;
   border: none;
   border-bottom: 1px solid white;
-  background-color: transparent;
+  background-color: white;
   outline: none;
+  color: black !important;
 }
 
 .auth-input::placeholder {
@@ -44,12 +45,11 @@
 
 .form-btn-submit {
   background-color: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.7);
+  border: 1px solid white;
 }
 
 .form-btn:hover {
   opacity: 70%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .form-btn-back {
@@ -62,11 +62,13 @@
 }
 
 input.ng-invalid.ng-touched {
-  border-bottom: 1px solid #fc5757;
+  border: 1px solid #fc5757;
+  background-color: mistyrose;
 }
 
 input.ng-invalid.ng-touched.clear {
-  border-bottom: 1px solid white;
+  border: 1px solid white;
+  background-color: white;
 }
 
 .hide {
@@ -75,4 +77,10 @@ input.ng-invalid.ng-touched.clear {
 
 .form-message {
   color: #fc5757;
+}
+
+.auth-header {
+  letter-spacing: 4px !important;
+  font-size: 30px !important;
+  font-weight: 300;
 }

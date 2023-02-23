@@ -11,6 +11,8 @@ import {CommentService} from "../service/comment/comment.service";
 import {Comments} from "../model/Comments";
 import {DataService} from "../service/data/data.service";
 import {SongsService} from "../service/songs/songs.service";
+import {EditStringSingerService} from "../service/edit-string-singer.service";
+import {ToStringSinger} from "../service/pipe/toStringSinger";
 
 @Component({
   selector: 'app-playlist',
@@ -103,7 +105,13 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         )
       }
     )
-
+    // @ts-ignore
+    let userId = +localStorage.getItem('idUser')
+    this.userService.countByUser(userId).subscribe(
+      data => {
+        this.userData = data;
+      }
+    )
     this.commentService.getPlaylistComments(this.playlistId).subscribe(
       (data: Comments[]) => {
         this.comments = data;
@@ -122,6 +130,9 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   }
 
   loadSong(i: number) {
+    $('.song.active').removeClass('active')
+    // @ts-ignore
+    $('.song-' + this.playlist.songsList[i].id).addClass('active')
     this.load(i)
   }
 
@@ -163,6 +174,9 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       // @ts-ignore
       if (i < this.playlist?.songsList?.length - 1) {
         this.load(i + 1);
+        $('.song.active').removeClass('active')
+        // @ts-ignore
+        $('.song-' + this.playlist.songsList[i + 1].id).addClass('active')
       } else {
         this.isPlaying = false;
         $('.p-avt').trigger('click')

@@ -8,14 +8,14 @@ export class ToStringSinger implements PipeTransform {
   constructor() {
   }
 
-  transform(list: Singer[]|any):string {
-    let content='';
-    if(list!=undefined){
-      content=" - ";
+  transform(list: Singer[] | any):string {
+    let content = '';
+    if (list != undefined) {
+      content = " - ";
       for (let i = 0; i < list.length; i++) {
-        content+=list[i].name
-        if(i<list.length-1){
-          content+=' x ';
+        content += list[i].name
+        if (i < list.length-1) {
+          content += ' x ';
         }
       }
     }

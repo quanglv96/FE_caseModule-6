@@ -8,7 +8,7 @@
     <div class="track-desc d-flex flex-column justify-content-between" >
       <div class="track-desc-first d-flex justify-content-between">
         <div class="left-section d-flex">
-          <div class="play-btn me-1" [routerLink]="['/song',s.id]">
+          <div class="play-btn me-2" [routerLink]="['/song',s.id]">
             <i style="margin-left: 3px" class="fa-solid fa-play"></i>
           </div>
           <div class="track-name-user">
@@ -24,9 +24,9 @@
         <div class="wave-loader"></div>
         <div class="action-btn d-flex justify-content-between">
           <div class="action">
-            <span   class="like act-btn font-12 like-count border py-1 px-2 me-1 border-radius-1 pointer font-14">
-            <i class="fa-solid fa-heart"></i> {{ s.userLikeSong?.length }}
-          </span>
+            <span [class.like]="statusLike" (click)="changeLike(s)" class="act-btn font-12">
+              <i class="fa-solid fa-heart"></i> {{ s.userLikeSong?.length }}
+            </span>
             <span class="act-btn font-12" (click)="editSong(s.id)"><i class="fa-solid fa-pen" ></i> Edit</span>
             <span class="act-btn font-12" (click)="openModalAddSongToPlaylist(s)"><i class="fa-solid fa-plus" ></i> Add to playlist</span>
             <span class="act-btn font-12" (click)="confirmDelete(s.id,s.name)"><i class="fa-solid fa-trash" ></i> Delete</span>

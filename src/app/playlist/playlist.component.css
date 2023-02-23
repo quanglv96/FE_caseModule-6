@@ -197,3 +197,7 @@
   border: 1px solid orangered;
   color: orangered;
 }
+
+.active {
+  background-color: #cbcbcb;
+}
