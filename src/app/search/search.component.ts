@@ -7,6 +7,7 @@ import {TagsService} from "../service/tags/tags.service";
 import {LoadMoreService} from "../service/loadMore/load-more.service";
 import {Observable} from "rxjs";
 
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -35,7 +36,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     const routerPath = this.activatedRoute.routeConfig?.path
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.resultSearch = [];
-      if(routerPath == 'search/:textSearch'){
+      if (routerPath == 'search/:textSearch') {
         const textSearch: string | null = param.get('textSearch');
         if (textSearch != '') {
           this.text = textSearch;
@@ -72,21 +73,15 @@ export class SearchComponent implements OnInit, AfterViewInit {
     $('.sidebar-container').width(width);
   }
 
-  fillCategory(text: string) {
-    this.category = text;
-  }
+  listAll: Object[] = []
 
   getPlayAndSongByTag(id ?: number | any, name ?: string | any) {
     this.resultContent = 'result for "' + "#" + name + '"'
     this.searchService.getPlayAndSongByTag(id).subscribe((data: any) => {
-      this.resultSearch = []
-      for (let i = 0; i < data.length; i++) {
-        const demo = data[i]
-        for (let j = 0; j < demo.length; j++) {
-          this.resultSearch.push(demo[j]);
-        }
-      }
-      this.loadMore()
+      this.category = ''
+      this.resultSearch = this.pushResultAndSortList(data)
+      this.listAll = this.resultSearch
+      this.loadMore([], this.resultSearch)
       this.statisticalContent = `Found ${data[0].length} Playlist, ${data[1].length} Songs`
     })
     this.tagService.getHint5Tag().subscribe((data) => {
@@ -95,28 +90,79 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   result() {
-    this.searchService.resultSearch(this.text).subscribe((data: any) => {
-      this.resultSearch = []
-      for (let i = 0; i < data.length; i++) {
-        const demo = data[i]
-        for (let j = 0; j < demo.length; j++) {
-          this.resultSearch.push(demo[j]);
-        }
-      }
-      this.loadMore()
+    this.searchService.resultSearch(this.text).subscribe((data: any[]) => {
+      this.resultSearch = this.pushResultAndSortList(data)
+      this.listAll = this.resultSearch
+      this.loadMore([], this.resultSearch)
       this.statisticalContent = `Found ${data[0].length} Songs, ${data[2].length} people, ${data[1].length} playlists`
     })
   }
 
-
-  dataShow: Array<Object> = []
-  resultSearch$: Observable<Array<Object>>;
-
-  loadMore() {
-    this.LoadMoreService.onload(this.dataShow, this.resultSearch)
-    this.resultSearch$.subscribe((data: Array<Object>) => {
-      this.dataShow = data;
+  pushResultAndSortList(data: any[]) {
+    let list: Object[] = []
+    for (let i = 0; i < data.length; i++) {
+      const demo = data[i]
+      for (let j = 0; j < demo.length; j++) {
+        list.push(demo[j]);
+      }
+    }
+    list.sort((a, b) => {
+      // @ts-ignore
+      if (a['name'].toLowerCase() < b['name'].toLowerCase()) {
+        return -1;
+      }
+      // @ts-ignore
+      if (a['name'].toLowerCase() > b['name'].toLowerCase()) {
+        return 1;
+      }
+      return 0;
     })
+    return list
   }
 
+  dataShow: [] = []
+  resultSearch$: Observable<Array<Object>>;
+
+  fillCategory(text: string) {
+    let list = []
+    window.scrollTo(0, 0)
+    this.category = text;
+    for (let i = 0; i < this.resultSearch.length; i++) {
+      switch (this.category) {
+        case "songs":
+          if (this.resultSearch[i].audio) {
+            list.push(this.resultSearch[i]);
+          }
+          break;
+        case "playlist":
+          if (this.resultSearch[i].description) {
+            list.push(this.resultSearch[i]);
+          }
+          break;
+        case "users":
+          if (this.resultSearch[i].username) {
+            list.push(this.resultSearch[i]);
+          }
+          break;
+        default:
+          list = this.resultSearch
+          break;
+      }
+    }
+   this.listAll=list
+    this.loadMore([], list)
+  }
+  loadMore(dataShow: Object[], listAll: Object[]) {
+
+    let count = true;
+    this.LoadMoreService.onload(dataShow, listAll)
+    // @ts-ignore
+    this.resultSearch$.subscribe((data: []) => {
+      if (count) {
+        count = false;
+        return this.dataShow = data;
+
+      }
+    })
+  }
 }

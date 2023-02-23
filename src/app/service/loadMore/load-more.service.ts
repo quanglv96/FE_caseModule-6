@@ -24,6 +24,8 @@ export class LoadMoreService {
   loadMore(): void {
     if (this.getNextItems()) {
       this.categoriesSubject.next(this.result);
+    }else {
+      this.categoriesSubject.next(this.resultAll);
     }
   }
 

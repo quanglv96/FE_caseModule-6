@@ -43,4 +43,5 @@ export class DiscoveryItemComponent implements OnInit{
   redirect(path: string, id: any) {
     return this.router.navigateByUrl(`${path}/${id}`)
   }
+
 }

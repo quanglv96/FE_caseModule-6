@@ -32,17 +32,6 @@ export class FilterPipe implements PipeTransform {
         }
       }
     }
-    list.sort((a,b)=>{
-      // @ts-ignore
-      if ( a['name'].toLowerCase()  < b['name'].toLowerCase()){
-        return -1;
-      }
-      // @ts-ignore
-      if ( a['name'].toLowerCase() > b['name'].toLowerCase() ){
-        return 1;
-      }
-      return 0;
-    })
     return list;
   }
 
