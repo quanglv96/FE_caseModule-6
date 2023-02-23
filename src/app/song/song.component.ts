@@ -46,7 +46,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   statusLike: boolean | undefined;
   statusLogin: boolean | undefined;
   countByUser: any
-  countSongByUser:number | any = 0;
+  countSongByUser: number | any = 0;
   countPlaylistByUser: number | any = 0;
 
   constructor(public waveSurferService: NgxWavesurferService,
@@ -61,7 +61,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
 
   ngOnInit() {
     this.dataService.currentMessage.subscribe(message => {
-      switch (message){
+      switch (message) {
         case "log out":
           this.statusLogin = false;
           this.statusLike = false;
@@ -98,6 +98,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         this.songService.changeLikeSongOrViews(song).subscribe()
       })
     })
+
     this.dataService.changeMessage("clearSearch");
     this.actionSubscribe();
   }
@@ -153,6 +154,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       }
     )
   }
+
 
   renderAudioOnStart() {
     this.currentTime = '00:00';
@@ -238,7 +240,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     // @ts-ignore
     this.songService.saveComment(comment).subscribe((comment: Comments[]) => {
       this.contentComment = '';
-        this.listComment = comment;
+      this.listComment = comment;
     })
   }
 
@@ -275,7 +277,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   openModalAddSongToPlaylist() {
-    if (localStorage.getItem('idUser')){
+    if (localStorage.getItem('idUser')) {
       this.dialog.open(AddSongToPlaylistComponent, {
         width: '500px',
         data: {
@@ -286,5 +288,6 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     } else {
       this.router.navigateByUrl('auth').finally()
     }
+
   }
 }

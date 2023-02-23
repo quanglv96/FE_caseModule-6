@@ -51,6 +51,7 @@ import {NgxAudioPlayerModule} from "ngx-audio-player";
 import {AudioPlayerService} from "./service/audio-player.service";
 import {PlyrModule} from "ngx-plyr";
 import {AngMusicPlayerModule} from "ang-music-player";
+import {InfiniteScrollModule} from "ngx-infinite-scroll";
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import {AngMusicPlayerModule} from "ang-music-player";
     MatButtonModule,
     NgxAudioPlayerModule,
     PlyrModule,
-    AngMusicPlayerModule
+    AngMusicPlayerModule,
+    InfiniteScrollModule
   ],
   providers: [
     ScreenTrackingService, UserTrackingService, FileUploadService, NgxWavesurferService, CanDeactivateGuard, AudioPlayerService

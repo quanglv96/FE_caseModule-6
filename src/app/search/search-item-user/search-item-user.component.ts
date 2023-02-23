@@ -9,6 +9,7 @@ import {User} from "../../model/User";
 })
 export class SearchItemUserComponent implements OnInit {
   @Input('user') user:User|any;
+
   ngOnInit(): void {
 
   }

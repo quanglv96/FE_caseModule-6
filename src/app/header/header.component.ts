@@ -23,7 +23,9 @@ export class HeaderComponent implements OnInit {
   // @ts-ignore
   routeSearch() {
     if (this.textSearch != undefined) {
-      return this.router.navigateByUrl(`search/${this.textSearch}`)
+      let searchValue = this.textSearch;
+      this.textSearch = ''
+      return this.router.navigateByUrl(`search/${searchValue}`)
     }
   }
 
@@ -34,8 +36,6 @@ export class HeaderComponent implements OnInit {
       }
       if (message.search("textSearch: ") == 0) {
         this.textSearch = message.slice(12)
-        console.log('text '+this.textSearch)
-        console.log('mes '+ message.slice(12))
       }
       if (localStorage.getItem('idUser')) {
         this.userService.findById(localStorage.getItem('idUser')).subscribe((data: User) => {
@@ -51,10 +51,10 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  toTrending(){
-    console.log(this.router)
-this.router.navigateByUrl('/trending').finally()
+  toTrending() {
+    this.router.navigateByUrl('/trending').finally()
   }
+
   logOut() {
     localStorage.removeItem('idUser');
     this.user = null;

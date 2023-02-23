@@ -1,10 +1,11 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {faPlayCircle} from "@fortawesome/free-solid-svg-icons";
 import {Songs} from "../../model/Songs";
 import {Tags} from "../../model/Tags";
 import {Router} from "@angular/router";
 import {AddSongToPlaylistComponent} from "../../add-song-to-playlist/add-song-to-playlist.component";
 import {MatDialog} from "@angular/material/dialog";
+import {TagsService} from "../../service/tags/tags.service";
 import {NgxWavesurferService} from "ngx-wavesurfer";
 
 @Component({
@@ -28,6 +29,7 @@ export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy
     cursorColor: 'transparent',
   }
   wavesurfer: any;
+  resultSong: Songs[] = []
 
   ngOnInit(): void {
     this.tagString = this.toStringTag(this.song.tagsList);
@@ -53,7 +55,8 @@ export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(private router: Router,
               private dialog: MatDialog,
-              private wavesurferService: NgxWavesurferService) {
+              private wavesurferService: NgxWavesurferService,
+              private tagsService : TagsService) {
 
   }
 
@@ -87,6 +90,15 @@ export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy
         song: song
       }
     });
+  }
+
+  findSongsByTag(id: number) {
+    console.log(id)
+    this.tagsService.findSongsByTags(id).subscribe((data:Songs[]) => {
+      this.resultSong = data;
+      console.log(data)
+      // this.router.navigateByUrl(`tag/` + id);
+    })
   }
 
   ngOnDestroy() {

@@ -19,9 +19,8 @@
                 <div class="d-inline-block right-text">
                   <p class="m-0 font-14 pb-3 text-end text-white">Updated {{ playlist.lastUpdate | amTimeAgo }}</p>
                   <div class="text-end">
-                    <span *ngFor="let t of playlist?.tagsList" class="item-tag">#{{ t.name }}</span>
+                    <span *ngFor="let t of playlist?.tagsList" class="item-tag" [routerLink]="['/tags', t.id, t.name]">#{{ t.name }}</span>
                   </div>
-
                 </div>
               </div>
             </div>

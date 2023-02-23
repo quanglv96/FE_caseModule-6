@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component,  Input, OnInit} from '@angular/core';
 
 import {Playlist} from "../../model/Playlist";
 import {Router} from "@angular/router";
@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 })
 export class SearchItemPlaylistComponent implements OnInit {
   @Input('playlist') playlist: Playlist | any;
+
 
   ngOnInit(): void {
 
