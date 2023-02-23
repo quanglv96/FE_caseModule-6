@@ -76,7 +76,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   listAll: Object[] = []
 
   getPlayAndSongByTag(id ?: number | any, name ?: string | any) {
-    this.resultContent = 'result for "' + "#" + name + '"'
+    this.resultContent = 'result for tag: "' + "#" + name + '"'
     this.searchService.getPlayAndSongByTag(id).subscribe((data: any) => {
       this.category = ''
       this.resultSearch = this.pushResultAndSortList(data)
