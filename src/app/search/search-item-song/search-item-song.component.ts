@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {faPlayCircle} from "@fortawesome/free-solid-svg-icons";
 import {Songs} from "../../model/Songs";
 import {Tags} from "../../model/Tags";
@@ -55,8 +55,7 @@ export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(private router: Router,
               private dialog: MatDialog,
-              private wavesurferService: NgxWavesurferService,
-              private tagsService : TagsService) {
+              private wavesurferService: NgxWavesurferService) {
 
   }
 
@@ -78,10 +77,10 @@ export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy
   redirectSongDetail(id: any) {
     return this.router.navigateByUrl('song/' + id)
   }
-  // @ts-ignore
+
   openModalAddSongToPlaylist(song:Songs) {
-    if(!localStorage.getItem('idUser')){
-      return this.router.navigateByUrl('auth')
+    if (!localStorage.getItem('idUser')){
+      this.router.navigateByUrl('auth').finally()
     }
     this.dialog.open(AddSongToPlaylistComponent, {
       width: '500px',
@@ -90,15 +89,6 @@ export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy
         song: song
       }
     });
-  }
-
-  findSongsByTag(id: number) {
-    console.log(id)
-    this.tagsService.findSongsByTags(id).subscribe((data:Songs[]) => {
-      this.resultSong = data;
-      console.log(data)
-      // this.router.navigateByUrl(`tag/` + id);
-    })
   }
 
   ngOnDestroy() {

@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap} from "@angular/router";
+import {ActivatedRoute, ParamMap, Params} from "@angular/router";
 import {SearchService} from "../service/search/search.service";
 import * as $ from "jquery";
 import {Tags} from "../model/Tags";
@@ -97,7 +97,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.statisticalContent = `Found ${data[0].length} Songs, ${data[2].length} people, ${data[1].length} playlists`
     })
   }
-  random(data: any) {
 
   pushResultAndSortList(data: any[]) {
     let list: Object[] = []
@@ -125,9 +124,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
   resultSearch$: Observable<Array<Object>>;
 
   fillCategory(text: string, index: number) {
-      this.category = text;
-      $('.filter-option.active').removeClass('active')
-      $('.tab-' + index).addClass('active')
+    this.category = text;
+    $('.filter-option.active').removeClass('active')
+    $('.tab-' + index).addClass('active')
     let list = []
     window.scrollTo(0, 0)
     this.category = text;
@@ -153,9 +152,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
           break;
       }
     }
-   this.listAll=list
+    this.listAll = list
     this.loadMore([], list)
   }
+
   loadMore(dataShow: Object[], listAll: Object[]) {
 
     let count = true;
