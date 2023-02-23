@@ -4,7 +4,7 @@
       <div class="login-section">
         <div class="form-container p-4 d-flex flex-column justify-content-center">
           <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="onLogin()">
-            <h2 class="d-block text-center modal-header my-3 text-white">Login</h2>
+            <h2 class="d-block text-center auth-header my-3 text-white">Login</h2>
             <div>
               <div class="form-group text-start">
                 <label class="auth-label my-1 text-white" for="username">Username:</label><br>
@@ -66,7 +66,7 @@
 
           <form id="register-form" class="modal-tab-other" *ngIf="!isLogin"
                 [formGroup]="registerForm" (ngSubmit)="onRegister()">
-            <h2 class="d-block text-center modal-header my-3 text-white">Register</h2>
+            <h2 class="d-block text-center auth-header my-3 text-white">Register</h2>
             <div class="modal-body p-0 mb-3">
               <div class="form-group text-start">
                 <label class="auth-label my-1 text-white" for="c-username">Username:</label><br>

@@ -1,5 +1,65 @@
 <div class="audio-player-container">
-  <div class="row">
-
+  <div class="row g-0 h-100">
+    <div class="col-9 g-0 h-100">
+      <div class="row g-0 h-100">
+        <div class="col-4 g-0 h-100">
+          <div class="controls">
+            <span (click)="prev()" class="controls__item"><i class="fa-sharp fa-solid fa-backward-step"></i></span>
+            <span class="controls__item" (click)="playPause()">
+              <i *ngIf="!isPlay" class="fa-sharp fa-solid fa-play"></i>
+              <i *ngIf="isPlay" style="font-size: 20px" class="fa-sharp fa-solid fa-pause"></i>
+            </span>
+            <span (click)="next()" class="controls__item"><i class="fa-sharp fa-solid fa-forward-step"></i></span>
+            <span class="controls__item"><i class="fa-sharp fa-solid fa-shuffle"></i></span>
+            <span class="controls__item"><i class="fa-sharp fa-solid fa-repeat"></i></span>
+          </div>
+        </div>
+        <div class="col-8 g-0 h-100">
+          <div class="row g-0 h-100">
+            <div class="col-1 g-0 h-100 d-flex align-items-center justify-content-center">
+              <span class="time">{{ currentTime }}</span>
+            </div>
+            <div class="col-9 g-0 h-100 d-flex align-items-center">
+              <input (change)="seekTo($event)" class="timeline" type="range" min="0" max="{{ totalTime }}" value="{{ seek }}">
+            </div>
+            <div class="col-1 g-0 h-100 d-flex align-items-center justify-content-center">
+              <span class="time">{{ duration }}</span>
+            </div>
+            <div class="col-1 g-0 h-100 d-flex align-items-center justify-content-center">
+              <span class="controls__item"><i class="fa-sharp fa-solid fa-volume-high"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3 g-0">
+      <div class="row g-0 h-100">
+        <div class="col-10 g-0 h-100">
+          <div class="current-song">
+            <div class="current-song__image" [routerLink]="['/song', currentTrack?.id]">
+              <img class="fit-image" [src]="currentTrack?.avatar" alt="">
+            </div>
+            <div class="current-song__desc">
+              <p class="current-song__desc__user">{{ currentTrack?.users?.name }}</p>
+              <p class="current-song__desc__name">{{ currentTrack?.name }}{{ currentTrack?.singerList | toStringSinger }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-2 g-0 h-100">
+          <div class="list-song h-100 d-flex align-items-center justify-content-center">
+            <span class="list-song__toggle-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                   class="bi bi-music-note-list" viewBox="0 0 16 16">
+                    <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                    <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/>
+                    <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/>
+                    <path fill-rule="evenodd"
+                          d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
+                  </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

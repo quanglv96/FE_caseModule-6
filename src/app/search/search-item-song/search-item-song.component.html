@@ -27,7 +27,7 @@
           <!--        Time upload-->
           <p class="date-upload m-0 grey-text font-12" style="text-align: right">{{song.date | amTimeAgo}}</p>
           <!--        Tag-->
-          <div style="text-align: right; display: flex; flex-wrap: wrap; justify-content: flex-end"><span *ngFor="let s of song?.tagsList" class="item-tag pointer"> #{{ s.name }}</span></div>
+          <div style="text-align: right; display: flex; flex-wrap: wrap; justify-content: flex-end"><span *ngFor="let s of song['tagsList']" class="item-tag pointer"> #{{ s.name }}</span></div>
         </div>
       </div>
     </div>
@@ -39,11 +39,10 @@
         <div class="like-box">
         <span
           class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
-<!--          Lượt like-->
           <i class="fa-solid fa-heart"></i> {{ song['userLikeSong'].length }}
         </span>
           <span class="play-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
-          <i class="fa-solid fa-play"></i> {{song?.views}}
+          <i class="fa-solid fa-play"></i> {{song['views']}}
         </span>
           <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1" (click)="openModalAddSongToPlaylist(song)">
           <i class="fa-solid fa-square-plus"></i> Add to playlist

@@ -1,9 +1,129 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+
+.h-100 {
+  height: 100%;
+}
+
 .audio-player-container {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 3;
-  height: 100px;
-  background-color: white;
+  height: 50px;
+  background-color: #f6f6f6;
+  border-top: 1px solid #e1e1e1;
 }
+
+.controls {
+  padding: 0 8px 0 20px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+}
+
+.controls__item {
+  font-size: 18px;
+  cursor: pointer;
+  width: 30px;
+  color: #383838;
+  margin: 0 18px;
+}
+
+.controls__item:hover {
+  opacity: 80%;
+}
+
+:root {
+  --percentage: 0;
+}
+
+.timeline {
+  -webkit-appearance: none;
+  width: 100%;
+  background-color: #d9d9d9;
+}
+
+.timeline::-webkit-slider-runnable-track {
+  height: 3px;
+  background-image: linear-gradient(90deg, orangered var(--percentage), #d9d9d9 var(--percentage));
+}
+
+.timeline::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  background-color: orangered;
+  border-radius: 50%;
+  margin-top: -2.5px;
+  position: relative;
+  z-index: 2;
+}
+
+.time {
+  text-align: center;
+  font-size: 12px;
+}
+
+.list-song {
+  position: relative;
+}
+
+.list-song__toggle-btn {
+  cursor: pointer;
+  color: #383838;
+}
+
+.list-song__toggle-btn:hover {
+  opacity: 80%;
+}
+
+.current-song {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.current-song__image {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.current-song__image:hover {
+  opacity: 80%;
+}
+
+.current-song__desc {
+  height: 32px;
+  width: 210px;
+  margin-left: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.current-song__desc__user {
+  font-size: 12px;
+  color: grey;
+  line-height: 14px;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.current-song__desc__name {
+  font-size: 12px;
+  line-height: 14px;
+  margin: 0;
+  letter-spacing: 1px;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+
+
