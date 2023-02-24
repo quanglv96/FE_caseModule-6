@@ -8,22 +8,29 @@ import {Songs} from "../model/Songs";
 export class AudioPlayerService {
   songOfPageId?: number
   songOfBarId?: number
+  playlistOfPageId?: number;
+  playlistOfBarId?: number;
   songChange = new Subject<{song: Songs, source: string}>()
-  playlistChange = new Subject<Songs[]>()
+  playlistChange = new Subject<{id: number | undefined, playlist: Songs[]}>()
   playState = new Subject<string>()
   fastForwardPos = new Subject<{source: string, pos: number}>()
   loadSongOfBarComplete = false;
   loadSongOfBarChange = new Subject()
-  loadSongOfPageComplete = false;
+  loadSongOfPlaylistComplete = false;
   loadSongOfPageChange = new Subject()
   currentTimeOfBar = new Subject();
   loadStateChange = new Subject<string>()
-  nextChange = new Subject<number>()
+  nextChange = new Subject<{state: string, id: number}>()
   activePage: string = 'none'
+  action:string = ''
 
   constructor() { }
 
   compareSong() {
     return this.songOfPageId === this.songOfBarId
+  }
+
+  comparePlayList() {
+    return this.playlistOfBarId === this.playlistOfPageId
   }
 }

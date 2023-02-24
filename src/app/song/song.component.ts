@@ -1,6 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {NgxWavesurferService} from "ngx-wavesurfer";
-import * as $ from "jquery";
 import {CanComponentDeactivate} from "../service/can-deactivate";
 import {ActivatedRoute, Router, ParamMap} from "@angular/router";
 import {SongsService} from "../service/songs/songs.service";
@@ -171,7 +170,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.waveSurfer.on('finish', () => {
       this.isPlaying = false;
     })
-    this.waveSurfer.on('seek', (progress: any) => {
+    this.waveSurfer.on('seek', () => {
       if (this.audioService.compareSong()) {
         this.audioService.fastForwardPos.next({source: 'page', pos: this.waveSurfer.getCurrentTime()})
       }
@@ -181,15 +180,14 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       this.currentTime = this.formatTime(this.waveSurfer.getCurrentTime())
     })
     this.audioService.loadSongOfBarChange.subscribe(
-      data => {
+      () => {
         if (this.loadState === 'page' && this.loadingComplete && this.waveSurfer !== undefined) {
-          this.waveSurfer.play()
-          this.isPlaying = this.waveSurfer.isPlaying()
+          // this.waveSurfer.play()
+          // this.isPlaying = this.waveSurfer.isPlaying()
           this.audioService.playState.next('barPlay')
           this.audioService.loadSongOfBarComplete = true;
         }
         if (this.loadState === 'next/prev' && this.loadingComplete && this.waveSurfer !== undefined) {
-          console.log('next')
           this.waveSurfer.stop()
           this.currentTime = '00:00'
           this.isPlaying = false;
@@ -210,7 +208,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.audioService.loadStateChange.next('page')
     if (this.loadingComplete && !this.audioService.compareSong()) {
       this.audioService.songChange.next({song: this.songs, source: 'songDetails'})
-      this.audioService.playlistChange.next(this.suggestSongs)
+      this.audioService.playlistChange.next({id: undefined, playlist: this.suggestSongs})
     }
     if (this.audioService.compareSong()) {
       this.audioService.loadSongOfBarComplete = true;
