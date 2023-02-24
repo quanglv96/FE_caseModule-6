@@ -18,6 +18,8 @@ export class AudioPlayerService {
   loadSongOfPageChange = new Subject()
   currentTimeOfBar = new Subject();
   loadStateChange = new Subject<string>()
+  nextChange = new Subject<number>()
+  activePage: string = 'none'
 
   constructor() { }
 

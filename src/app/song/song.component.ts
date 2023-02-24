@@ -182,7 +182,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     })
     this.audioService.loadSongOfBarChange.subscribe(
       data => {
-        if (this.loadState === 'playDetails' && this.loadingComplete && this.waveSurfer !== undefined) {
+        if (this.loadState === 'page' && this.loadingComplete && this.waveSurfer !== undefined) {
           this.waveSurfer.play()
           this.isPlaying = this.waveSurfer.isPlaying()
           this.audioService.playState.next('barPlay')
@@ -207,7 +207,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
   }
 
   playPause() {
-    this.audioService.loadStateChange.next('playDetails')
+    this.audioService.loadStateChange.next('page')
     if (this.loadingComplete && !this.audioService.compareSong()) {
       this.audioService.songChange.next({song: this.songs, source: 'songDetails'})
       this.audioService.playlistChange.next(this.suggestSongs)
@@ -215,7 +215,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     if (this.audioService.compareSong()) {
       this.audioService.loadSongOfBarComplete = true;
     }
-    if (this.audioService.loadSongOfBarComplete || this.loadState === 'playDetails') {
+    if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
       this.togglePlayPause()
     }
   }

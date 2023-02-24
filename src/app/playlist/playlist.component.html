@@ -6,7 +6,7 @@
           <div>
             <div class="d-flex align-items-center justify-content-between p-3">
               <div class="d-flex align-items-center">
-                <div class="play-button d-flex justify-content-center align-items-center me-3" (click)="playPause()">
+                <div class="play-button d-flex justify-content-center align-items-center me-3" (click)="newPlayMethod(0)">
                   <i *ngIf="!isPlaying" style="font-size: 24px; margin-left: 4px" class="fa-solid fa-play"></i>
                   <i *ngIf="isPlaying" style="font-size: 24px" class="fa-solid fa-pause"></i>
                 </div>
@@ -25,7 +25,7 @@
               </div>
             </div>
             <div class="p-3" [hidden]="!isStartPlaying">
-              <span class="song-play">{{ songPlay }}&nbsp;<span style="color: #cccccc">{{singerSong|toStringSinger }}</span></span>
+              <span class="song-play">{{ currentSong?.name }}&nbsp;<span style="color: #cccccc">{{currentSong?.singerList | toStringSinger }}</span></span>
             </div>
           </div>
           <div class="details-foot p-3">
@@ -34,7 +34,7 @@
               <span class="track">TRACKS</span>
             </div>
             <div [hidden]="!isStartPlaying" id="waveform">
-              <span class="time time-start-container"><span class="time-start">00:00</span></span>
+              <span class="time time-start-container"><span class="time-start">{{ currentTime }}</span></span>
               <span class="time time-end-container"><span class="time-end">{{ endTime }}</span></span>
               <span class="play-line">
                 <span class="line"></span>
@@ -92,7 +92,7 @@
             <div class="songs-list mb-3">
               <p class="h4">{{ playlist.name }}</p>
 
-              <div (click)="loadSong(i)" *ngFor="let s of playlist?.songsList; let i = index"
+              <div (click)="newPlayMethod(i)" *ngFor="let s of playlist?.songsList; let i = index"
                    class="py-1 border-bottom d-flex justify-content-between align-items-center song song-{{ s?.id }}"
                    style="cursor: pointer;">
                 <div class="d-flex align-items-center">
@@ -118,7 +118,7 @@
       <div class="col-4 border-start">
         <div class="feedback" [hidden]="!statusLogin">
           <div class="comment border d-flex">
-            <img class="user-img" [src]="user?.avatar" alt="">
+            <img class="user-img" [src]="user?.['avatar']" alt="">
             <div class="input-container d-flex align-item-center justify-content-center py-2 px-2">
               <input class="input-comment" [(ngModel)]="contentComment" type="text">
             </div>

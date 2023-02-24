@@ -10,8 +10,14 @@
               <i *ngIf="isPlay" style="font-size: 20px" class="fa-sharp fa-solid fa-pause"></i>
             </span>
             <span (click)="next()" class="controls__item"><i class="fa-sharp fa-solid fa-forward-step"></i></span>
-            <span class="controls__item"><i class="fa-sharp fa-solid fa-shuffle"></i></span>
-            <span class="controls__item"><i class="fa-sharp fa-solid fa-repeat"></i></span>
+            <span (click)="changePlayMode()" [class.active]="playMode === 'shuffle'" class="controls__item controls__item--play"><i class="fa-sharp fa-solid fa-shuffle"></i></span>
+            <span (click)="changeLoopMode()" [class.active]="loopMode !== 'none'" class="controls__item controls__item--loop">
+              <i *ngIf="loopMode !== 'one'" class="fa-sharp fa-solid fa-repeat"></i>
+              <span style="position: relative" *ngIf="loopMode === 'one'">
+                <i class="fa-sharp fa-solid fa-repeat"></i>
+                <span class="one-icon">1</span>
+              </span>
+            </span>
           </div>
         </div>
         <div class="col-8 g-0 h-100">

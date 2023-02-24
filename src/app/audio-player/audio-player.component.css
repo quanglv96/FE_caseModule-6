@@ -125,5 +125,18 @@
   text-overflow: ellipsis !important;
 }
 
+.active {
+  color: orangered;
+}
+
+.one-icon {
+  font-weight: 700;
+  font-size: 7px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 
 
