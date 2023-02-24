@@ -15,18 +15,16 @@
             <i *ngIf="isPlaying" class="fa-solid fa-pause"></i>
           </div>
           <div class="first-desc-row d-inline-block">
-            <!--          User upload-->
             <p class="user-upload m-0 grey-text font-12">{{song['users'].username}}</p>
-            <!--          Song name-->
             <p class="item-name m-0">{{song.name}}{{song['singerList'] | toStringSinger}}</p>
           </div>
         </div>
       </div>
-      <div class="second-desc-row d-inline-block right-text">
-<!--        Time upload-->
-        <p class="date-upload m-0 grey-text font-12" style="text-align: right">{{song.date|amTimeAgo}}</p>
-<!--        Tag-->
-        <p style="text-align: right"><span *ngFor="let s of song?.tagsList" class="item-tag" [routerLink]="['/tags', s.id, s.name]"> #{{ s.name }}</span></p>
+      <div class="col-4 g-2 mt-0">
+        <div class="second-desc-row d-flex justify-content-end flex-column" style="width: 100%">
+          <div class="date-upload m-0 grey-text font-12" style="text-align: right">{{song.date | amTimeAgo}}</div>
+          <div class="d-flex justify-content-end flex-wrap"><span *ngFor="let s of song?.['tagsList']" class="item-tag" [routerLink]="['/tags', s.id, s.name]"> #{{ s.name }}</span></div>
+        </div>
       </div>
     </div>
     <div class="play-box">

@@ -11,8 +11,9 @@ import {CommentService} from "../service/comment/comment.service";
 import {Comments} from "../model/Comments";
 import {DataService} from "../service/data/data.service";
 import {SongsService} from "../service/songs/songs.service";
-import {EditStringSingerService} from "../service/edit-string-singer.service";
-import {ToStringSinger} from "../service/pipe/toStringSinger";
+import {AudioPlayerService} from "../service/audio-player.service";
+import {Songs} from "../model/Songs";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-playlist',
@@ -47,6 +48,12 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   singerSong: any;
   countSongByUser: number = 0;
   countPlaylistByUser: number = 0;
+  loadingComplete: boolean = false;
+  currentTime: string = '00:00';
+  loadState: string = '';
+  currentSong?: Songs
+  songList: Songs[] = []
+  index: number = 0
 
   constructor(private playlistService: PlaylistService,
               public waveSurferService: NgxWavesurferService,
@@ -55,10 +62,13 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
               private commentService: CommentService,
               private dataService: DataService,
               private router: Router,
-              private songService: SongsService) {
+              private songService: SongsService,
+              private audioService: AudioPlayerService) {
   }
 
   ngOnInit() {
+    this.audioService.activePage = 'playlistDetails'
+    this.subscribeEvent()
     this.dataService.currentMessage.subscribe(message => {
       switch (message) {
         case "log out":
@@ -73,6 +83,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
 
     this.playlistService.findPlaylistById(this.playlistId).subscribe(data => {
         this.playlist = data;
+        this.songList = this.playlist.songsList as Songs[]
         // @ts-ignore
         this.playlist.views = this.playlist?.views + 1
         if (localStorage.getItem('idUser')) {
@@ -193,10 +204,13 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   }
 
   getDuration() {
-    let timeInSecond = this.wavesurfer.getDuration()
-    let minutes = Math.floor(timeInSecond / 60);
-    let second = Math.round(timeInSecond - minutes * 60);
-    return minutes + ':' + second
+    return this.formatTime(this.wavesurfer.getDuration())
+  }
+
+  formatTime(time: number) {
+    let format: string = "mm:ss"
+    const momentTime = time * 1000;
+    return moment.utc(momentTime).format(format);
   }
 
   canDeactivate() {
@@ -204,6 +218,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       this.wavesurfer.destroy()
     }
     this.wavesurfer = undefined
+    this.audioService.activePage = 'none'
     return true;
   }
 
@@ -236,5 +251,159 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       this.playlistService.changeLikePlaylistOrViews(this.playlist).subscribe(() => {
       })
     }
+  }
+
+  renderAudioOnClick(i: number) {
+    if (!!this.wavesurfer) {
+      this.wavesurfer.destroy()
+      this.wavesurfer = undefined
+    }
+    this.songList = this.playlist.songsList as Songs[]
+    this.currentSong = this.songList[i]
+    this.audioService.songOfPageId = Number(this.currentSong.id as string)
+    this.currentTime = '00:00';
+    this.audioService.loadSongOfBarComplete = false;
+    this.loadingComplete = false;
+    this.isPlaying = false;
+    this.wavesurfer = this.waveSurferService.create(this.option)
+    this.loadAudio(this.wavesurfer, this.currentSong.audio).then(() => {
+      this.audioService.loadSongOfPageChange.next(true);
+      this.wavesurfer.setMute(true)
+      this.endTime = this.getDuration();
+      this.loadingComplete = true;
+      this.audioService.loadStateChange.next('page')
+      if (!this.audioService.compareSong()) {
+        this.audioService.songChange.next({song: this.currentSong as Songs, source: 'playlist'})
+        this.songList = this.playlist.songsList as Songs[]
+        this.audioService.playlistChange.next(this.songList);
+      }
+      if (this.audioService.compareSong()) {
+        this.audioService.loadSongOfBarComplete = true;
+      }
+      if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
+        this.togglePlayPause()
+      }
+    })
+    this.wavesurfer.on('finish', () => {
+      this.isPlaying = false;
+    })
+    this.wavesurfer.on('seek', (progress: any) => {
+      if (this.audioService.compareSong()) {
+        this.audioService.fastForwardPos.next({source: 'page', pos: this.wavesurfer.getCurrentTime()})
+      }
+    })
+    this.wavesurfer.on('audioprocess', () => {
+      if (this.audioService.compareSong()) {}
+      this.currentTime = this.formatTime(this.wavesurfer.getCurrentTime())
+    })
+    this.loadSongToBarSubscribe()
+  }
+
+  newPlayMethod(i: number) {
+    this.audioService.songOfPageId = Number(this.songList[i].id)
+    if (!this.isStartPlaying || !this.audioService.compareSong()) {
+      this.renderAudioOnClick(i);
+      this.isStartPlaying = true;
+    }
+    if (this.loadingComplete) {
+      if (this.audioService.compareSong()) {
+        this.audioService.loadSongOfBarComplete = true;
+      }
+      if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
+        this.togglePlayPause()
+      }
+    }
+  }
+
+  subscribeEvent() {
+    this.subscribePlayPause();
+    this.loadSongToBarSubscribe();
+    this.loadStateSubscribe();
+    this.nextChangeSubscribe();
+    this.subscribeFastForward();
+    this.subscribeCurrentTime();
+  }
+
+  subscribeFastForward() {
+    this.audioService.fastForwardPos.subscribe(
+      (pos) => {
+        if (pos.source === 'bar') {
+          this.wavesurfer.setCurrentTime(pos.pos)
+        }
+      }
+    )
+  }
+
+  subscribeCurrentTime() {
+    this.audioService.currentTimeOfBar.subscribe(
+      time => {
+        if (time as number > 0 && this.audioService.compareSong() && this.wavesurfer !== undefined) {
+          let currentTime = time as number + 0.15
+          this.wavesurfer.play(currentTime);
+          this.audioService.playState.next('barPlay');
+          this.isPlaying = this.wavesurfer.isPlaying()
+        }
+      }
+    )
+  }
+
+  subscribePlayPause() {
+    this.audioService.playState.subscribe(
+      data => {
+        if (data === 'pagePlay' && this.wavesurfer !== undefined) {
+          this.wavesurfer.play();
+          this.isPlaying = this.wavesurfer.isPlaying();
+        } else if (data === 'pagePause' && this.wavesurfer !== undefined) {
+          this.wavesurfer.pause();
+          this.isPlaying = this.wavesurfer.isPlaying();
+        }
+      }
+    )
+  }
+  togglePlayPause() {
+    if (!this.wavesurfer.isPlaying()) {
+      console.log('play')
+      this.wavesurfer.play();
+      this.audioService.playState.next('barPlay')
+    } else {
+      console.log('pause')
+      this.wavesurfer.pause();
+      this.audioService.playState.next('barPause')
+    }
+    this.isPlaying = this.wavesurfer.isPlaying();
+  }
+  loadSongToBarSubscribe() {
+    this.audioService.loadSongOfBarChange.subscribe(
+      data => {
+        if (this.loadState === 'page' && this.loadingComplete && this.wavesurfer !== undefined) {
+          this.wavesurfer.play()
+          console.log('play')
+          this.isPlaying = this.wavesurfer.isPlaying()
+          this.audioService.playState.next('barPlay')
+          this.audioService.loadSongOfBarComplete = true;
+        }
+        if (this.loadState === 'next/prev' && this.loadingComplete && this.wavesurfer !== undefined) {
+          this.wavesurfer.stop()
+          this.currentTime = '00:00'
+          this.isPlaying = false;
+        }
+      }
+    )
+  }
+  loadStateSubscribe() {
+    this.audioService.loadStateChange.subscribe(
+      data => {
+        this.loadState = data;
+      }
+    )
+  }
+  nextChangeSubscribe() {
+    this.audioService.nextChange.subscribe(
+      data => {
+        this.index = data
+        console.log(data)
+        this.newPlayMethod(this.index)
+      }
+    )
   }
 }

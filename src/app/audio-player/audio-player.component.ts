@@ -10,7 +10,9 @@ import * as moment from "moment";
   styleUrls: ['./audio-player.component.css']
 })
 export class AudioPlayerComponent implements OnInit {
-  autoplay = true;
+  indexArr: number[] = []
+  playMode = 'auto';
+  loopMode = 'none'
   shuffle = false;
   repeat = false;
   index: number = -1;
@@ -22,7 +24,7 @@ export class AudioPlayerComponent implements OnInit {
   currentTime: string = ''
   seek: number = 0
   totalTime: number = 0;
-  loadState: string = 'playDetails'
+  loadState: string = 'page'
 
   audio = new Audio()
   audioEvents = [
@@ -44,7 +46,6 @@ export class AudioPlayerComponent implements OnInit {
     this.audioService.songOfBarId = +(this.currentTrack?.id as string)
     this.tracks = JSON.parse(localStorage.getItem('playlist') as string)
     this.index = Number(localStorage.getItem('currentSongIndex'))
-    console.log(this.currentTrack, this.tracks, this.index)
   }
   /** Load audio when start page */
   ngOnInit() {
@@ -54,6 +55,7 @@ export class AudioPlayerComponent implements OnInit {
   actionSubscribe() {
     this.playPauseSubscribe();
     this.fastForwardSubscribe();
+    this.playListSubscribe();
     this.newSongSubscribe();
     this.timelineSubscribe();
     this.loadStateSubscribe();
@@ -89,6 +91,7 @@ export class AudioPlayerComponent implements OnInit {
       this.audio.currentTime = 0;
       this.audioService.loadSongOfBarComplete = false;
       this.currentTrack = track.song
+      console.log(this.currentTrack)
       localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
       this.streamObserver(track.song.audio as string).subscribe();
       this.audioService.songOfBarId = +(this.currentTrack?.id as string)
@@ -105,8 +108,19 @@ export class AudioPlayerComponent implements OnInit {
           localStorage.setItem('currentSongIndex', this.index.toString())
           this.audioService.songOfBarId = +(this.currentTrack?.id as string)
         })
-        break
+        break;
     }
+  }
+  playListSubscribe() {
+    this.audioService.playlistChange.subscribe(playlist => {
+      this.tracks = playlist;
+      console.log(this.tracks)
+      localStorage.setItem('playlist', JSON.stringify(this.tracks))
+      this.index = this.tracks.findIndex((track) => track.id == this.currentTrack?.id);
+      localStorage.setItem('currentSongIndex', this.index.toString())
+      this.audioService.songOfBarId = +(this.currentTrack?.id as string)
+      console.log(this.currentTrack, this.tracks, this.index)
+    })
   }
   timelineSubscribe() {
     this.audioService.loadSongOfPageChange.subscribe(
@@ -166,6 +180,7 @@ export class AudioPlayerComponent implements OnInit {
           case "ended":
             this.audio.pause();
             this.isPlay = false;
+            this.next()
             break;
         }
       }
@@ -204,7 +219,7 @@ export class AudioPlayerComponent implements OnInit {
       this.audioService.fastForwardPos.next({source: 'bar', pos: position})
     }
   }
-  /** Play / pause song */
+  /** Song action */
   playPause() {
     if (this.loadingComplete) {
       if (!this.isPlay) {
@@ -223,30 +238,131 @@ export class AudioPlayerComponent implements OnInit {
       }
     }
   }
-  /** Next / prev song */
   next() {
-    if (this.index < this.tracks.length - 1) {
-      this.index++
-      this.nextPrevAction();
+    if (this.audioService.activePage === 'playlistDetails') {
+      this.nextOnPlayListPage();
+    } else {
+      this.nextOnAudioPlayer()
     }
   }
-
-  private nextPrevAction() {
-    this.currentTrack = this.tracks[this.index];
+  prev() {
+    if (this.index > 0) {
+      this.index--
+      this.moveTo(this.index);
+    }
+  }
+  moveTo(i: number) {
+    this.currentTrack = this.tracks[i];
     this.audioService.loadStateChange.next('next/prev')
     this.audioService.songOfBarId = +(this.currentTrack?.id as string)
     this.streamObserver(this.currentTrack.audio as string).subscribe();
     if (this.audioService.compareSong()) {
-      this.audioService.loadStateChange.next('playDetails')
+      this.audioService.loadStateChange.next('page')
     }
     localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
     localStorage.setItem('currentSongIndex', this.index.toString())
   }
-
-  prev() {
-    if (this.index > 0) {
-      this.index--
-      this.nextPrevAction();
+  changePlayMode() {
+    if (this.playMode === 'auto') {
+      this.playMode = 'shuffle'
+    } else {
+      this.playMode = 'auto'
     }
+  }
+  changeLoopMode() {
+    if (this.loopMode === 'none') {
+      this.loopMode = 'one'
+    } else if (this.loopMode === 'one') {
+      this.loopMode = 'loop'
+    } else if (this.loopMode === 'loop') {
+      this.loopMode = 'none'
+    }
+  }
+  /** Next song on playlist page */
+  nextOnPlayListPage() {
+    if (this.loopMode === 'one') {
+      this.audio.currentTime = 0;
+      this.audioService.fastForwardPos.next({source: 'bar', pos: 0})
+    } else if (this.playMode === 'auto') {
+      this.nextOnPlaylistPageAutoMode()
+    } else if (this.playMode == 'shuffle') {
+      if (this.indexArr.length < this.tracks.length - 1) {
+        this.indexArr.push(this.index)
+        this.nextOnPlaylistPageShuffleMode()
+      } else {
+        if (this.loopMode == 'loop') {
+          this.indexArr = []
+          this.nextOnPlaylistPageShuffleMode()
+        }
+      }
+    }
+  }
+  nextOnPlaylistPageAutoMode() {
+    if (this.index < this.tracks.length - 1) {
+      this.index++
+      this.currentTrack = this.tracks[this.index]
+      this.audioService.nextChange.next(this.index)
+      localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
+      localStorage.setItem('currentSongIndex', this.index.toString())
+    } else {
+      if (this.loopMode === 'loop') {
+        this.index = 0
+        this.currentTrack = this.tracks[this.index]
+        this.audioService.nextChange.next(this.index)
+        localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
+        localStorage.setItem('currentSongIndex', this.index.toString())
+      }
+    }
+  }
+  nextOnPlaylistPageShuffleMode() {
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * this.tracks.length)
+    } while (this.indexArr.includes(newIndex))
+    this.index = newIndex;
+    this.currentTrack = this.tracks[this.index]
+    this.audioService.nextChange.next(this.index)
+    localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
+    localStorage.setItem('currentSongIndex', this.index.toString())
+  }
+  /** Next song on audio player */
+  nextOnAudioPlayer() {
+    if (this.loopMode === 'one') {
+      this.audio.currentTime = 0;
+      if (this.audioService.compareSong()) {
+        this.audioService.fastForwardPos.next({source: 'bar', pos: 0})
+      }
+    } else if (this.playMode === 'auto') {
+      this.nextOnAudioPlayerAutoMode()
+    } else if (this.playMode == 'shuffle') {
+      if (this.indexArr.length < this.tracks.length - 1) {
+        this.indexArr.push(this.index)
+        this.nextOnAudioPlayerShuffleMode()
+      } else {
+        if (this.loopMode == 'loop') {
+          this.indexArr = []
+          this.nextOnAudioPlayerShuffleMode()
+        }
+      }
+    }
+  }
+  nextOnAudioPlayerAutoMode() {
+    if (this.index < this.tracks.length - 1) {
+      this.index++
+      this.moveTo(this.index)
+    } else {
+      if (this.loopMode === 'loop') {
+        this.index = 0
+        this.moveTo(this.index)
+      }
+    }
+  }
+  nextOnAudioPlayerShuffleMode() {
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * this.tracks.length)
+    } while (this.indexArr.includes(newIndex))
+    this.index = newIndex
+    this.moveTo(this.index)
   }
 }
