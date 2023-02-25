@@ -141,6 +141,11 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   }
 
   loadSong(i: number) {
+    // @ts-ignore
+    this.playlist.songsList[i].views = this.playlist.songsList[i].views + 1;
+    // @ts-ignore
+    this.songService.changeLikeSongOrViews(this.playlist?.songsList[i]).subscribe(()=>{
+    });
     $('.song.active').removeClass('active')
     // @ts-ignore
     $('.song-' + this.playlist.songsList[i].id).addClass('active')
@@ -304,7 +309,13 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     if (!this.isStartPlaying || !this.audioService.compareSong()) {
       this.renderAudioOnClick(i);
       this.isStartPlaying = true;
+      // @ts-ignore
+      this.playlist.songsList[i].views = this.playlist.songsList[i].views + 1;
+      // @ts-ignore
+      this.songService.changeLikeSongOrViews(this.playlist?.songsList[i]).subscribe(()=>{
+      });
     }
+
     if (this.loadingComplete) {
       if (this.audioService.compareSong()) {
         this.audioService.loadSongOfBarComplete = true;

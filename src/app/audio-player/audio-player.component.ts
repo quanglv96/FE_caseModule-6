@@ -78,7 +78,7 @@ export class AudioPlayerComponent implements OnInit {
   fastForwardSubscribe() {
     this.audioService.fastForwardPos.subscribe(
       (pos) => {
-        if (pos.source === 'page') {
+        if (pos.source === 'page' && this.audioService.compareSong()) {
           this.audio.currentTime = pos.pos;
         }
       }
