@@ -46,8 +46,9 @@ export class AudioPlayerComponent implements OnInit {
     this.audioService.songOfBarId = +(this.currentTrack?.id as string)
     this.tracks = JSON.parse(localStorage.getItem('playlist') as string)
     this.index = Number(localStorage.getItem('currentSongIndex'))
+    this.audioService.playlistOfBarId = Number(localStorage.getItem('playlistId') as string)
   }
-  /** Load audio when start page */
+  /** Subscribe event when start page */
   ngOnInit() {
     this.actionSubscribe()
   }
@@ -95,14 +96,16 @@ export class AudioPlayerComponent implements OnInit {
       localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
       this.streamObserver(track.song.audio as string).subscribe();
       this.audioService.songOfBarId = +(this.currentTrack?.id as string)
-      this.newPlaylistSubscribe(track.source)
+      this.randomCreatePlaylistSubscribe(track.source)
     })
   }
-  newPlaylistSubscribe(source: string) {
+  randomCreatePlaylistSubscribe(source: string) {
     switch (source) {
       case 'songDetails':
         this.audioService.playlistChange.subscribe(playlist => {
-          this.tracks = [this.currentTrack as Songs, ...playlist];
+          this.tracks = [this.currentTrack as Songs, ...playlist.playlist];
+          this.audioService.playlistOfBarId = playlist.id
+          localStorage.setItem('playlistId', JSON.stringify(playlist.id))
           localStorage.setItem('playlist', JSON.stringify(this.tracks))
           this.index = 0;
           localStorage.setItem('currentSongIndex', this.index.toString())
@@ -113,8 +116,9 @@ export class AudioPlayerComponent implements OnInit {
   }
   playListSubscribe() {
     this.audioService.playlistChange.subscribe(playlist => {
-      this.tracks = playlist;
-      console.log(this.tracks)
+      this.tracks = playlist.playlist;
+      this.audioService.playlistOfBarId = playlist.id
+      localStorage.setItem('playlistId', JSON.stringify(playlist.id))
       localStorage.setItem('playlist', JSON.stringify(this.tracks))
       this.index = this.tracks.findIndex((track) => track.id == this.currentTrack?.id);
       localStorage.setItem('currentSongIndex', this.index.toString())
@@ -138,15 +142,6 @@ export class AudioPlayerComponent implements OnInit {
         this.loadState = data;
       }
     )
-  }
-  /** Fill color for progress of song */
-  fillProgress() {
-    let input = document.querySelector('.timeline') as HTMLInputElement
-    let min = +input.min;
-    let max = +input.max;
-    let val = +input.value;
-    let percentage = (val - min) / (max - min) * 100;
-    input.style.setProperty('--percentage', percentage + '%')
   }
   /** Stream object for audio */
   streamObserver(url: string) {
@@ -204,23 +199,14 @@ export class AudioPlayerComponent implements OnInit {
       obj.removeEventListener(event, handler);
     })
   }
-  /** Time format */
-  formatTime(time: number) {
-    let format: string = "mm:ss"
-    const momentTime = time * 1000;
-    return moment.utc(momentTime).format(format);
-  }
-  /** Allow skip forward / backward */
-  seekTo(event: Event) {
-    let input = event.target as HTMLInputElement
-    let position = Number(input.value);
-    this.audio.currentTime = position;
-    if (this.audioService.compareSong()) {
-      this.audioService.fastForwardPos.next({source: 'bar', pos: position})
-    }
-  }
   /** Song action */
   playPause() {
+    console.log(this.audioService.playlistOfBarId, this.audioService.playlistOfPageId)
+    if (this.audioService.comparePlayList() && !this.audioService.loadSongOfPlaylistComplete) {
+
+      this.audioService.nextChange.next({state: 'pageIsNotLoad', id: this.index});
+      return
+    }
     if (this.loadingComplete) {
       if (!this.isPlay) {
         this.audio.play().then(() => {
@@ -239,11 +225,14 @@ export class AudioPlayerComponent implements OnInit {
     }
   }
   next() {
-    if (this.audioService.activePage === 'playlistDetails') {
+    this.audio.pause();
+    this.audioService.action = 'next'
+    if (this.audioService.activePage === 'playlistDetails' && this.audioService.comparePlayList()) {
       this.nextOnPlayListPage();
     } else {
       this.nextOnAudioPlayer()
     }
+    this.audioService.action = ''
   }
   prev() {
     if (this.index > 0) {
@@ -278,6 +267,14 @@ export class AudioPlayerComponent implements OnInit {
       this.loopMode = 'none'
     }
   }
+  seekTo(event: Event) {
+    let input = event.target as HTMLInputElement
+    let position = Number(input.value);
+    this.audio.currentTime = position;
+    if (this.audioService.compareSong()) {
+      this.audioService.fastForwardPos.next({source: 'bar', pos: position})
+    }
+  }
   /** Next song on playlist page */
   nextOnPlayListPage() {
     if (this.loopMode === 'one') {
@@ -301,14 +298,14 @@ export class AudioPlayerComponent implements OnInit {
     if (this.index < this.tracks.length - 1) {
       this.index++
       this.currentTrack = this.tracks[this.index]
-      this.audioService.nextChange.next(this.index)
+      this.audioService.nextChange.next({state: 'next', id: this.index})
       localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
       localStorage.setItem('currentSongIndex', this.index.toString())
     } else {
       if (this.loopMode === 'loop') {
         this.index = 0
         this.currentTrack = this.tracks[this.index]
-        this.audioService.nextChange.next(this.index)
+        this.audioService.nextChange.next({state: 'next', id: this.index})
         localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
         localStorage.setItem('currentSongIndex', this.index.toString())
       }
@@ -321,7 +318,7 @@ export class AudioPlayerComponent implements OnInit {
     } while (this.indexArr.includes(newIndex))
     this.index = newIndex;
     this.currentTrack = this.tracks[this.index]
-    this.audioService.nextChange.next(this.index)
+    this.audioService.nextChange.next({state: 'next', id: this.index})
     localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
     localStorage.setItem('currentSongIndex', this.index.toString())
   }
@@ -364,5 +361,19 @@ export class AudioPlayerComponent implements OnInit {
     } while (this.indexArr.includes(newIndex))
     this.index = newIndex
     this.moveTo(this.index)
+  }
+  /** Other util action */
+  fillProgress() {
+    let input = document.querySelector('.timeline') as HTMLInputElement
+    let min = +input.min;
+    let max = +input.max;
+    let val = +input.value;
+    let percentage = (val - min) / (max - min) * 100;
+    input.style.setProperty('--percentage', percentage + '%')
+  }
+  formatTime(time: number) {
+    let format: string = "mm:ss"
+    const momentTime = time * 1000;
+    return moment.utc(momentTime).format(format);
   }
 }

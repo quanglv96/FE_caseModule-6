@@ -84,8 +84,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.playlistService.findPlaylistById(this.playlistId).subscribe(data => {
         this.playlist = data;
         this.songList = this.playlist.songsList as Songs[]
-        // @ts-ignore
-        this.playlist.views = this.playlist?.views + 1
+        this.audioService.playlistOfPageId = Number(this.playlist?.id);
+        this.playlist.views = this.playlist?.views as number + 1
         if (localStorage.getItem('idUser')) {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
@@ -93,9 +93,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
             this.statusLike = !!this.playlist.userLikesPlaylist?.find(id => id.id == this.user.id)?.id;
           })
         }
-        this.playlistService.changeLikePlaylistOrViews(this.playlist).subscribe(() => {
-
-        })
+        this.playlistService.changeLikePlaylistOrViews(this.playlist).subscribe()
         this.userService.countByUser(this.playlist.users?.id).subscribe(
           data => {
             this.countSongByUser = data[1];
@@ -116,8 +114,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         )
       }
     )
-    // @ts-ignore
-    let userId = +localStorage.getItem('idUser')
+    let userId = Number(localStorage.getItem('idUser'))
     this.userService.countByUser(userId).subscribe(
       data => {
         this.userData = data;
@@ -131,73 +128,9 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.dataService.changeMessage("clearSearch");
   }
 
-  playPause() {
-    if (this.wavesurfer === undefined) {
-      this.loadSong(0)
-    } else {
-      this.wavesurfer.playPause();
-      this.isPlaying = this.wavesurfer.isPlaying();
-    }
-  }
-
-  loadSong(i: number) {
-    // @ts-ignore
-    this.playlist.songsList[i].views = this.playlist.songsList[i].views + 1;
-    // @ts-ignore
-    this.songService.changeLikeSongOrViews(this.playlist?.songsList[i]).subscribe(()=>{
-    });
+  selected(i: number) {
     $('.song.active').removeClass('active')
-    // @ts-ignore
-    $('.song-' + this.playlist.songsList[i].id).addClass('active')
-    this.load(i)
-  }
-
-  load(i: number) {
-    if (!!this.wavesurfer) {
-      this.wavesurfer.destroy();
-    }
-    // @ts-ignore
-    if(this.playlist.songsList[i]){
-      // @ts-ignore
-      if (this.playlist.songsList[i].views) {
-        // @ts-ignore
-        this.playlist.songsList[i].views = this.playlist.songsList[i].views + 1;
-        // @ts-ignore
-        this.songService.changeLikeSongOrViews(this.playlist?.songsList[i]).subscribe(()=>{
-        });
-      }
-    }
-
-    this.isStartPlaying = true
-    this.wavesurfer = this.waveSurferService.create(this.option)
-    // @ts-ignore
-    this.loadAudio(this.wavesurfer, this.playlist?.songsList[i]?.audio).then(
-      () => {
-        // @ts-ignore
-        this.songPlay = this.playlist?.songsList[i].name;
-        // @ts-ignore
-        this.singerSong = this.playlist?.songsList[i].singerList;
-        // @ts-ignore
-        this.songUser = this.playlist?.songsList[i].users.name
-        this.endTime = this.getDuration();
-        this.wavesurfer.playPause();
-        this.isPlaying = this.wavesurfer.isPlaying()
-        $('.p-avt').trigger('click')
-
-      }
-    )
-    this.wavesurfer.on('finish', () => {
-      // @ts-ignore
-      if (i < this.playlist?.songsList?.length - 1) {
-        this.load(i + 1);
-        $('.song.active').removeClass('active')
-        // @ts-ignore
-        $('.song-' + this.playlist.songsList[i + 1].id).addClass('active')
-      } else {
-        this.isPlaying = false;
-        $('.p-avt').trigger('click')
-      }
-    })
+    $('.song-' + this.songList[i].id).addClass('active')
   }
 
   loadAudio(wavesurfer: any, url: string | any) {
@@ -227,7 +160,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     return true;
   }
 
-
   @Input() contentComment: string = "";
 
   sendComment() {
@@ -236,7 +168,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       users: this.user,
       playlist: this.playlist
     }
-    // @ts-ignore
     this.songService.saveComment(comment).subscribe((comment: Comments[]) => {
       this.contentComment = '';
       this.comments = comment;
@@ -276,12 +207,13 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       this.wavesurfer.setMute(true)
       this.endTime = this.getDuration();
       this.loadingComplete = true;
+      this.audioService.loadSongOfPlaylistComplete = true;
       this.audioService.loadStateChange.next('page')
       if (!this.audioService.compareSong()) {
         this.audioService.songChange.next({song: this.currentSong as Songs, source: 'playlist'})
         this.songList = this.playlist.songsList as Songs[]
-        this.audioService.playlistChange.next(this.songList);
       }
+      this.audioService.playlistChange.next({id: Number(this.playlist?.id), playlist: this.songList});
       if (this.audioService.compareSong()) {
         this.audioService.loadSongOfBarComplete = true;
       }
@@ -292,7 +224,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.wavesurfer.on('finish', () => {
       this.isPlaying = false;
     })
-    this.wavesurfer.on('seek', (progress: any) => {
+    this.wavesurfer.on('seek', () => {
       if (this.audioService.compareSong()) {
         this.audioService.fastForwardPos.next({source: 'page', pos: this.wavesurfer.getCurrentTime()})
       }
@@ -306,18 +238,35 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
 
   newPlayMethod(i: number) {
     this.audioService.songOfPageId = Number(this.songList[i].id)
-    if (!this.isStartPlaying || !this.audioService.compareSong()) {
+    if (!this.isStartPlaying || !this.audioService.comparePlayList()
+      || this.audioService.action == 'next' ) {
       this.renderAudioOnClick(i);
+      this.selected(i)
       this.isStartPlaying = true;
-      // @ts-ignore
-      this.playlist.songsList[i].views = this.playlist.songsList[i].views + 1;
-      // @ts-ignore
-      this.songService.changeLikeSongOrViews(this.playlist?.songsList[i]).subscribe(()=>{
-      });
     }
-
     if (this.loadingComplete) {
-      if (this.audioService.compareSong()) {
+      if (this.audioService.comparePlayList()) {
+        this.audioService.loadSongOfBarComplete = true;
+      }
+      if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
+        this.togglePlayPause()
+      }
+    }
+  }
+
+  playOnClick(i: number) {
+    if (this.songList[i].id !== this.currentSong?.id) {
+      this.loadAndPlay(i);
+    }
+  }
+
+  loadAndPlay(i: number) {
+    this.audioService.songOfPageId = Number(this.songList[i].id)
+    this.renderAudioOnClick(i);
+    this.selected(i)
+    this.isStartPlaying = true;
+    if (this.loadingComplete) {
+      if (this.audioService.comparePlayList()) {
         this.audioService.loadSongOfBarComplete = true;
       }
       if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
@@ -371,6 +320,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     )
   }
+
   togglePlayPause() {
     if (!this.wavesurfer.isPlaying()) {
       console.log('play')
@@ -383,12 +333,12 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     }
     this.isPlaying = this.wavesurfer.isPlaying();
   }
+
   loadSongToBarSubscribe() {
     this.audioService.loadSongOfBarChange.subscribe(
-      data => {
+      () => {
         if (this.loadState === 'page' && this.loadingComplete && this.wavesurfer !== undefined) {
           this.wavesurfer.play()
-          console.log('play')
           this.isPlaying = this.wavesurfer.isPlaying()
           this.audioService.playState.next('barPlay')
           this.audioService.loadSongOfBarComplete = true;
@@ -401,6 +351,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     )
   }
+
   loadStateSubscribe() {
     this.audioService.loadStateChange.subscribe(
       data => {
@@ -408,12 +359,16 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     )
   }
+
   nextChangeSubscribe() {
     this.audioService.nextChange.subscribe(
       data => {
-        this.index = data
-        console.log(data)
-        this.newPlayMethod(this.index)
+        this.index = data.id
+        if (data.state === 'next') {
+          this.newPlayMethod(this.index)
+        } else if (data.state === 'pageIsNotLoad') {
+          this.playOnClick(this.index)
+        }
       }
     )
   }

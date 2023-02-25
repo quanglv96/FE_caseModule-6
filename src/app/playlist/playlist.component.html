@@ -92,7 +92,7 @@
             <div class="songs-list mb-3">
               <p class="h4">{{ playlist.name }}</p>
 
-              <div (click)="newPlayMethod(i)" *ngFor="let s of playlist?.songsList; let i = index"
+              <div (click)="playOnClick(i)" *ngFor="let s of playlist?.songsList; let i = index"
                    class="py-1 border-bottom d-flex justify-content-between align-items-center song song-{{ s?.id }}"
                    style="cursor: pointer;">
                 <div class="d-flex align-items-center">
