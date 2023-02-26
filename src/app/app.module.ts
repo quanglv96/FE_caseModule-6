@@ -81,7 +81,7 @@ import {InfiniteScrollModule} from "ngx-infinite-scroll";
     PlaylistComponent,
     AddSongToPlaylistComponent,
     SingerComponent,
-    AudioPlayerComponent,
+    AudioPlayerComponent
   ],
   imports: [
     BrowserModule,

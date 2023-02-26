@@ -3,6 +3,7 @@ import {AudioPlayerService} from "../service/audio-player.service";
 import {Songs} from "../model/Songs";
 import {Observable} from "rxjs";
 import * as moment from "moment";
+import {PlaylistSyncService} from "../playlist-sync.service";
 
 @Component({
   selector: 'app-audio-player',
@@ -25,6 +26,8 @@ export class AudioPlayerComponent implements OnInit {
   seek: number = 0
   totalTime: number = 0;
   loadState: string = 'page'
+  showPlaylist: boolean = false;
+  actionPage: string = 'none';
 
   audio = new Audio()
   audioEvents = [
@@ -40,17 +43,21 @@ export class AudioPlayerComponent implements OnInit {
     "canplaythrough",
   ];
 
-  constructor(private audioService: AudioPlayerService) {
+  constructor(private audioService: AudioPlayerService,
+              private playlistSyncService: PlaylistSyncService) {
     this.currentTrack = JSON.parse(localStorage.getItem('currentSong') as string)
     this.streamObserver(this.currentTrack?.audio as string).subscribe();
     this.audioService.songOfBarId = +(this.currentTrack?.id as string)
+    this.playlistSyncService.currentSongOfPlayerId = +(this.currentTrack?.id as string)
     this.tracks = JSON.parse(localStorage.getItem('playlist') as string)
     this.index = Number(localStorage.getItem('currentSongIndex'))
     this.audioService.playlistOfBarId = Number(localStorage.getItem('playlistId') as string)
+    this.playlistSyncService.currentPlaylistOfPlayerId = Number(localStorage.getItem('playlistId') as string)
   }
   /** Subscribe event when start page */
   ngOnInit() {
-    this.actionSubscribe()
+    // this.actionSubscribe()
+    this.subscribeEventFromPlaylistPage()
   }
   /** Subscribe for play song action */
   actionSubscribe() {
@@ -123,7 +130,7 @@ export class AudioPlayerComponent implements OnInit {
       this.index = this.tracks.findIndex((track) => track.id == this.currentTrack?.id);
       localStorage.setItem('currentSongIndex', this.index.toString())
       this.audioService.songOfBarId = +(this.currentTrack?.id as string)
-      console.log(this.currentTrack, this.tracks, this.index)
+
     })
   }
   timelineSubscribe() {
@@ -153,19 +160,20 @@ export class AudioPlayerComponent implements OnInit {
           case "canplaythrough":
             this.loadingComplete = true;
             this.audioService.loadSongOfBarChange.next(this.loadState);
-            if (this.loadState === 'next/prev') {
-              this.audio.play().then(
-                () => {this.isPlay = true}
-              )
+            this.playlistSyncService.onPlayerLoaded.next(this.loadState);
+            if (this.loadState === 'playlist-first-play') {
+              this.audio.play().then(() => {this.isPlay = true})
             }
             this.duration = this.formatTime(this.audio.duration)
             this.totalTime = this.audio.duration;
             break;
-          case "playing":
+          case "play":
             this.isPlay = true;
+            this.playlistSyncService.isPlayerPlaying = true;
             break;
           case "pause":
             this.isPlay = false;
+            this.playlistSyncService.isPlayerPlaying = false;
             break;
           case "timeupdate":
             this.fillProgress()
@@ -173,9 +181,9 @@ export class AudioPlayerComponent implements OnInit {
             this.seek = this.audio.currentTime;
             break;
           case "ended":
-            this.audio.pause();
-            this.isPlay = false;
-            this.next()
+            // this.audio.pause();
+            // this.isPlay = false;
+            // this.next()
             break;
         }
       }
@@ -201,28 +209,30 @@ export class AudioPlayerComponent implements OnInit {
   }
   /** Song action */
   playPause() {
-    console.log(this.audioService.playlistOfBarId, this.audioService.playlistOfPageId)
-    if (this.audioService.comparePlayList() && !this.audioService.loadSongOfPlaylistComplete) {
-
-      this.audioService.nextChange.next({state: 'pageIsNotLoad', id: this.index});
-      return
-    }
-    if (this.loadingComplete) {
-      if (!this.isPlay) {
-        this.audio.play().then(() => {
-          this.isPlay = true;
-          if (this.audioService.compareSong()) {
-            this.audioService.playState.next('pagePlay')
-          }
-        })
-      } else {
-        this.audio.pause();
-        this.isPlay = false
-        if (this.audioService.compareSong()) {
-          this.audioService.playState.next('pagePause')
-        }
-      }
-    }
+    // console.log(this.audioService.playlistOfBarId, this.audioService.playlistOfPageId)
+    // if (this.audioService.comparePlayList() && !this.audioService.loadSongOfPlaylistComplete) {
+    //
+    //   this.audioService.nextChange.next({state: 'pageIsNotLoad', id: this.index});
+    //   return
+    // }
+    // if (this.loadingComplete) {
+    //   if (!this.isPlay) {
+    //     this.audio.play().then(() => {
+    //       this.isPlay = true;
+    //       if (this.audioService.compareSong()) {
+    //         this.audioService.playState.next('pagePlay')
+    //       }
+    //     })
+    //   } else {
+    //     this.audio.pause();
+    //     this.isPlay = false
+    //     if (this.audioService.compareSong()) {
+    //       this.audioService.playState.next('pagePause')
+    //     }
+    //   }
+    // }
+    this.togglePlayPauseWithPlaylistPage()
+    this.togglePlayPauseWhenNoPageIsLoad()
   }
   next() {
     this.audio.pause();
@@ -240,8 +250,15 @@ export class AudioPlayerComponent implements OnInit {
       this.moveTo(this.index);
     }
   }
+  moveToSong(i: number) {
+    if (!this.checkIndex(i)) {
+      this.moveTo(i)
+    }
+  }
   moveTo(i: number) {
     this.currentTrack = this.tracks[i];
+    this.index = i
+    this.playlistSyncService.currentSongOfPlayerId = Number(this.currentTrack.id);
     this.audioService.loadStateChange.next('next/prev')
     this.audioService.songOfBarId = +(this.currentTrack?.id as string)
     this.streamObserver(this.currentTrack.audio as string).subscribe();
@@ -273,6 +290,9 @@ export class AudioPlayerComponent implements OnInit {
     this.audio.currentTime = position;
     if (this.audioService.compareSong()) {
       this.audioService.fastForwardPos.next({source: 'bar', pos: position})
+    }
+    if (this.playlistSyncService.compareSong()) {
+      this.playlistSyncService.onFastForwardSong.next({source: 'player', pos: position})
     }
   }
   /** Next song on playlist page */
@@ -376,4 +396,166 @@ export class AudioPlayerComponent implements OnInit {
     const momentTime = time * 1000;
     return moment.utc(momentTime).format(format);
   }
+  closePlaylist() {
+    this.showPlaylist = false
+  }
+  togglePlaylist() {
+    this.showPlaylist = !this.showPlaylist;
+  }
+  checkIndex(i: number) {
+    return this.index === i
+  }
+
+
+
+
+  newNext() {
+    this.nextWithPlaylistPage()
+  }
+
+
+  /** Playlist page sync handle */
+  subscribeEventFromPlaylistPage() {
+    this.onSongOfPLPageChange();
+    this.onPlaylistOfPLPageChange();
+    this.onPlaylistPageFastForward();
+    this.onPlaylistTogglePlayPause();
+    this.onPlaylistRetrievingCurrentTime();
+    this.onPlaylistPageChange()
+  }
+  onPlaylistOfPLPageChange() {
+    this.playlistSyncService.onPlaylistChange.subscribe(
+      songList => {
+        this.tracks = songList.songList;
+        this.playlistSyncService.currentPlaylistOfPlayerId = songList.id
+        localStorage.setItem('playlistId', JSON.stringify(songList.id))
+        localStorage.setItem('playlist', JSON.stringify(this.tracks))
+      }
+    )
+  }
+  onSongOfPLPageChange() {
+    this.playlistSyncService.onSongChange.subscribe(
+      song => {
+        if (song.state === 'first-play') {
+          this.currentTrack = song.song;
+          this.index = this.getIndex()
+          this.playlistSyncService.currentSongOfPlayerId = Number(this.currentTrack?.id)
+          localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
+          localStorage.setItem('currentSongIndex', this.index.toString())
+          this.audio.src = this.currentTrack?.audio as string
+          this.loadState = 'playlist-first-play'
+          this.audio.load()
+        }
+      }
+    )
+  }
+  onPlaylistPageFastForward() {
+    this.playlistSyncService.onFastForwardSong.subscribe(
+      data => {
+        if (data.source === 'playlist-page' && this.playlistSyncService.compareSong()) {
+          this.audio.currentTime = data.pos
+        }
+      }
+    )
+  }
+  onPlaylistTogglePlayPause() {
+    this.playlistSyncService.onTogglePlayPause.subscribe(
+      data => {
+        if (data === 'playlist-page-play' || data === 'play-when-player-play' ||
+            data === 'player-next-song') {
+          this.audio.play().then(() => {this.isPlay = true})
+        }
+        if (data === 'playlist-page-pause') {
+          this.audio.pause()
+          this.isPlay = false;
+        }
+      }
+    )
+  }
+  onPlaylistRetrievingCurrentTime() {
+    this.playlistSyncService.onRetrievingCurrentTime.subscribe(
+      data => {
+        if (data.action === 'playlist-request-current-time' && data.pos === -1 && this.isPlay) {
+          const currentTime = this.audio.currentTime
+          this.playlistSyncService.onRetrievingCurrentTime.next({action: 'player-respond-current-time', pos: currentTime})
+        }
+      }
+    )
+  }
+  onPlaylistPageChange() {
+    this.playlistSyncService.onPageChange.subscribe(data => {this.actionPage = data})
+  }
+  /** Action with playlist page */
+  /** Play / pause */
+  togglePlayPauseWithPlaylistPage() {
+    if (this.actionPage === 'playlist') {
+      if (!this.playlistSyncService.isPlayListPageStartPlaying && this.playlistSyncService.comparePlaylist()) {
+        this.renderAndPlayAudioOfPlaylistPage()
+      } else {
+        this.togglePlayPauseWhenPlaylistPageIsLoaded()
+      }
+    }
+  }
+  renderAndPlayAudioOfPlaylistPage() {
+    if (this.playlistSyncService.comparePlaylist()) {
+      this.playlistSyncService.onRetrieveCurrentSongOfPlayer.next(
+        {desc: 'retrieve-when-first-play', song: this.currentTrack as Songs}
+      )}
+  }
+  togglePlayPauseWhenPlaylistPageIsLoaded() {
+    if (!this.isPlay) {
+      this.audio.play().then(() => {
+        this.isPlay = true
+      })
+    } else {
+      this.audio.pause()
+      this.isPlay = false;
+    }
+  }
+  /** Next / prev / move to */
+  nextWithPlaylistPage() {
+    if (this.actionPage === 'playlist' && this.playlistSyncService.comparePlaylist()) {
+      if (this.index < this.tracks.length - 1) {
+        this.index++
+        this.moveToAChosenSong(this.index)
+      }
+    }
+  }
+  prevWithPlaylistPage() {
+
+  }
+  moveToAChosenSong(index: number) {
+    this.currentTrack = this.tracks[index]
+    this.playlistSyncService.currentSongOfPlayerId = Number(this.currentTrack.id)
+    localStorage.setItem('currentSong', JSON.stringify(this.currentTrack))
+    localStorage.setItem('currentSongIndex', index.toString())
+    this.audio.src = this.currentTrack.audio as string
+    this.loadState = 'playlist-page-next'
+    this.audio.load()
+  }
+  getIndex() {
+    return this.tracks.findIndex((track) => track.id === this.currentTrack?.id)
+  }
+
+
+
+
+
+  togglePlayPauseWhenNoPageIsLoad() {
+    if (this.actionPage === 'none') {
+      if (!this.isPlay) {
+        this.audio.play().then(() => {
+          this.isPlay = true
+        })
+      } else {
+        this.audio.pause()
+        this.isPlay = false;
+      }
+    }
+  }
+  nextWhenNoPageIsLoad() {
+
+  }
 }
+
+

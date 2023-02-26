@@ -9,7 +9,7 @@
               <i *ngIf="!isPlay" class="fa-sharp fa-solid fa-play"></i>
               <i *ngIf="isPlay" style="font-size: 20px" class="fa-sharp fa-solid fa-pause"></i>
             </span>
-            <span (click)="next()" class="controls__item"><i class="fa-sharp fa-solid fa-forward-step"></i></span>
+            <span (click)="newNext()" class="controls__item"><i class="fa-sharp fa-solid fa-forward-step"></i></span>
             <span (click)="changePlayMode()" [class.active]="playMode === 'shuffle'" class="controls__item controls__item--play"><i class="fa-sharp fa-solid fa-shuffle"></i></span>
             <span (click)="changeLoopMode()" [class.active]="loopMode !== 'none'" class="controls__item controls__item--loop">
               <i *ngIf="loopMode !== 'one'" class="fa-sharp fa-solid fa-repeat"></i>
@@ -53,7 +53,7 @@
         </div>
         <div class="col-2 g-0 h-100">
           <div class="list-song h-100 d-flex align-items-center justify-content-center">
-            <span class="list-song__toggle-btn">
+            <span class="list-song__toggle-btn" (click)="togglePlaylist()">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                    class="bi bi-music-note-list" viewBox="0 0 16 16">
                     <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
@@ -63,6 +63,27 @@
                           d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/>
                   </svg>
             </span>
+            <div class="list-song__menu" [hidden]="!showPlaylist">
+              <div class="list-song__menu__header">
+                <span class="list-song__menu__header__text">Next up</span>
+                <span class="list-song__menu__header__close-btn" (click)="closePlaylist()">
+                  <i class="fa-solid fa-xmark"></i>
+                </span>
+              </div>
+              <div class="list-song__menu__item-field">
+                <div class="list-song__menu__item-container" [class.activated]="s?.id == currentTrack?.id" *ngFor="let s of tracks; index as i">
+                  <div class="song__image">
+                    <img class="fit-image" [src]="s?.avatar" alt="">
+                    <span class="play-btn" (click)="moveToSong(i)"><i style="margin-left: 2px" class="fa-sharp fa-solid fa-play"></i></span>
+                  </div>
+                  <div class="song__desc">
+                    <p class="song__desc__user">{{ s?.users?.name }}</p>
+                    <p class="song__desc__name pointer"
+                       [routerLink]="['/song', s?.id]">{{ s?.name }}{{ s?.singerList | toStringSinger }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

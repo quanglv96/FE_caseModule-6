@@ -1,9 +1,10 @@
 import {OwlOptions} from "ngx-owl-carousel-o";
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {SongsService} from "../service/songs/songs.service";
 import {Songs} from "../model/Songs";
 import {DataService} from "../service/data/data.service";
 import {Router} from "@angular/router";
+import {IRegionPositions, ITimeUpdateEvent, NgWaveformComponent} from "ng-waveform";
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -58,5 +59,44 @@ export class HomeComponent implements OnInit {
       this.dataService.changeMessage("textSearch: "+this.textSearch)
       return this.router.navigateByUrl(`search/${this.textSearch}`)
     }
+  }
+
+
+
+
+  @ViewChild('waveform', { static: false }) waveform?: NgWaveformComponent;
+
+  src = 'https://firebasestorage.googleapis.com/v0/b/upload-file-540c6.appspot.com/o/audio%2FMinhTungYeuNhau-MiuLe-3574692_1676862239919?alt=media&token=4b9799bb-385f-4ff3-ad47-caa43112117f'
+
+  onTrackLoaded($event: number) {
+
+  }
+
+  onTrackRendered($event: number) {
+
+  }
+
+  onDurationChange($event: number) {
+
+  }
+
+  onTimeUpdate($event: ITimeUpdateEvent) {
+
+  }
+
+  onPaused() {
+
+  }
+
+  onRegionChange($event: IRegionPositions) {
+
+  }
+
+  onPlayButtonClick() {
+    console.log(this.waveform)
+    this.waveform?.play();
+  }
+  onPauseButtonClick() {
+    this.waveform?.pause();
   }
 }
