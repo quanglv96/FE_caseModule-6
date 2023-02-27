@@ -81,14 +81,15 @@ export class SearchItemSongComponent implements OnInit, AfterViewInit, OnDestroy
   openModalAddSongToPlaylist(song:Songs) {
     if (!localStorage.getItem('idUser')){
       this.router.navigateByUrl('auth').finally()
+    }else {
+      this.dialog.open(AddSongToPlaylistComponent, {
+        width: '500px',
+        data: {
+          idUser: localStorage.getItem('idUser'),
+          song: song
+        }
+      });
     }
-    this.dialog.open(AddSongToPlaylistComponent, {
-      width: '500px',
-      data: {
-        idUser: localStorage.getItem('idUser'),
-        song: song
-      }
-    });
   }
 
   ngOnDestroy() {
