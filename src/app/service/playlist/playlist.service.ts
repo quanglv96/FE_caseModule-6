@@ -26,7 +26,7 @@ export class PlaylistService {
     return this.http.post<Playlist>(`${API_URL}/playlist`,playlist)
   }
 
-  getPlaylistByUser(id: number) {
+  getPlaylistByUser(id: number|any) {
     return this.http.get<Playlist[]>(`${API_URL}/playlist/findPlaylistByUser/${id}`)
   }
 

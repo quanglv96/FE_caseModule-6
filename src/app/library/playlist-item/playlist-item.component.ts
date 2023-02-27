@@ -23,7 +23,7 @@ export class PlaylistItemComponent implements OnInit {
     this.dataService.currentMessage.subscribe(() => {
       this.idUser = localStorage.getItem('idUser')
       if (this.idUser) {
-        this.playlistService.getPlaylistByUser(this.idUser).subscribe((data: Songs[]) => {
+        this.playlistService.getPlaylistByUser(this.idUser).subscribe((data: Playlist[]) => {
           this.listPlaylist = data;
         })
       }
@@ -53,28 +53,30 @@ export class PlaylistItemComponent implements OnInit {
       }
     });
   }
-confirmSongInPlaylist(index:number,playlist:Playlist,song :Songs){
-  // @ts-ignore
-  return SwAl.fire({
-    title: `Are you sure remove Song: "${song.name}"?`,
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#FF4500FF",
-    confirmButtonText: "Yes, remove it!",
-    cancelButtonText: "No, cancel please!",
-    closeOnConfirm: false,
-    closeOnCancel: false
-  }).then(result => {
-    if (result.isConfirmed) {
-      playlist.songsList=playlist.songsList?.filter(element=>element.id!=song.id)
-      this.deleteSongInPlaylist(playlist)
-    } else if (result.isDenied) {
-      SwAl.fire('Changes are not saved', '', 'info').then()
-    }
-  });
-}
-  deleteSongInPlaylist(playlist:Playlist){
-    this.playlistService.changeSongToPlaylist(playlist).subscribe(()=>{
+
+  confirmSongInPlaylist(index: number, playlist: Playlist, song: Songs) {
+    // @ts-ignore
+    return SwAl.fire({
+      title: `Are you sure remove Song: "${song.name}"?`,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#FF4500FF",
+      confirmButtonText: "Yes, remove it!",
+      cancelButtonText: "No, cancel please!",
+      closeOnConfirm: false,
+      closeOnCancel: false
+    }).then(result => {
+      if (result.isConfirmed) {
+        playlist.songsList = playlist.songsList?.filter(element => element.id != song.id)
+        this.deleteSongInPlaylist(playlist)
+      } else if (result.isDenied) {
+        SwAl.fire('Changes are not saved', '', 'info').then()
+      }
+    });
+  }
+
+  deleteSongInPlaylist(playlist: Playlist) {
+    this.playlistService.changeSongToPlaylist(playlist).subscribe(() => {
       SwAl.fire({
         title: `Remove Success`,
         icon: "success",
@@ -90,6 +92,7 @@ confirmSongInPlaylist(index:number,playlist:Playlist,song :Songs){
       }).then();
     });
   }
+
   deletePlaylist(id: number | any) {
     this.playlistService.deletePlaylist(id).subscribe(() => {
         SwAl.fire({
@@ -111,14 +114,14 @@ confirmSongInPlaylist(index:number,playlist:Playlist,song :Songs){
     )
   }
 
-  showDeleteButton(idSong: string | undefined,idPlaylist:string | undefined) {
-    $('.view-' + idSong+'-'+idPlaylist).removeClass('show').addClass('hide')
-    $('.delete-' + idSong+'-'+idPlaylist).removeClass('hide').addClass('show')
+  showDeleteButton(idSong: string | undefined, idPlaylist: string | undefined) {
+    $('.view-' + idSong + '-' + idPlaylist).removeClass('show').addClass('hide')
+    $('.delete-' + idSong + '-' + idPlaylist).removeClass('hide').addClass('show')
   }
 
-  hideDeleteButton(idSong: string | undefined,idPlaylist:string | undefined) {
-    $('.view-' + idSong+'-'+idPlaylist).removeClass('hide').addClass('show')
-    $('.delete-' + idSong+'-'+idPlaylist).removeClass('show').addClass('hide')
+  hideDeleteButton(idSong: string | undefined, idPlaylist: string | undefined) {
+    $('.view-' + idSong + '-' + idPlaylist).removeClass('hide').addClass('show')
+    $('.delete-' + idSong + '-' + idPlaylist).removeClass('show').addClass('hide')
   }
 
 }

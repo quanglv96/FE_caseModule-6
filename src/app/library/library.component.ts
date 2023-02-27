@@ -66,7 +66,6 @@ export class LibraryComponent implements OnInit {
 
 
   toAddForm() {
-    console.log(this.childPath)
     if (this.childPath === 'song' || this.childPath === 'library') {
       this.router.navigate(['/library/song/new']).finally()
     } else {

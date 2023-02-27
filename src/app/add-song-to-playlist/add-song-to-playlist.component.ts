@@ -17,7 +17,7 @@ export class AddSongToPlaylistComponent implements OnInit {
   // idUser,song
   data: any
   user: User = {}
-  playlists?: Playlist[]
+  playlists: Playlist[]=[]
   alertSwAl = SwAl.mixin({
     toast: true,
     heightAuto: true,
@@ -86,23 +86,41 @@ export class AddSongToPlaylistComponent implements OnInit {
     })
   }
 
+  // @ts-ignore
   addSongNewPlaylist() {
-    this.userService.findById(this.data.idUser).subscribe((user: User) => {
-      const playlist: Playlist = {
-        name: this.newNamePlaylist,
-        users: user,
-        songsList: [this.data.song],
-        views: 1000
-      }
-      this.playlistService.changeSongToPlaylist(playlist).subscribe(() => {
-        this.alertSwAl.fire({
-          icon: 'success',
-          title: 'Add Success'
-        }).then(() => {
-          this.ngOnInit()
-          this.switchTo('create-new')
+    if(this.playlists.find(element=> {
+      return element.name==this.newNamePlaylist
+    })){
+      SwAl.fire({
+        title: 'Name Playlist already exists',
+        icon: "error",
+        showConfirmButton: false,
+        showCloseButton: true,
+        customClass: {
+          title: 'error-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+    }else {
+      this.userService.findById(this.data.idUser).subscribe((user: User) => {
+        const playlist: Playlist = {
+          name: this.newNamePlaylist,
+          users: user,
+          songsList: [this.data.song],
+          views: 1000
+        }
+        this.playlistService.changeSongToPlaylist(playlist).subscribe(() => {
+          this.alertSwAl.fire({
+            icon: 'success',
+            title: 'Add Success'
+          }).then(() => {
+            this.ngOnInit()
+            this.switchTo('create-new')
+          })
         })
       })
-    })
+    }
   }
 }

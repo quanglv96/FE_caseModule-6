@@ -8,6 +8,7 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DataService} from "../../../service/data/data.service";
 import SwAl from "sweetalert2";
 import {EditStringTagsService} from "../../../service/edit-string-tags.service";
+import {Songs} from "../../../model/Songs";
 
 @Component({
   selector: 'app-playlist-form',
@@ -36,10 +37,11 @@ export class PlaylistFormComponent implements OnInit {
   }
 
   editIdPlaylist: any
+  listPlaylist: Playlist[] = []
 
   ngOnInit(): void {
     this.activeRouter.paramMap.subscribe((paramMap: ParamMap) => {
-      if(paramMap.get('id')){
+      if (paramMap.get('id')) {
         this.playlistService.findPlaylistById(paramMap.get('id')).subscribe((data: Playlist) => {
           if (data.users?.id != localStorage.getItem('idUser')) {
             this.router.navigateByUrl('').finally()
@@ -48,27 +50,48 @@ export class PlaylistFormComponent implements OnInit {
             this.editIdPlaylist = paramMap.get('id');
           }
         })
+        this.playlistService.getPlaylistByUser(paramMap.get('id')).subscribe((data: Playlist[]) => {
+          this.listPlaylist = data;
+        })
       }
     })
   }
+
+  // @ts-ignore
   submitForm() {
     SwAl.fire('Please wait').then();
     SwAl.showLoading()
-    if (!this.editIdPlaylist) {
-      let url: string = ''
-      if (this.avatar?.nativeElement.files[0]) {
+    if(!this.listPlaylist.find(element=> {
+      return element.name==this.formPlaylist.value.name
+    })){
+      SwAl.fire({
+        title: 'Name Playlist already exists',
+        icon: "error",
+        showConfirmButton: false,
+        showCloseButton: true,
+        customClass: {
+          title: 'error-message',
+          popup: 'popup',
+          confirmButton: 'confirm-btn',
+          closeButton: 'close-btn'
+        }
+      }).then()
+    }else {
+      if (!this.editIdPlaylist) {
+        let url: string = ''
+        if (this.avatar?.nativeElement.files[0]) {
           this.fileUpload.pushFileToStorage("image", this.avatar?.nativeElement.files[0]).subscribe(path => {
             url = path;
             this.saveCreate(url)
           })
+        } else {
+          url = 'https://thumbs.dreamstime.com/b/music-collection-line-icon-playlist-outline-logo-illustr-illustration-linear-pictogram-isolated-white-90236357.jpg'
+          this.saveCreate(url)
+        }
       } else {
-        url = 'https://thumbs.dreamstime.com/b/music-collection-line-icon-playlist-outline-logo-illustr-illustration-linear-pictogram-isolated-white-90236357.jpg'
-        this.saveCreate(url)
+        this.updatePlaylist();
       }
-    } else {
-      this.updatePlaylist();
     }
-
   }
 
   saveCreate(pathAvatar: any) {
@@ -117,7 +140,7 @@ export class PlaylistFormComponent implements OnInit {
           closeButton: 'close-btn'
         }
       }).then()
-    }else {
+    } else {
       const files = event.target.files;
       const reader = new FileReader()
       if (files && files[0]) {
@@ -131,17 +154,17 @@ export class PlaylistFormComponent implements OnInit {
   }
 
   openFormEdit(data: Playlist) {
-      this.formPlaylist.patchValue(data);
-      if (data.avatar) {
-        this.playlistImage = data.avatar
+    this.formPlaylist.patchValue(data);
+    if (data.avatar) {
+      this.playlistImage = data.avatar
+    }
+    this.stringTag = '';
+    if (data.tagsList != undefined) {
+      for (let i = 0; i < data.tagsList.length; i++) {
+        this.stringTag += '#' + data.tagsList[i].name + ' '
       }
-      this.stringTag = '';
-      if(data.tagsList!=undefined){
-        for (let i = 0; i < data.tagsList.length; i++) {
-          this.stringTag += '#' + data.tagsList[i].name + ' '
-        }
-      }
-      this.titleContent = "Update Playlist"
+    }
+    this.titleContent = "Update Playlist"
   }
 
   updatePlaylist() {
@@ -184,4 +207,5 @@ export class PlaylistFormComponent implements OnInit {
       return this.router.navigateByUrl('/library/playlist')
     })
   }
+
 }
