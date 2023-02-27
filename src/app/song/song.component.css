@@ -103,21 +103,15 @@
   position: relative;
 }
 
-.play-line {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-  right: 0;
-  left: 0;
-  padding: 0 3px;
-  height: 2px;
-  z-index: 4;
-}
-
 .line {
-  border-top: 2px solid #a8a8a8;
+  position: absolute;
+  bottom: 49%;
+  margin: 0;
+  height: 2px;
+  background-color: #969696;
+  z-index: 4;
   width: 100%;
-  display: block;
+  line-height: 2px;
 }
 
 .time {
@@ -142,14 +136,6 @@
   color: white;
   display: flex;
   align-items: center;
-}
-
-.time-start {
-  margin-left: 3px;
-}
-
-.time-end {
-  margin-right: 3px;
 }
 
 .c-img {

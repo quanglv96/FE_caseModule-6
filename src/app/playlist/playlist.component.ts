@@ -297,7 +297,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     )
   }
-   /** Page action */
+   /** Playlist page action */
   autoPlayWhenPlayerIsPlayingSamePL() {
     if (this.syncService.isPlayerPlaying && this.syncService.comparePlaylist()) {
       this.loadAudioState = ''
