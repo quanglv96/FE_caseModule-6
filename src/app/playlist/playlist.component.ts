@@ -11,9 +11,9 @@ import {CommentService} from "../service/comment/comment.service";
 import {Comments} from "../model/Comments";
 import {DataService} from "../service/data/data.service";
 import {SongsService} from "../service/songs/songs.service";
-import {AudioPlayerService} from "../service/audio-player.service";
 import {Songs} from "../model/Songs";
 import * as moment from "moment";
+import {PlaylistSyncService} from "../playlist-sync.service";
 
 @Component({
   selector: 'app-playlist',
@@ -40,20 +40,24 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     hideCursor: true,
     cursorColor: 'transparent'
   }
-  isStartPlaying = false;
-  isPlaying = false;
+
+  isFirstTimeClickPlayButton = true;
+  isStartLoading: boolean = false;
+  isLoadingComplete: boolean = false;
+  isPlaying: boolean = false;
+  position: number = 0;
+  currentTime: string = '00:00';
   endTime: string = '';
+  loadAudioState: string = 'navigate-load';
+
   statusLike: boolean | undefined;
   statusLogin: boolean | undefined;
   singerSong: any;
   countSongByUser: number = 0;
   countPlaylistByUser: number = 0;
-  loadingComplete: boolean = false;
-  currentTime: string = '00:00';
-  loadState: string = '';
   currentSong?: Songs
   songList: Songs[] = []
-  index: number = 0
+  @Input() contentComment: string = "";
 
   constructor(private playlistService: PlaylistService,
               public waveSurferService: NgxWavesurferService,
@@ -63,12 +67,12 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
               private dataService: DataService,
               private router: Router,
               private songService: SongsService,
-              private audioService: AudioPlayerService) {
+              private syncService: PlaylistSyncService) {
   }
 
   ngOnInit() {
-    this.audioService.activePage = 'playlistDetails'
-    this.subscribeEvent()
+    this.subscribeEventFromPlayer()
+    this.syncService.onPageChange.next('playlist')
     this.dataService.currentMessage.subscribe(message => {
       switch (message) {
         case "log out":
@@ -84,8 +88,11 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.playlistService.findPlaylistById(this.playlistId).subscribe(data => {
         this.playlist = data;
         this.songList = this.playlist.songsList as Songs[]
-        this.audioService.playlistOfPageId = Number(this.playlist?.id);
+        this.syncService.currentPLIdOfPLPage = Number(this.playlist?.id);
+
         this.playlist.views = this.playlist?.views as number + 1
+        /** handle loading here */
+        this.autoPlayWhenPlayerIsPlayingSamePL()
         if (localStorage.getItem('idUser')) {
           this.statusLogin = true
           this.userService.findById(localStorage.getItem('idUser')).subscribe((users: User) => {
@@ -108,8 +115,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
         this.playlistService.findPlaylistById(this.playlistId).subscribe(
           data => {
             this.playlist = data
-            this.isStartPlaying = false;
-            this.isPlaying = false
           }
         )
       }
@@ -128,40 +133,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.dataService.changeMessage("clearSearch");
   }
 
-  selected(i: number) {
-    $('.song.active').removeClass('active')
-    $('.song-' + this.songList[i].id).addClass('active')
-  }
-
-  loadAudio(wavesurfer: any, url: string | any) {
-    return new Promise((resolve, reject) => {
-      wavesurfer.on('error', reject);
-      wavesurfer.on('ready', resolve);
-      wavesurfer.load(url);
-    });
-  }
-
-  getDuration() {
-    return this.formatTime(this.wavesurfer.getDuration())
-  }
-
-  formatTime(time: number) {
-    let format: string = "mm:ss"
-    const momentTime = time * 1000;
-    return moment.utc(momentTime).format(format);
-  }
-
-  canDeactivate() {
-    if (this.wavesurfer !== undefined) {
-      this.wavesurfer.destroy()
-    }
-    this.wavesurfer = undefined
-    this.audioService.activePage = 'none'
-    return true;
-  }
-
-  @Input() contentComment: string = "";
-
   sendComment() {
     const comment = {
       content: this.contentComment,
@@ -173,7 +144,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       this.comments = comment;
     })
   }
-
   changeLike() {
     if (!this.statusLogin) {
       this.router.navigateByUrl('auth').finally()
@@ -188,188 +158,217 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       })
     }
   }
+  canDeactivate() {
+    if (this.wavesurfer !== undefined) {
+      this.wavesurfer.destroy()
+    }
+    this.wavesurfer = undefined
+    this.isStartLoading = false;
+    this.syncService.isPLPageStartLoading = false;
+    this.syncService.isPLPageLoadComplete = false;
+    this.syncService.isPLPagePlaying = false;
+    this.syncService.currentSongIdOfPLPage = -1;
+    this.syncService.currentPLIdOfPLPage = -1;
+    this.syncService.onPageChange.next('none')
+    this.syncService.count = 0;
+    return true;
+  }
 
-  renderAudioOnClick(i: number) {
+  /** Event */
+  // 1. Wave event
+  addWavesurferEvent() {
+    this.handlerReadyEvent();
+    this.handlerFastForwardEvent();
+    this.handlerTimeEvent();
+  }
+  handlerReadyEvent() {
+    this.wavesurfer.on('ready', () => {
+      sessionStorage.removeItem('player-time')
+      this.endTime = this.getDuration()
+      this.wavesurfer.setVolume(0)
+      this.isLoadingComplete = true;
+      this.syncService.isPLPageLoadComplete = true;
+      this.isPlaying = true;
+      if (this.loadAudioState === 'navigate-load') {
+        this.syncService.onPLPageLoadingComplete.next(
+          {state: 'navigate-song', data: [this.currentSong, this.playlist]}
+        )
+        return
+      }
+      if (this.loadAudioState === 'start-play-when-player-play') {
+        this.wavesurfer.setCurrentTime(this.syncService.playerCurrentTime)
+        this.wavesurfer.play()
+        this.isPlaying = this.wavesurfer.isPlaying()
+        this.syncService.isPLPagePlaying = true
+        this.syncService.onPLPageStartPlay.next('pl-play-when-player-toggle-play')
+        return;
+      }
+      if (this.loadAudioState === '') {
+        this.wavesurfer.setCurrentTime(this.syncService.playerCurrentTime + 0.2)
+        this.wavesurfer.play()
+        this.isPlaying = this.wavesurfer.isPlaying()
+      }
+      this.loadAudioState = ''
+    })
+  }
+  handlerFastForwardEvent() {
+    this.wavesurfer.on('seek', () => {
+      this.syncService.onFastForwardSong.next({source: 'pl-page', pos: this.wavesurfer.getCurrentTime()})
+    })
+  }
+  handlerTimeEvent() {
+    this.wavesurfer.on('audioprocess', () => {
+      if (this.syncService.comparePlaylist()) {}
+      this.currentTime = this.formatTime(this.wavesurfer.getCurrentTime())
+    })
+  }
+  // 2. Player event
+  subscribeEventFromPlayer() {
+    this.onPlayPauseToggle();
+    this.onNavigateToSong();
+    this.onRetrievingCurrentTime();
+    this.onPlayerFastForward();
+  }
+  onPlayPauseToggle() {
+    this.syncService.onPlayPauseToggle.subscribe(
+      data => {
+        if (data === 'player-played-on-navigate' && this.wavesurfer != undefined) {
+          if (this.isFirstTimeClickPlayButton) {
+            let time = sessionStorage.getItem('player-time')
+            sessionStorage.removeItem('player-time')
+            this.wavesurfer.setCurrentTime(time)
+            this.isFirstTimeClickPlayButton = false;
+          }
+          this.wavesurfer.play()
+          this.isPlaying = this.wavesurfer.isPlaying()
+          this.syncService.isPLPagePlaying = true
+        }
+        if (data === 'player-play' && this.wavesurfer != undefined) {
+          this.wavesurfer.play()
+          this.isPlaying = this.wavesurfer.isPlaying()
+          this.syncService.isPLPagePlaying = true
+        }
+        if (data === 'player-pause' && this.wavesurfer != undefined) {
+          this.wavesurfer.pause()
+          this.isPlaying = this.wavesurfer.isPlaying()
+          this.syncService.isPLPagePlaying = false
+        }
+      }
+    )
+  }
+  onNavigateToSong() {
+    this.syncService.onNavigateToSong.subscribe(
+      data => {
+        if (data.desc === 'next-song') {
+          let id = data.data['id']
+          this.loadAudioState = 'navigate-load'
+          $('.song-' + id).trigger('click')
+        }
+        if (data.desc === 'play-when-pl-page-is-not-play') {
+          let id = data.data[0]['id']
+          this.position = data.data[1]
+          this.loadAudioState = 'start-play-when-player-play'
+          $('.song-' + id).trigger('click')
+        }
+      }
+    )
+  }
+  onRetrievingCurrentTime() {
+    this.syncService.onResponseCurrentTime.subscribe(
+      data => {
+        if (data.action === 'response-current-time-from-player' && this.syncService.count < 1) {
+          this.syncService.count++
+          let id = this.syncService.currentSongIdOfPlayer
+          let selector = '.song-' + id
+          setTimeout(() => {
+            this.loadAudioState = 'autoplay-play-when-player-play'
+            $(selector).trigger('click')
+          }, 0)
+        }
+      }
+    )
+  }
+  onPlayerFastForward() {
+    this.syncService.onFastForwardSong.subscribe(
+      data => {
+        if (data.source === 'player') {
+          this.wavesurfer.setCurrentTime(data.pos)
+        }
+      }
+    )
+  }
+   /** Page action */
+  autoPlayWhenPlayerIsPlayingSamePL() {
+    if (this.syncService.isPlayerPlaying && this.syncService.comparePlaylist()) {
+      this.loadAudioState = ''
+      let id = this.syncService.currentSongIdOfPlayer
+      this.currentSong = this.songList.find(s => s.id == id.toString())
+      this.isStartLoading = true;
+      this.syncService.onRequestCurrentTime.next({action: 'request-current-time-of-player', pos: -1})
+    }
+  }
+  onPLPageNavigate(i: number) {
+    this.currentSong = this.songList[i]
+    this.syncService.currentSongIdOfPLPage = Number(this.currentSong.id)
     if (!!this.wavesurfer) {
       this.wavesurfer.destroy()
       this.wavesurfer = undefined
     }
-    this.songList = this.playlist.songsList as Songs[]
-    this.currentSong = this.songList[i]
-    this.audioService.songOfPageId = Number(this.currentSong.id as string)
-    this.currentTime = '00:00';
-    this.audioService.loadSongOfBarComplete = false;
-    this.loadingComplete = false;
+    this.isLoadingComplete = false;
+    this.syncService.isPLPageLoadComplete = false;
     this.isPlaying = false;
     this.wavesurfer = this.waveSurferService.create(this.option)
-    this.loadAudio(this.wavesurfer, this.currentSong.audio).then(() => {
-      this.audioService.loadSongOfPageChange.next(true);
-      this.wavesurfer.setMute(true)
-      this.endTime = this.getDuration();
-      this.loadingComplete = true;
-      this.audioService.loadSongOfPlaylistComplete = true;
-      this.audioService.loadStateChange.next('page')
-      if (!this.audioService.compareSong()) {
-        this.audioService.songChange.next({song: this.currentSong as Songs, source: 'playlist'})
-        this.songList = this.playlist.songsList as Songs[]
-      }
-      this.audioService.playlistChange.next({id: Number(this.playlist?.id), playlist: this.songList});
-      if (this.audioService.compareSong()) {
-        this.audioService.loadSongOfBarComplete = true;
-      }
-      if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
-        this.togglePlayPause()
-      }
-    })
-    this.wavesurfer.on('finish', () => {
-      this.isPlaying = false;
-    })
-    this.wavesurfer.on('seek', () => {
-      if (this.audioService.compareSong()) {
-        this.audioService.fastForwardPos.next({source: 'page', pos: this.wavesurfer.getCurrentTime()})
-      }
-    })
-    this.wavesurfer.on('audioprocess', () => {
-      if (this.audioService.compareSong()) {}
-      this.currentTime = this.formatTime(this.wavesurfer.getCurrentTime())
-    })
-    this.loadSongToBarSubscribe()
+    this.isStartLoading = true
+    this.addWavesurferEvent();
+    this.syncService.isPLPageStartLoading = true;
+    this.wavesurfer.load(this.currentSong.audio)
+    this.selected(this.getCurrentSongIndex())
   }
-
-  newPlayMethod(i: number) {
-    this.audioService.songOfPageId = Number(this.songList[i].id)
-    if (!this.isStartPlaying || !this.audioService.comparePlayList()
-      || this.audioService.action == 'next' ) {
-      this.renderAudioOnClick(i);
-      this.selected(i)
-      this.isStartPlaying = true;
-    }
-    if (this.loadingComplete) {
-      if (this.audioService.comparePlayList()) {
-        this.audioService.loadSongOfBarComplete = true;
-      }
-      if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
-        this.togglePlayPause()
-      }
-    }
-  }
-
-  playOnClick(i: number) {
-    if (this.songList[i].id !== this.currentSong?.id) {
-      this.loadAndPlay(i);
-    }
-  }
-
-  loadAndPlay(i: number) {
-    this.audioService.songOfPageId = Number(this.songList[i].id)
-    this.renderAudioOnClick(i);
-    this.selected(i)
-    this.isStartPlaying = true;
-    if (this.loadingComplete) {
-      if (this.audioService.comparePlayList()) {
-        this.audioService.loadSongOfBarComplete = true;
-      }
-      if (this.audioService.loadSongOfBarComplete || this.loadState === 'page') {
-        this.togglePlayPause()
-      }
-    }
-  }
-
-  subscribeEvent() {
-    this.subscribePlayPause();
-    this.loadSongToBarSubscribe();
-    this.loadStateSubscribe();
-    this.nextChangeSubscribe();
-    this.subscribeFastForward();
-    this.subscribeCurrentTime();
-  }
-
-  subscribeFastForward() {
-    this.audioService.fastForwardPos.subscribe(
-      (pos) => {
-        if (pos.source === 'bar') {
-          this.wavesurfer.setCurrentTime(pos.pos)
-        }
-      }
-    )
-  }
-
-  subscribeCurrentTime() {
-    this.audioService.currentTimeOfBar.subscribe(
-      time => {
-        if (time as number > 0 && this.audioService.compareSong() && this.wavesurfer !== undefined) {
-          let currentTime = time as number + 0.15
-          this.wavesurfer.play(currentTime);
-          this.audioService.playState.next('barPlay');
-          this.isPlaying = this.wavesurfer.isPlaying()
-        }
-      }
-    )
-  }
-
-  subscribePlayPause() {
-    this.audioService.playState.subscribe(
-      data => {
-        if (data === 'pagePlay' && this.wavesurfer !== undefined) {
-          this.wavesurfer.play();
-          this.isPlaying = this.wavesurfer.isPlaying();
-        } else if (data === 'pagePause' && this.wavesurfer !== undefined) {
-          this.wavesurfer.pause();
-          this.isPlaying = this.wavesurfer.isPlaying();
-        }
-      }
-    )
-  }
-
-  togglePlayPause() {
-    if (!this.wavesurfer.isPlaying()) {
-      console.log('play')
-      this.wavesurfer.play();
-      this.audioService.playState.next('barPlay')
+  playButtonAction() {
+    if (!this.isStartLoading) {
+      this.startPlaying()
     } else {
-      console.log('pause')
-      this.wavesurfer.pause();
-      this.audioService.playState.next('barPause')
+      this.togglePlayPause()
     }
-    this.isPlaying = this.wavesurfer.isPlaying();
   }
-
-  loadSongToBarSubscribe() {
-    this.audioService.loadSongOfBarChange.subscribe(
-      () => {
-        if (this.loadState === 'page' && this.loadingComplete && this.wavesurfer !== undefined) {
-          this.wavesurfer.play()
-          this.isPlaying = this.wavesurfer.isPlaying()
-          this.audioService.playState.next('barPlay')
-          this.audioService.loadSongOfBarComplete = true;
-        }
-        if (this.loadState === 'next/prev' && this.loadingComplete && this.wavesurfer !== undefined) {
-          this.wavesurfer.stop()
-          this.currentTime = '00:00'
-          this.isPlaying = false;
-        }
-      }
-    )
+  startPlaying() {
+    if (this.syncService.comparePlaylist()) {
+      let id = this.syncService.currentSongIdOfPlayer
+      this.currentSong = this.songList.find(s => s.id == id.toString())
+      let index = this.getCurrentSongIndex()
+      this.onPLPageNavigate(index)
+    } else {
+      this.currentSong = this.songList[0]
+      this.onPLPageNavigate(0)
+    }
   }
-
-  loadStateSubscribe() {
-    this.audioService.loadStateChange.subscribe(
-      data => {
-        this.loadState = data;
-      }
-    )
+  togglePlayPause() {
+    if (this.wavesurfer.isPlaying()) {
+      this.wavesurfer.pause()
+      this.syncService.onPlayPauseToggle.next('pl-page-pause')
+    } else {
+      this.wavesurfer.play()
+      this.syncService.onPlayPauseToggle.next('pl-page-play')
+    }
+    this.isPlaying = this.wavesurfer.isPlaying()
   }
-
-  nextChangeSubscribe() {
-    this.audioService.nextChange.subscribe(
-      data => {
-        this.index = data.id
-        if (data.state === 'next') {
-          this.newPlayMethod(this.index)
-        } else if (data.state === 'pageIsNotLoad') {
-          this.playOnClick(this.index)
-        }
-      }
-    )
+  /** Util */
+  getCurrentSongIndex() {
+    return this.songList.findIndex(song => song.id === this.currentSong?.id)
+  }
+  getIndex(song: Songs) {
+    return this.songList.findIndex(s => s.id === song.id)
+  }
+  selected(i: number) {
+    $('.song.active').removeClass('active')
+    $('.song-' + this.songList[i].id).addClass('active')
+  }
+  formatTime(time: number) {
+    let format: string = "mm:ss"
+    const momentTime = time * 1000;
+    return moment.utc(momentTime).format(format);
+  }
+  getDuration() {
+    return this.formatTime(this.wavesurfer.getDuration())
   }
 }
