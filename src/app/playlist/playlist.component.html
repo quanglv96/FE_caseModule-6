@@ -6,7 +6,7 @@
           <div>
             <div class="d-flex align-items-center justify-content-between p-3">
               <div class="d-flex align-items-center">
-                <div class="play-button d-flex justify-content-center align-items-center me-3" (click)="playPlaylist()">
+                <div class="play-button d-flex justify-content-center align-items-center me-3" (click)="playButtonAction()">
                   <i *ngIf="!isPlaying" style="font-size: 24px; margin-left: 4px" class="fa-solid fa-play"></i>
                   <i *ngIf="isPlaying" style="font-size: 24px" class="fa-solid fa-pause"></i>
                 </div>
@@ -24,21 +24,19 @@
                 </div>
               </div>
             </div>
-            <div class="p-3" [hidden]="!isStartPlaying">
+            <div class="p-3" [hidden]="!isStartLoading">
               <span class="song-play">{{ currentSong?.name }}&nbsp;<span style="color: #cccccc">{{currentSong?.singerList | toStringSinger }}</span></span>
             </div>
           </div>
           <div class="details-foot p-3">
-            <div *ngIf="!isStartPlaying" class="playlist-info">
+            <div *ngIf="!isStartLoading" class="playlist-info">
               <span class="song-num">{{ playlist.songsList?.length }}</span>
               <span class="track">TRACKS</span>
             </div>
             <div id="waveform">
-<!--              <span class="time time-start-container"><span class="time-start">{{ currentTime }}</span></span>-->
-<!--              <span class="time time-end-container"><span class="time-end">{{ endTime }}</span></span>-->
-<!--              <span class="play-line">-->
-<!--                <span class="line"></span>-->
-<!--              </span>-->
+              <span [hidden]="!isStartLoading" class="time time-start-container"><span class="time-start">{{ currentTime }}</span></span>
+              <span [hidden]="!isStartLoading" class="time time-end-container"><span class="time-end">{{ endTime }}</span></span>
+              <hr [hidden]="!isStartLoading" class="line">
             </div>
           </div>
         </div>
@@ -94,7 +92,7 @@
 
               <div *ngFor="let s of playlist?.songsList; let i = index"
                    class="py-1 border-bottom d-flex justify-content-between align-items-center song song-{{ s?.id }}"
-                   style="cursor: pointer;">
+                   style="cursor: pointer;" (click)="onPLPageNavigate(i)">
                 <div class="d-flex align-items-center">
                   <div class="p-song-img">
                     <img class="fit-image" [src]="s?.avatar" alt="">

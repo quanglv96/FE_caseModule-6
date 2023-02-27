@@ -9,7 +9,7 @@
               <i *ngIf="!isPlay" class="fa-sharp fa-solid fa-play"></i>
               <i *ngIf="isPlay" style="font-size: 20px" class="fa-sharp fa-solid fa-pause"></i>
             </span>
-            <span (click)="newNext()" class="controls__item"><i class="fa-sharp fa-solid fa-forward-step"></i></span>
+            <span (click)="next()" class="controls__item"><i class="fa-sharp fa-solid fa-forward-step"></i></span>
             <span (click)="changePlayMode()" [class.active]="playMode === 'shuffle'" class="controls__item controls__item--play"><i class="fa-sharp fa-solid fa-shuffle"></i></span>
             <span (click)="changeLoopMode()" [class.active]="loopMode !== 'none'" class="controls__item controls__item--loop">
               <i *ngIf="loopMode !== 'one'" class="fa-sharp fa-solid fa-repeat"></i>
@@ -31,8 +31,16 @@
             <div class="col-1 g-0 h-100 d-flex align-items-center justify-content-center">
               <span class="time">{{ duration }}</span>
             </div>
-            <div class="col-1 g-0 h-100 d-flex align-items-center justify-content-center">
-              <span class="controls__item"><i class="fa-sharp fa-solid fa-volume-high"></i></span>
+            <div class="col-1 g-0 h-100 volume-controls">
+              <div class="popover" [hidden]="!showVolumeControl">
+                <div class="arrow"></div>
+                <input (change)="controlVolume($event)" class="volume-controls__input" type="range" min="0" max="1" step="0.01" [(ngModel)]="volume">
+              </div>
+              <span class="controls__item" (click)="toggleVolumeControl()">
+                <i *ngIf="volume >= 0.5" class="fa-sharp fa-solid fa-volume-high"></i>
+                <i *ngIf="volume < 0.5 && volume > 0" class="fa-sharp fa-solid fa-volume-low"></i>
+                <i *ngIf="volume === 0" class="fa-sharp fa-solid fa-volume-xmark"></i>
+              </span>
             </div>
           </div>
         </div>
@@ -74,7 +82,7 @@
                 <div class="list-song__menu__item-container" [class.activated]="s?.id == currentTrack?.id" *ngFor="let s of tracks; index as i">
                   <div class="song__image">
                     <img class="fit-image" [src]="s?.avatar" alt="">
-                    <span class="play-btn" (click)="moveToSong(i)"><i style="margin-left: 2px" class="fa-sharp fa-solid fa-play"></i></span>
+                    <span class="play-btn" (click)="navigate(i)"><i style="margin-left: 2px" class="fa-sharp fa-solid fa-play"></i></span>
                   </div>
                   <div class="song__desc">
                     <p class="song__desc__user">{{ s?.users?.name }}</p>

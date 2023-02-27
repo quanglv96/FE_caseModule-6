@@ -37,6 +37,7 @@
 
 :root {
   --percentage: 0;
+  --volPercentage: 0;
 }
 
 .timeline {
@@ -252,4 +253,58 @@
   background-color: #e8e8e8;
 }
 
+.volume-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.popover {
+  bottom: 105px;
+  position: absolute;
+  transform: rotate(-90deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 30px;
+  border-radius: 0;
+  z-index: -1;
+}
+
+.arrow {
+  position: relative;
+  transform: rotate(45deg);
+  right: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.176);
+  border-left: 1px solid rgba(0, 0, 0, 0.176);
+  width: 10px;
+  height: 10px;
+  z-index: 2;
+  background-color: white;
+}
+
+.volume-controls__input {
+  -webkit-appearance: none;
+  background-color: #d9d9d9;
+  margin-right: 10px;
+}
+
+.volume-controls__input::-webkit-slider-runnable-track {
+  height: 3px;
+  background-image: linear-gradient(90deg, orangered var(--volPercentage), #d9d9d9 var(--volPercentage));
+}
+
+.volume-controls__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  background-color: orangered;
+  border-radius: 50%;
+  margin-top: -2.5px;
+  position: relative;
+  z-index: 2;
+}
 
