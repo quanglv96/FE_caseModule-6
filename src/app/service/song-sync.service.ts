@@ -18,11 +18,6 @@ export class SongSyncService {
   onRequestCurrentTime = new Subject<string>()
   onResponseCurrentTime = new Subject<{desc: string, pos: number}>()
   onNavigateSong = new Subject<{state: string, data: any}>()
-  loadSongOfBarChange = new Subject()
-  loadSongOfPlaylistComplete = false;
-  loadSongOfPageChange = new Subject()
-
-  loadStateChange = new Subject<string>()
   nextChange = new Subject<{state: string, id: number}>()
   action:string = ''
 

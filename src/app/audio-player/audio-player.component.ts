@@ -141,6 +141,10 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
           this.isPlay = true
           this.assignPlayingStateToService()
         })
+        break
+      case 'navigate-on-page-song':
+        this.songSyncService.onNavigateSong.next({state: 'navigate-on-page-song', data: this.currentTrack})
+        break;
     }
   }
     /** General action */
@@ -155,22 +159,36 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.audio.pause();
     this.assignPlayingStateToService()
     this.isPlay = false;
-    this.nextSongPLPage()
-    this.nextSongPage()
-    if (this.actionPage === 'none') {
-      this.normalNext()
+    switch (this.actionPage) {
+      case 'playlist':
+        this.nextSongPLPage()
+        break;
+      case 'song-page':
+        this.nextSongPage()
+        break;
+      case 'none':
+        this.normalNext()
+        break
     }
   }
   prev() {
     this.audio.pause();
     this.isPlay = false;
     this.assignPlayingStateToService()
-    this.prevSongPLPage()
-    if (this.actionPage === 'none') {
-      this.normalPrev()
+    switch (this.actionPage) {
+      case 'playlist':
+        this.prevSongPLPage()
+        break;
+      case 'song-page':
+        this.prevSongPage()
+        break;
+      case 'none':
+        this.normalPrev()
+        break
     }
   }
   navigate(index: number) {
+    console.log(this.actionPage)
     this.navigateAtPLPage(index)
     this.navigateAtSongPage(index)
     if (this.actionPage === 'none') {
@@ -345,7 +363,9 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   }
   assignPlayingStateToService() {
     this.songSyncService.isPlayerPlaying = this.isPlay
-    this.playlistSyncService.isPlayerPlaying = this.isPlay
+    if (!!this.tracks) {
+      this.playlistSyncService.isPlayerPlaying = this.isPlay
+    }
   }
   /** Playlist page */
 
@@ -601,6 +621,7 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.onSongPageRequestCurrentTime()
     this.onSongPageResponseCurrentTime()
     this.onSongPageChange()
+    this.onNavigateToSameSongWithPage()
   }
   onSongChangeSongPage() {
     this.songSyncService.onSongChange.subscribe(
@@ -633,6 +654,20 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
           this.assignPlayingStateToService()
           return;
         }
+        if (data === 'navigate-on-page-song') {
+          this.audio.play().then(() => {
+            this.isPlay = true
+            this.assignPlayingStateToService()
+            return;
+          })
+        }
+        if (data === 'navigate-on-page-song-with-same-song') {
+          this.audio.play().then(() => {
+            this.isPlay = true
+            this.assignPlayingStateToService()
+            return;
+          })
+        }
       }
     )
   }
@@ -652,6 +687,11 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
           this.tracks = JSON.parse(localStorage.getItem('playlist') as string)
           this.songSyncService.onResponseCurrentTime.next(
             {desc: 'player-response-song-page-current-time', pos: this.audio.currentTime}
+          )
+        }
+        if (data === 'current-time-of-player-when-page-start' && this.audio.currentTime > 0) {
+          this.songSyncService.onResponseCurrentTime.next(
+            {desc: 'current-time-of-player-when-page-start', pos: this.audio.currentTime}
           )
         }
       }
@@ -675,6 +715,20 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
       data => {
         this.actionPage = data
         this.songSyncService.songOfPlayerId = +(this.currentTrack?.id as string)
+      }
+    )
+  }
+  onNavigateToSameSongWithPage() {
+    this.songSyncService.onNavigateSong.subscribe(
+      data => {
+        if (data.state === 'navigate-on-same-song-with-page') {
+          this.audio.play().then(() => {
+            this.isPlay = true
+            this.assignPlayingStateToService()
+            this.songSyncService.onPlayPause.next('navigate-on-same-song-with-page')
+            return;
+          })
+        }
       }
     )
   }
@@ -757,7 +811,57 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.moveToSongOnSongPage(index)
   }
   // Prev
-
+  prevSongPage() {
+    if (this.actionPage === 'song-page') {
+      this.prevSongPageOnSameSong()
+    } else {
+      this.normalPrev()
+    }
+  }
+  prevSongPageOnSameSong() {
+    let index = this.getIndex()
+    if (this.loopMode === 'one') {
+      this.prevSongPageLoopOneMode()
+    } else if (this.playMode === 'auto') {
+      this.prevSongPageAutoMode(index)
+    } else if (this.playMode == 'shuffle') {
+      this.prevSongPageShuffleMode()
+    }
+  }
+  prevSongPageLoopOneMode() {
+    this.audio.currentTime = 0;
+    this.songSyncService.onNavigateSong.next({state: 'next-song-page-loop-one', data: this.currentTrack})
+    this.audio.play().then(() => {
+      this.isPlay = true
+      this.assignPlayingStateToService()
+      return;
+    })
+  }
+  prevSongPageAutoMode(index: number) {
+    if (index > 0) {
+      index--
+      this.moveToSongOnSongPage(index)
+    } else {
+      if (this.loopMode === 'loop') {
+        index = this.tracks.length - 1
+        this.moveToSongOnSongPage(index)
+      }
+    }
+  }
+  prevSongPageShuffleMode() {
+    if (this.indexArr.length === 0) {
+      this.playMode = 'auto'
+      let index = this.getIndex()
+      this.prevSongPageAutoMode(index)
+    } else {
+      let index = this.indexArr[this.indexArr.length - 1]
+      this.moveToSongOnSongPage(index)
+      this.indexArr.pop()
+      if (this.indexArr.length === 0) {
+        this.playMode = 'auto'
+      }
+    }
+  }
   // Navigate
   navigateAtSongPage(index: number) {
     if (this.actionPage === 'song-page') {
@@ -770,8 +874,7 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.currentTrack = this.tracks[index]
     this.songSyncService.songOfPlayerId = Number(this.currentTrack.id)
     this.assignPlayingStateToService()
-    this.songSyncService.onNavigateSong.next({state: 'navigate-on-page-song', data: this.currentTrack})
-    this.loadAudioState = 'next'
+    this.loadAudioState = 'navigate-on-page-song'
     this.audio.src = this.currentTrack.audio as string
     this.audio.load()
     this.saveToStorage()
