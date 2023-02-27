@@ -51,5 +51,17 @@
   background-color: #615e5e;
 }
 
+.add-btn {
+  padding: 4px 8px;
+  border: 1px solid rgba(157, 157, 157, 0.5);
+  cursor: pointer;
+  line-height: 15px;
+}
+
+.add-btn:hover {
+  opacity: 80%;
+}
+
+
 
 

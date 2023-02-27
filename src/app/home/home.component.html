@@ -38,29 +38,4 @@
     <h4 style="font-weight: 300">Save tracks, follow artists and build playlists. All for free.</h4>
     <button class="create-btn" routerLink="/auth" [hidden]="statusLogin">Create account / Sign in</button>
   </div>
-
-
-
-
-  <ng-waveform #waveform class="waveform"
-               [src]="src"
-               [height]="150"
-               [useRegion]="true"
-               backgroundColor="#d3d3d3"
-               regionBackgroundColor="rgba(255, 255, 255, 0.7)"
-               regionStartStickColor="#21f032"
-               regionEndStickColor="red"
-               regionTextColor="#09417e"
-               [withRegionLabels]="true"
-               waveColor="#ff11ff"
-               (trackLoaded)="onTrackLoaded($event)"
-               (rendered)="onTrackRendered($event)"
-               (durationChange)="onDurationChange($event)"
-               (timeUpdate)="onTimeUpdate($event)"
-               (paused)="onPaused()"
-               (regionChange)="onRegionChange($event)"
-  >
-  </ng-waveform>
-  <button (click)="onPlayButtonClick()">Play</button>
-  <button (click)="onPauseButtonClick()">Pause</button>
 </div>

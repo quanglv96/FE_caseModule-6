@@ -32,17 +32,16 @@
 
       </div>
       <div class="action-box d-flex justify-content-between mt-2">
-        <div class="like-box">
-        <span
-          class="like-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
-          <i class="fa-solid fa-heart"></i> {{ song['userLikeSong'].length }}
-        </span>
-          <span class="play-count font-12 grey-text border py-1 px-2 me-1 border-radius-1 pointer">
-          <i class="fa-solid fa-play"></i> {{song['views']}}
-        </span>
-          <span class="like-count font-12 grey-text border py-1 px-2 border-radius-1" (click)="openModalAddSongToPlaylist(song)">
+        <span class="add-btn font-12" (click)="openModalAddSongToPlaylist(song)">
           <i class="fa-solid fa-square-plus"></i> Add to playlist
         </span>
+        <div class="like-box">
+          <span class="like-count font-12 grey-text me-2">
+            <i class="fa-solid fa-heart"></i> {{ song['userLikeSong'].length }}
+          </span>
+          <span class="play-count font-12 grey-text">
+            <i class="fa-solid fa-play"></i> {{song['views']}}
+          </span>
         </div>
       </div>
     </div>
