@@ -57,26 +57,9 @@ export class PlaylistFormComponent implements OnInit {
     })
   }
 
-  // @ts-ignore
   submitForm() {
     SwAl.fire('Please wait').then();
     SwAl.showLoading()
-    if(!this.listPlaylist.find(element=> {
-      return element.name==this.formPlaylist.value.name
-    })){
-      SwAl.fire({
-        title: 'Name Playlist already exists',
-        icon: "error",
-        showConfirmButton: false,
-        showCloseButton: true,
-        customClass: {
-          title: 'error-message',
-          popup: 'popup',
-          confirmButton: 'confirm-btn',
-          closeButton: 'close-btn'
-        }
-      }).then()
-    }else {
       if (!this.editIdPlaylist) {
         let url: string = ''
         if (this.avatar?.nativeElement.files[0]) {
@@ -91,7 +74,6 @@ export class PlaylistFormComponent implements OnInit {
       } else {
         this.updatePlaylist();
       }
-    }
   }
 
   saveCreate(pathAvatar: any) {

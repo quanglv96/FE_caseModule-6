@@ -86,24 +86,7 @@ export class AddSongToPlaylistComponent implements OnInit {
     })
   }
 
-  // @ts-ignore
   addSongNewPlaylist() {
-    if(this.playlists.find(element=> {
-      return element.name==this.newNamePlaylist
-    })){
-      SwAl.fire({
-        title: 'Name Playlist already exists',
-        icon: "error",
-        showConfirmButton: false,
-        showCloseButton: true,
-        customClass: {
-          title: 'error-message',
-          popup: 'popup',
-          confirmButton: 'confirm-btn',
-          closeButton: 'close-btn'
-        }
-      }).then()
-    }else {
       this.userService.findById(this.data.idUser).subscribe((user: User) => {
         const playlist: Playlist = {
           name: this.newNamePlaylist,
@@ -122,5 +105,4 @@ export class AddSongToPlaylistComponent implements OnInit {
         })
       })
     }
-  }
 }
