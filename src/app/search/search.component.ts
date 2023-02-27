@@ -32,6 +32,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.dataService.changeMessage('offPlay')
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')

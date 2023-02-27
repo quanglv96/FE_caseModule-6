@@ -4,6 +4,7 @@ import {Songs} from "../model/Songs";
 import {Observable} from "rxjs";
 import * as moment from "moment";
 import {PlaylistSyncService} from "../playlist-sync.service";
+import {DataService} from "../service/data/data.service";
 
 @Component({
   selector: 'app-audio-player',
@@ -46,9 +47,10 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     "canplaythrough",
     "seeked"
   ];
-
+  status: boolean=false
   constructor(private songSyncService: SongSyncService,
-              private playlistSyncService: PlaylistSyncService) {
+              private playlistSyncService: PlaylistSyncService,
+              private dataService:DataService) {
     this.audio.volume = this.volume;
     this.currentTrack = JSON.parse(localStorage.getItem('currentSong') as string)
     this.tracks = JSON.parse(localStorage.getItem('playlist') as string)
@@ -57,8 +59,18 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   }
   /** Subscribe event when start page */
   ngOnInit() {
-    this.subscribeEventFromPLPage()
-    this.subscribeEventFromSongPage()
+    this.dataService.currentMessage.subscribe((message:string)=>{
+      if(message=='offPlay'){
+        this.status=true
+        this.audio.pause()
+      }
+      if(message=='onPlay'){
+        this.status=false;
+        this.subscribeEventFromPLPage()
+        this.subscribeEventFromSongPage()
+      }
+    })
+
   }
 
   ngAfterViewInit() {
@@ -863,6 +875,7 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     }
   }
   // Navigate
+
   navigateAtSongPage(index: number) {
     if (this.actionPage === 'song-page') {
       if (!this.checkIndex(index)) {

@@ -56,6 +56,8 @@ export class LibraryComponent implements OnInit {
       });
     })
     this.dataService.changeMessage("clearSearch");
+    this.dataService.changeMessage('offPlay')
+
   }
 
   option = {

@@ -102,6 +102,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       })
     })
     this.dataService.changeMessage("clearSearch");
+    this.dataService.changeMessage('onPlay')
     localStorage.setItem('playlistId', JSON.stringify(null))
     this.subscribeEventFromPlayer()
   }
