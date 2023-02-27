@@ -6,6 +6,7 @@ import {Tags} from "../model/Tags";
 import {TagsService} from "../service/tags/tags.service";
 import {LoadMoreService} from "../service/loadMore/load-more.service";
 import {Observable} from "rxjs";
+import {DataService} from "../service/data/data.service";
 
 
 @Component({
@@ -25,7 +26,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private searchService: SearchService,
               private tagService: TagsService,
-              private LoadMoreService: LoadMoreService) {
+              private LoadMoreService: LoadMoreService,
+              private dataService:DataService) {
     this.resultSearch$ = LoadMoreService.result$
   }
 
@@ -33,13 +35,17 @@ export class SearchComponent implements OnInit, AfterViewInit {
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')
+    $('.filter-option.active').removeClass('active')
+    $('.tab-' + 1).addClass('active')
     const routerPath = this.activatedRoute.routeConfig?.path
     this.activatedRoute.paramMap.subscribe((param: ParamMap) => {
       this.resultSearch = [];
+      this.dataService.changeMessage("clearSearch")
       if (routerPath == 'search/:textSearch') {
         const textSearch: string | null = param.get('textSearch');
         if (textSearch != '') {
           this.text = textSearch;
+          this.dataService.changeMessage('textSearch: '+this.text)
           this.result();
           this.resultContent = 'result for "' + this.text + '"'
           this.category = '';
