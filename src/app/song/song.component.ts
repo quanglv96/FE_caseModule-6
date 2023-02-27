@@ -211,13 +211,19 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           this.syncService.isSongPagePlaying = false;
           return
         }
+        if (data === 'navigate-on-same-song-with-page' && this.waveSurfer != undefined) {
+          this.waveSurfer.play()
+          this.isPlaying = this.waveSurfer.isPlaying();
+          this.syncService.isSongPagePlaying = true;
+          return
+        }
       }
     )
   }
   onPlayerFastForward() {
     this.syncService.onFastForwardSong.subscribe(
       data => {
-        if (data.source === 'player' && this.syncService.compareSong()) {
+        if (data.source === 'player' && this.syncService.compareSong() && this.waveSurfer != undefined) {
           this.waveSurfer.setCurrentTime(data.pos)
         }
       }
@@ -231,6 +237,15 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
           this.waveSurfer.play()
           this.isPlaying = this.waveSurfer.isPlaying()
           this.syncService.isSongPagePlaying = true;
+          return
+        }
+        if (data.desc === 'current-time-of-player-when-page-start' && this.waveSurfer != undefined) {
+          this.waveSurfer.setCurrentTime(data.pos)
+          this.waveSurfer.pause()
+          this.isPlaying = this.waveSurfer.isPlaying()
+          this.syncService.isSongPagePlaying = false;
+          this.currentTime = this.formatTime(data.pos)
+          return;
         }
       }
     )
@@ -239,16 +254,25 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.syncService.onNavigateSong.subscribe(
       data => {
         let nextSong = data.data as Songs
-        if (data.state === 'next-song-page-loop-one' || nextSong.id == this.songs.id) {
+        if (data.state === 'next-song-page-loop-one') {
           this.waveSurfer.setCurrentTime(0)
           this.waveSurfer.play()
           this.isPlaying = this.waveSurfer.isPlaying();
           this.syncService.isSongPagePlaying = true;
-        } else {
+          return
+        }
+        if (nextSong?.id == this.songs?.id) {
+          this.syncService.onNavigateSong.next({state: 'navigate-on-same-song-with-page', data: null})
+        } else if (data.state === 'navigate-on-page-song' && nextSong.id != this.songs.id) {
+          this.waveSurfer.pause()
           this.waveSurfer.setCurrentTime(0)
           this.waveSurfer.pause()
+          this.currentTime = '00:00'
           this.isPlaying = false
           this.syncService.isSongPagePlaying = false;
+          this.syncService.onPlayPause.next('navigate-on-page-song')
+        } else if (data.state === 'next-song-page-loop-one') {
+
         }
       }
     )
@@ -300,6 +324,10 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
       let playlist = [this.songs, ...this.suggestSongs]
       localStorage.setItem('playlist', JSON.stringify(playlist))
       this.isStartPlaying = true;
+      return
+    }
+    if (this.syncService.compareSong() && !this.syncService.isPlayerPlaying) {
+      this.syncService.onRequestCurrentTime.next('current-time-of-player-when-page-start')
     }
   }
   /** Util */
@@ -318,5 +346,4 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.syncService.onPageChange.next('none')
     return true;
   }
-
 }
