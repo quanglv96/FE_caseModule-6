@@ -57,6 +57,7 @@ export class HeaderComponent implements OnInit {
 
   logOut() {
     localStorage.removeItem('idUser');
+    window.scrollTo(0,0)
     this.user = null;
     this.dataService.changeMessage('log out');
     SwAl.fire({
