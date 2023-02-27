@@ -3,13 +3,16 @@ import {NavigationEnd, Router} from "@angular/router";
 import {UserService} from "../service/user/user.service";
 import {User} from "../model/User";
 import {DataService} from "../service/data/data.service";
+import {CanComponentDeactivate} from "../service/can-deactivate";
+import {Observable} from "rxjs";
+import {LibrarySyncService} from "../service/library-sync.service";
 
 @Component({
   selector: 'app-library',
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.css']
 })
-export class LibraryComponent implements OnInit {
+export class LibraryComponent implements OnInit, CanComponentDeactivate {
   childPath: string = 'song'
   idUser: any;
   user: User | any;
@@ -20,7 +23,8 @@ export class LibraryComponent implements OnInit {
 
   constructor(private router: Router,
               private userService: UserService,
-              private dataService: DataService) {
+              private dataService: DataService,
+              private librarySyncService: LibrarySyncService) {
     router.events.subscribe(
       event => {
         if (event instanceof NavigationEnd) {
@@ -32,6 +36,7 @@ export class LibraryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.librarySyncService.onPageChange.next('library')
     // @ts-ignore
     this.dataService.currentMessage.subscribe((message: string) => {
       switch (message) {
@@ -72,5 +77,11 @@ export class LibraryComponent implements OnInit {
     } else {
       this.router.navigate(['/library/playlist/new']).finally()
     }
+  }
+
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    console.log('none')
+    this.librarySyncService.onPageChange.next('none')
+    return true;
   }
 }

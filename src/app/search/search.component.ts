@@ -7,6 +7,8 @@ import {TagsService} from "../service/tags/tags.service";
 import {LoadMoreService} from "../service/loadMore/load-more.service";
 import {Observable} from "rxjs";
 import {DataService} from "../service/data/data.service";
+import {LibrarySyncService} from "../service/library-sync.service";
+import {CanComponentDeactivate} from "../service/can-deactivate";
 
 
 @Component({
@@ -14,7 +16,7 @@ import {DataService} from "../service/data/data.service";
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit, AfterViewInit {
+export class SearchComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
   search: [] = [];
   text: any;
   resultSearch: any[] = [];
@@ -27,11 +29,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
               private searchService: SearchService,
               private tagService: TagsService,
               private LoadMoreService: LoadMoreService,
-              private dataService:DataService) {
+              private dataService:DataService,
+              private librarySyncService: LibrarySyncService) {
     this.resultSearch$ = LoadMoreService.result$
   }
 
   ngOnInit(): void {
+    this.librarySyncService.onPageChange.next('search')
+
     let footerHeight = localStorage.getItem('footer-height') as string;
     let height = '100vh - ' + (parseInt(footerHeight) + 93) + 'px'
     $('.content').css('min-height', 'calc(' + height + ')')
@@ -174,5 +179,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
       }
     })
+  }
+
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    this.librarySyncService.onPageChange.next('none')
+    return true;
   }
 }

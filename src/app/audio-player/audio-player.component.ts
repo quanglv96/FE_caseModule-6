@@ -4,6 +4,7 @@ import {Songs} from "../model/Songs";
 import {Observable} from "rxjs";
 import * as moment from "moment";
 import {PlaylistSyncService} from "../playlist-sync.service";
+import {LibrarySyncService} from "../service/library-sync.service";
 
 @Component({
   selector: 'app-audio-player',
@@ -46,19 +47,32 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     "canplaythrough",
     "seeked"
   ];
+  isVisible: boolean = true
 
   constructor(private songSyncService: SongSyncService,
-              private playlistSyncService: PlaylistSyncService) {
+              private playlistSyncService: PlaylistSyncService,
+              private librarySyncService: LibrarySyncService) {
     this.audio.volume = this.volume;
     this.currentTrack = JSON.parse(localStorage.getItem('currentSong') as string)
     this.tracks = JSON.parse(localStorage.getItem('playlist') as string)
     this.streamObserver(this.currentTrack?.audio as string).subscribe();
 
   }
+
+  onLibraryPageChange() {
+    this.librarySyncService.onPageChange.subscribe(
+      data => {
+        console.log(data)
+        this.isVisible = !(data === 'library' || data === 'search');
+      }
+    )
+  }
+
   /** Subscribe event when start page */
   ngOnInit() {
     this.subscribeEventFromPLPage()
     this.subscribeEventFromSongPage()
+    this.onLibraryPageChange()
   }
 
   ngAfterViewInit() {

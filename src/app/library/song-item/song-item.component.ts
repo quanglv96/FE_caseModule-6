@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {SongsService} from "../../service/songs/songs.service";
 import {Songs} from "../../model/Songs";
 import {DataService} from "../../service/data/data.service";
@@ -8,6 +8,7 @@ import {AddSongToPlaylistComponent} from "../../add-song-to-playlist/add-song-to
 import {MatDialog} from "@angular/material/dialog";
 import {UserService} from "../../service/user/user.service";
 import {User} from "../../model/User";
+import {NgxWavesurferService} from "ngx-wavesurfer";
 
 @Component({
   selector: 'app-song-item',
@@ -19,11 +20,26 @@ export class SongItemComponent implements OnInit {
   listSongs: Songs[] = [];
   user: User={};
 
+  option = {
+    container: '',
+    waveColor: '#989898',
+    progressColor: '#fc821d',
+    barWidth: 2,
+    height: 80,
+    hideScrollbar: true,
+    hideCursor: true,
+    cursorColor: 'transparent',
+  }
+  wavesurfer: any = {};
+  playable: boolean = false
+  isPlaying: any = {}
+
   constructor(private songService: SongsService,
               private dataService: DataService,
               private router: Router,
               private dialog: MatDialog,
-              private userService: UserService) {
+              private userService: UserService,
+              private wavesurferService: NgxWavesurferService) {
   }
 
   ngOnInit(): void {
@@ -35,7 +51,7 @@ export class SongItemComponent implements OnInit {
           this.listSongs = data;
         })
         this.userService.findById(this.idUser).subscribe((data:User)=>{
-          this.user=data;
+          this.user = data;
         })
       }
     })
@@ -98,6 +114,6 @@ export class SongItemComponent implements OnInit {
   }
 
   changeLike(s: Songs) {
-    
+
   }
 }

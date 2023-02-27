@@ -20,13 +20,13 @@ import {SingerComponent} from "./singer/singer.component";
 const routes: Routes = [
   {path: 'auth', component: AuthComponent},
   {path: 'search/:textSearch', component: SearchComponent},
-  {path: 'tag/:id', component: SearchComponent},
+  {path: 'tag/:id', component: SearchComponent, canDeactivate: [CanDeactivateGuard],},
   {path: 'auth', component: AuthComponent},
   {path: 'user-info', component: UserInfoComponent, children: [
       {path: 'edit', component: EditUserComponent},
       {path: 'change-password', component: ChangePasswordComponent}
   ]},
-  {path: 'library', component: LibraryComponent, children: [
+  {path: 'library', component: LibraryComponent, canDeactivate: [CanDeactivateGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: '/library/song'},
       {path: 'song', component: SongItemComponent, children: [
           {path: 'new', component: SongFormComponent},
@@ -40,7 +40,7 @@ const routes: Routes = [
   {path: 'trending', component: TrendingComponent,pathMatch:"full"},
   {path: 'song/:id', component: SongComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: 'playlist/:id', component: PlaylistComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
-  {path: 'tags/:id/:name', component: SearchComponent},
+  {path: 'tags/:id/:name', component: SearchComponent, canDeactivate: [CanDeactivateGuard],},
   {path: 'singer/:id', component: SingerComponent, canDeactivate: [CanDeactivateGuard], pathMatch: 'full'},
   {path: '', component: HomeComponent, pathMatch: 'full'}
 ];
