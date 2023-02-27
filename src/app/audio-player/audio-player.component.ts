@@ -159,23 +159,36 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.audio.pause();
     this.assignPlayingStateToService()
     this.isPlay = false;
-    this.nextSongPLPage()
-    this.nextSongPage()
-    if (this.actionPage === 'none') {
-      this.normalNext()
+    switch (this.actionPage) {
+      case 'playlist':
+        this.nextSongPLPage()
+        break;
+      case 'song-page':
+        this.nextSongPage()
+        break;
+      case 'none':
+        this.normalNext()
+        break
     }
   }
   prev() {
     this.audio.pause();
     this.isPlay = false;
     this.assignPlayingStateToService()
-    this.prevSongPLPage()
-    this.prevSongPage()
-    if (this.actionPage === 'none') {
-      this.normalPrev()
+    switch (this.actionPage) {
+      case 'playlist':
+        this.prevSongPLPage()
+        break;
+      case 'song-page':
+        this.prevSongPage()
+        break;
+      case 'none':
+        this.normalPrev()
+        break
     }
   }
   navigate(index: number) {
+    console.log(this.actionPage)
     this.navigateAtPLPage(index)
     this.navigateAtSongPage(index)
     if (this.actionPage === 'none') {
@@ -350,7 +363,9 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   }
   assignPlayingStateToService() {
     this.songSyncService.isPlayerPlaying = this.isPlay
-    this.playlistSyncService.isPlayerPlaying = this.isPlay
+    if (!!this.tracks) {
+      this.playlistSyncService.isPlayerPlaying = this.isPlay
+    }
   }
   /** Playlist page */
 
