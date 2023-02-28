@@ -22,6 +22,7 @@ export class SearchItemPlaylistComponent implements OnInit {
   }
 
   redirectPlaylist(id: any) {
+
     return this.router.navigateByUrl('playlist/' + id)
   }
 }

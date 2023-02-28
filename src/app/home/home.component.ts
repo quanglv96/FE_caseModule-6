@@ -52,6 +52,8 @@ export class HomeComponent implements OnInit {
       })
     })
     this.dataService.changeMessage("clearSearch");
+    this.dataService.changeMessage('onPlay')
+
   }
   routeSearch() {
     if (this.textSearch != undefined) {

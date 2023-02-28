@@ -61,6 +61,8 @@ export class LibraryComponent implements OnInit, CanComponentDeactivate {
       });
     })
     this.dataService.changeMessage("clearSearch");
+    this.dataService.changeMessage('offPlay')
+
   }
 
   option = {
@@ -71,7 +73,6 @@ export class LibraryComponent implements OnInit, CanComponentDeactivate {
 
 
   toAddForm() {
-    console.log(this.childPath)
     if (this.childPath === 'song' || this.childPath === 'library') {
       this.router.navigate(['/library/song/new']).finally()
     } else {

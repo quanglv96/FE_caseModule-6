@@ -17,7 +17,7 @@ export class AddSongToPlaylistComponent implements OnInit {
   // idUser,song
   data: any
   user: User = {}
-  playlists?: Playlist[]
+  playlists: Playlist[]=[]
   alertSwAl = SwAl.mixin({
     toast: true,
     heightAuto: true,
@@ -87,22 +87,22 @@ export class AddSongToPlaylistComponent implements OnInit {
   }
 
   addSongNewPlaylist() {
-    this.userService.findById(this.data.idUser).subscribe((user: User) => {
-      const playlist: Playlist = {
-        name: this.newNamePlaylist,
-        users: user,
-        songsList: [this.data.song],
-        views: 1000
-      }
-      this.playlistService.changeSongToPlaylist(playlist).subscribe(() => {
-        this.alertSwAl.fire({
-          icon: 'success',
-          title: 'Add Success'
-        }).then(() => {
-          this.ngOnInit()
-          this.switchTo('create-new')
+      this.userService.findById(this.data.idUser).subscribe((user: User) => {
+        const playlist: Playlist = {
+          name: this.newNamePlaylist,
+          users: user,
+          songsList: [this.data.song],
+          views: 1000
+        }
+        this.playlistService.changeSongToPlaylist(playlist).subscribe(() => {
+          this.alertSwAl.fire({
+            icon: 'success',
+            title: 'Add Success'
+          }).then(() => {
+            this.ngOnInit()
+            this.switchTo('create-new')
+          })
         })
       })
-    })
-  }
+    }
 }

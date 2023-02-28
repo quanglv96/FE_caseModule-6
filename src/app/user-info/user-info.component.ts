@@ -17,7 +17,8 @@ export class UserInfoComponent implements OnInit {
   avatar: string = '';
 
   constructor(private userService: UserService,
-              private location: Location, private dataService: DataService) {
+              private location: Location,
+              private dataService: DataService) {
   }
 
   ngOnInit(): void {

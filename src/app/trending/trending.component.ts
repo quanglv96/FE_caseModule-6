@@ -55,6 +55,7 @@ export class TrendingComponent implements OnInit {
       }
     )
     this.dataService.changeMessage("clearSearch");
+    this.dataService.changeMessage('onPlay')
   }
 
 }

@@ -71,6 +71,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   }
 
   ngOnInit() {
+
     this.subscribeEventFromPlayer()
     this.syncService.onPageChange.next('playlist')
     this.dataService.currentMessage.subscribe(message => {
@@ -131,6 +132,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       }
     )
     this.dataService.changeMessage("clearSearch");
+    this.dataService.changeMessage('onPlay')
   }
 
   sendComment() {
