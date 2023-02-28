@@ -14,6 +14,7 @@ import {SongsService} from "../service/songs/songs.service";
 import {Songs} from "../model/Songs";
 import * as moment from "moment";
 import {PlaylistSyncService} from "../playlist-sync.service";
+import {LibrarySyncService} from "../service/library-sync.service";
 
 @Component({
   selector: 'app-playlist',
@@ -67,7 +68,8 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
               private dataService: DataService,
               private router: Router,
               private songService: SongsService,
-              private syncService: PlaylistSyncService) {
+              private syncService: PlaylistSyncService,
+              private libService: LibrarySyncService) {
   }
 
   ngOnInit() {
@@ -328,6 +330,7 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   }
   playButtonAction() {
     if (!this.isStartLoading) {
+      this.libService.onVisible.next(true)
       this.startPlaying()
     } else {
       this.togglePlayPause()

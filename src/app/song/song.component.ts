@@ -14,6 +14,7 @@ import {AddSongToPlaylistComponent} from "../add-song-to-playlist/add-song-to-pl
 import {SongSyncService} from "../service/song-sync.service";
 import * as moment from "moment/moment";
 import * as $ from "jquery"
+import {LibrarySyncService} from "../service/library-sync.service";
 
 @Component({
   selector: 'app-song',
@@ -58,7 +59,8 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
               private userService: UserService,
               private dataService: DataService,
               private dialog: MatDialog,
-              private syncService: SongSyncService) {
+              private syncService: SongSyncService,
+              private libService: LibrarySyncService) {
   }
 
   ngOnInit() {
@@ -288,16 +290,15 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     let playlistId = JSON.parse(localStorage.getItem('playlistId') as string)
     if (this.loadingComplete) {
       if (this.syncService.compareSong() && !playlistId && this.isStartPlaying) {
-        console.log('toggle play')
         this.togglePlayPause()
       } else {
-        console.log('start play')
         this.startPlaying()
       }
     }
     this.isStartPlaying = true;
   }
   startPlaying() {
+    this.libService.onVisible.next(true)
     if (!this.syncService.compareSong()) {
       this.syncService.onSongChange.next({song: this.songs, suggest: [this.songs, ...this.suggestSongs]})
     } else if (!this.isStartPlaying) {

@@ -56,15 +56,28 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.currentTrack = JSON.parse(localStorage.getItem('currentSong') as string)
     this.tracks = JSON.parse(localStorage.getItem('playlist') as string)
     this.streamObserver(this.currentTrack?.audio as string).subscribe();
-
+    this.isVisible = !!this.currentTrack
   }
 
   onLibraryPageChange() {
     this.librarySyncService.onPageChange.subscribe(
       data => {
         console.log(data)
-        this.isVisible = !(data === 'library' || data === 'search');
+        this.actionPage = data
+        if ((this.actionPage === 'library' || this.actionPage === 'search')) {
+          this.isVisible = false;
+          this.audio.pause()
+          this.isPlay = false;
+          this.assignPlayingStateToService()
+        } else {
+          this.isVisible = !!this.currentTrack
+        }
       }
+    )
+  }
+  onVisibleChange() {
+    this.librarySyncService.onVisible.subscribe(
+      data => {this.isVisible = data}
     )
   }
 
@@ -73,6 +86,7 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.subscribeEventFromPLPage()
     this.subscribeEventFromSongPage()
     this.onLibraryPageChange()
+    this.onVisibleChange()
   }
 
   ngAfterViewInit() {
@@ -440,9 +454,18 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   onPLPageChange() {
     this.playlistSyncService.onPageChange.subscribe(
       data => {
+        console.log(data)
         this.actionPage = data
         this.playlistSyncService.currentSongIdOfPlayer = +(this.currentTrack?.id as string)
         this.playlistSyncService.currentPLIdOfPlayer = Number(localStorage.getItem('playlistId') as string)
+        if ((this.actionPage === 'library' || this.actionPage === 'search')) {
+          this.isVisible = false;
+          this.audio.pause()
+          this.isPlay = false;
+          this.assignPlayingStateToService()
+        } else {
+          this.isVisible = !!this.currentTrack
+        }
       }
     )
   }
@@ -727,8 +750,17 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   onSongPageChange() {
     this.songSyncService.onPageChange.subscribe(
       data => {
+        console.log(data)
         this.actionPage = data
         this.songSyncService.songOfPlayerId = +(this.currentTrack?.id as string)
+        if ((this.actionPage === 'library' || this.actionPage === 'search')) {
+          this.isVisible = false;
+          this.audio.pause()
+          this.isPlay = false;
+          this.assignPlayingStateToService()
+        } else {
+          this.isVisible = !!this.currentTrack
+        }
       }
     )
   }

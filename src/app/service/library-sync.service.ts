@@ -6,6 +6,7 @@ import {Subject} from "rxjs";
 })
 export class LibrarySyncService {
   onPageChange = new Subject<string>()
+  onVisible = new Subject<boolean>()
 
   constructor() { }
 }
