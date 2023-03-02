@@ -257,7 +257,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.syncService.onNavigateSong.subscribe(
       data => {
         let nextSong = data.data as Songs
-        if (data.state === 'next-song-page-loop-one') {
+        if (data.state === 'next-song-page-loop-one' && this.waveSurfer != undefined) {
           this.waveSurfer.setCurrentTime(0)
           this.waveSurfer.play()
           this.isPlaying = this.waveSurfer.isPlaying();
@@ -266,7 +266,7 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
         }
         if (nextSong?.id == this.songs?.id) {
           this.syncService.onNavigateSong.next({state: 'navigate-on-same-song-with-page', data: null})
-        } else if (data.state === 'navigate-on-page-song' && nextSong.id != this.songs.id) {
+        } else if (data.state === 'navigate-on-page-song' && nextSong.id != this.songs.id && this.waveSurfer != undefined) {
           this.waveSurfer.pause()
           this.waveSurfer.setCurrentTime(0)
           this.waveSurfer.pause()
@@ -321,11 +321,13 @@ export class SongComponent implements OnInit, CanComponentDeactivate {
     this.isPlaying = this.waveSurfer.isPlaying();
   }
   autoPlayWhenPlayerPlayingSameSong() {
-    if (this.syncService.compareSong() && this.syncService.isPlayerPlaying) {
-      this.syncService.onRequestCurrentTime.next('song-page-request-time')
+    let id = JSON.parse(localStorage.getItem('playlistId') as string)
+    console.log(id)
+    if (this.syncService.compareSong() && this.syncService.isPlayerPlaying && !!id) {
       let playlist = [this.songs, ...this.suggestSongs]
       localStorage.setItem('playlist', JSON.stringify(playlist))
       this.isStartPlaying = true;
+      this.syncService.onRequestCurrentTime.next('song-page-request-time')
       return
     }
     if (this.syncService.compareSong() && !this.syncService.isPlayerPlaying) {

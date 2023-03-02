@@ -7,10 +7,10 @@ import {Songs} from "./model/Songs";
 })
 export class PlaylistSyncService {
   playerCurrentTime: number = 0;
-  currentSongIdOfPlayer: number = -1;
-  currentSongIdOfPLPage: number = -1;
-  currentPLIdOfPlayer: number = -1;
-  currentPLIdOfPLPage: number = -1;
+  currentSongIdOfPlayer: number = -2;
+  currentSongIdOfPLPage: number = -2;
+  currentPLIdOfPlayer: number = -2;
+  currentPLIdOfPLPage: number = -2;
   playlistOnLoadPos: number = 0;
   playlistOnLoadState: string = ''
   isPLPageStartLoading: boolean = false;

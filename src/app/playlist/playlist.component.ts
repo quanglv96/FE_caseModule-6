@@ -171,10 +171,11 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
     this.syncService.isPLPageStartLoading = false;
     this.syncService.isPLPageLoadComplete = false;
     this.syncService.isPLPagePlaying = false;
-    this.syncService.currentSongIdOfPLPage = -1;
-    this.syncService.currentPLIdOfPLPage = -1;
+    this.syncService.currentSongIdOfPLPage = -2;
+    this.syncService.currentPLIdOfPLPage = -2;
     this.syncService.onPageChange.next('none')
     this.syncService.count = 0;
+    localStorage.setItem('playlistId', JSON.stringify(null))
     return true;
   }
 
@@ -210,6 +211,11 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
       if (this.loadAudioState === '') {
         this.wavesurfer.setCurrentTime(this.syncService.playerCurrentTime + 0.2)
         this.wavesurfer.play()
+        this.isPlaying = this.wavesurfer.isPlaying()
+      }
+      if (this.loadAudioState === 'load-audio-on-same-playlist') {
+        this.wavesurfer.setCurrentTime(this.syncService.playerCurrentTime + 0.2)
+        this.wavesurfer.pause()
         this.isPlaying = this.wavesurfer.isPlaying()
       }
       this.loadAudioState = ''
@@ -285,7 +291,6 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
           let id = this.syncService.currentSongIdOfPlayer
           let selector = '.song-' + id
           setTimeout(() => {
-            this.loadAudioState = 'autoplay-play-when-player-play'
             $(selector).trigger('click')
           }, 0)
         }
@@ -305,6 +310,12 @@ export class PlaylistComponent implements OnInit, CanComponentDeactivate {
   autoPlayWhenPlayerIsPlayingSamePL() {
     if (this.syncService.isPlayerPlaying && this.syncService.comparePlaylist()) {
       this.loadAudioState = ''
+      let id = this.syncService.currentSongIdOfPlayer
+      this.currentSong = this.songList.find(s => s.id == id.toString())
+      this.isStartLoading = true;
+      this.syncService.onRequestCurrentTime.next({action: 'request-current-time-of-player', pos: -1})
+    } else if (!this.syncService.isPlayerPlaying && this.syncService.comparePlaylist()) {
+      this.loadAudioState = 'load-audio-on-same-playlist'
       let id = this.syncService.currentSongIdOfPlayer
       this.currentSong = this.songList.find(s => s.id == id.toString())
       this.isStartLoading = true;

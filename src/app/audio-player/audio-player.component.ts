@@ -472,7 +472,7 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   onResponseCurrentTime() {
     this.playlistSyncService.onRequestCurrentTime.subscribe(
       data => {
-        if (data.action === 'request-current-time-of-player') {
+        if (data.action === 'request-current-time-of-player' && this.actionPage === 'playlist') {
           let currentTime = this.audio.currentTime
           this.playlistSyncService.onResponseCurrentTime.next(
             {action: 'response-current-time-from-player', pos: currentTime}
